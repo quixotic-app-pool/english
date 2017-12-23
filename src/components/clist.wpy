@@ -1,0 +1,541 @@
+<template>
+  <view class="list-container">
+    <floatingbtn />
+    <navigator
+      wx:for="{{ list }}"
+      wx:for-item="item"
+      wx:key="{{ idx }}"
+      wx:for-index="idx"
+      url="/pages/detail?id={{ item.id }}"
+      open-type="navigate"
+      class="list-item"
+      style="width:{{sysWidth}}px">
+      <view class="list-item-fixed" wx:if="{{ item.isFixed }}">UP!</view>
+      <!-- User Info -->
+      <view class="list-user">
+        <view class="list-user-avatar">
+          <image
+            class="avatar"
+            src="{{ item.isanonymous ? item.user.gender === 'male' ? '../assets/icons/avatar-male.png' : '../assets/icons/avatar-female.png': item.user.avatar }}">
+          </image>
+        </view>
+        <view style="margin-bottom: 10px;" class="list-user-info">
+          <view class="list-user-nickname">
+            <text wx:if="{{ item.isanonymous }}" class="nickname">{{ item.user.gender === 'male' ? '隔壁老王': '宿管阿姨'}}</text>
+            <text wx:else class="nickname">{{ item.user.nickname }}</text>
+            <image
+              class="verify"
+              src="{{ item.user.gender === 'male' ? '../assets/icons/male.png' : '../assets/icons/female.png' }}">
+            </image>
+          </view>
+          <view class="list-category">
+            <text>{{item.tag}}</text>
+          </view>
+        </view>
+      </view>
+      <!-- Blog Body -->
+      <view class="list-item-body">
+        <text class="list-item-body-content">{{ item.text }}</text>
+        <view class="list-item-body-images" wx:if="{{ item.images.length !== 0 }}">
+          <image
+            wx:for-item="image"
+            wx:for="{{ item.images }}"
+            wx:for-index="i"
+            wx:key="{{ i }}"
+            @tap.stop="viewPic({{ image }}, {{ item.images }})"
+            src="{{ image }}"
+            class="list-item-body-image"
+            style="width:{{imgWith}}px; height:{{imgWith}}px"
+            mode="aspectFill">
+          </image>
+        </view>
+      </view>
+
+      <view class="list-user list-user2">
+        <view class="list-user-info">
+          <text class="time-and-from">{{ item.time }}</text>
+          <view
+            class="list-item-location"
+            wx:if="{{ item.location.locationName }}"
+            @tap.stop="showLocation({{ item.location.latitude }}, {{ item.location.longitude }})">
+            <image class="location-icon" src="../assets/svgs/location.svg"></image>
+            <text>{{ item.location.locationName }}</text>
+          </view>
+        </view>
+      </view>
+      <!-- Blog Operations -->
+      <view class="list-item-operations">
+        <view
+          @tap.stop="showMore({{ idx }}, {{ item.id }}, {{ item.user }})"
+          class="list-item-operation-more">
+          <image
+            class="list-item-operation-icon"
+            src="../assets/svgs/more.svg"></image>
+        </view>
+        <view
+          @tap.stop="like({{ idx }}, {{ item.id }})"
+          hover-class="list-item-operation-like-scale"
+          class="list-item-operation-like">
+          <image
+            class="list-item-operation-icon"
+            src="{{ item.like ? '../assets/images/like-fill.png' : '../assets/images/like.png' }}"></image>
+          <text class="number {{ item.like ? 'active' : '' }}" wx:if="{{ item.likeNum !== 0 }}">{{ item.likeNum }}</text>
+        </view>
+        <navigator
+          url="/pages/detail?id={{ item.id }}&focusComment=true"
+          open-type="navigate"
+          class="list-item-operation-comment">
+          <image class="list-item-operation-icon" src="../assets/images/comment.png"></image>
+          <text class="number" wx:if="{{ item.commentNum !== 0 }}">{{ item.commentNum }}</text>
+        </navigator>
+      </view>
+    </navigator>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import api from '../api/api'
+import floatingbtn from './floatingbtn'
+import { dummy } from '../dummyData'
+
+export default class Clist extends wepy.component {
+  data = {
+    list: [],
+    sysWidth: wepy.getSystemInfoSync().windowWidth,
+    imgWith: 0,
+    page: 1
+  }
+  components = {
+    floatingbtn: floatingbtn
+  }
+  async onPullDownRefresh () {
+    this.page = 1
+    await this.loadData()
+  }
+  async onReachBottom () {
+    this.page++
+    await this.loadData()
+  }
+  async onLoad () {
+    this.imgWith = (this.sysWidth - 130) / 3
+    await this.loadData()
+  }
+  async loadData () {
+    this.list = dummy.list
+    // consider screened user info that should be filted out
+    // need to fetch user general info saved in localstorage
+    // TODO: step 1 done -> fetchBlogList
+    // try {
+    //   const res = await api.fetchBlogList({
+    //     query: {
+    //       id: '?'
+    //     }
+    //   });
+    //
+    //   if (this.page === 1) {
+    //     this.list = res.data
+    //   } else {
+    //     this.list.push(...res.data)
+    //   }
+    //
+    //   wepy.stopPullDownRefresh()
+    //   this.$apply()
+    // } catch (e) {
+    //   wepy.showModal({
+    //     title: '提示',
+    //     content: `Oops，加载失败，咋这么不给力~ `
+    //   })
+    // }
+  }
+  methods = {
+    /**
+     * 查看大图
+     * @param {String} cur 当前展示图片
+     * @param {Array}  imageList 展示的图片列表
+     */
+    viewPic (cur, imageList) {
+      wepy.previewImage({
+        current: cur,
+        urls: imageList
+      })
+    },
+
+    /**
+     * 点赞
+     * @param {Number} idx 点赞树洞的索引
+     * @param {Number} id  点赞树洞的 id
+     */
+    async like (idx, id) {
+      const list = this.list
+      list[idx].like = !list[idx].like
+
+      if (list[idx].like) {
+        list[idx].likeNum++
+      } else {
+        list[idx].likeNum--
+      }
+
+      // apply change
+      this.$apply()
+
+      // TODO: step 1 done -> updateBlogLikeNumber
+      // try {
+      //     await api.updateBlogLikeNumber({
+      //       query: {
+      //         id: '?'
+      //       }
+      //     });
+      // } catch (e) {
+      //   // roll back when request failed
+      //   console.log(e)
+      //
+      //   list[idx].like = !list[idx].like
+      //
+      //   if (list[idx].like) {
+      //     list[idx].likeNum++
+      //   } else {
+      //     list[idx].likeNum--
+      //   }
+      //
+      //   this.$apply()
+      // }
+    },
+
+    async showMore (idx, id, user) {
+      try {
+        var option = ''
+        if (user.isAuthor) {
+          option = ['删除']
+          const { tapIndex } = await wepy.showActionSheet({
+            itemList: option
+          })
+          if (tapIndex === 0) {
+            const status = await wepy.showModal({
+              title: '删除',
+              content: '确定要删除这条状态吗？',
+              cancelText: '不删了',
+              cancelColor: '#666666',
+              confirmText: '删除吧',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              this.list.splice(idx, 1)
+              this.$apply()
+
+              // TODO: step 1 done -> deleteBlog
+              api.deleteBlog({
+                query: {
+                  bid: '?'
+                }
+              })
+            }
+          }
+        } else if (user.isAdmin) {
+          option = ['删除', '全屏封印']
+          const { tapIndex } = await wepy.showActionSheet({
+            itemList: option
+          })
+          if (tapIndex === 0) {
+            const status = await wepy.showModal({
+              title: '删除',
+              content: '确定要删除这条状态吗？',
+              cancelText: '不删了',
+              cancelColor: '#666666',
+              confirmText: '删除吧',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              this.list.splice(idx, 1)
+              this.$apply()
+
+              // TODO: step 1 done -> deleteBlog
+              api.deleteBlog({
+                query: {
+                  bid: '?'
+                }
+              })
+            }
+          } else if (tapIndex === 1) {
+            const status = await wepy.showModal({
+              title: '全屏封印',
+              content: '确定要封印TA吗？',
+              cancelText: '算了',
+              cancelColor: '#666666',
+              confirmText: '没错',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              // TODO: step 1 done -> banUser
+              api.banUser({
+                query: {
+                  bid: '?'
+                }
+              })
+            }
+          } else {
+              // other users
+            option = ['举报', '屏蔽']
+            const { tapIndex } = await wepy.showActionSheet({
+              itemList: option
+            })
+            if (tapIndex === 0) {
+              const status = await wepy.showModal({
+                title: '举报',
+                content: '确定要举报这个状态吗？',
+                cancelText: '算了',
+                cancelColor: '#666666',
+                confirmText: '坚决的很',
+                confirmColor: '#3CC51F'
+              })
+
+              if (status.confirm) {
+                // TODO: step 1 done -> reportBlog
+                api.reportBlog({
+                  query: {
+                    bid: '?'
+                  }
+                })
+              }
+            } else if (tapIndex === 1) {
+              const status = await wepy.showModal({
+                title: '屏蔽',
+                content: '不想再看到TA吗？',
+                cancelText: '算了',
+                cancelColor: '#666666',
+                confirmText: '已心冷',
+                confirmColor: '#3CC51F'
+              })
+
+              if (status.confirm) {
+                // TODO: step 1 done -> screenUser
+                api.screenUser({
+                  query: {
+                    bid: '?'
+                  }
+                })
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.log('User cancel')
+      }
+    },
+
+    /**
+     * 显示地图
+     * @param {Float} latitude  纬度
+     * @param {Float} longitude 经度
+     */
+    showLocation (latitude, longitude) {
+      wepy.openLocation({
+        latitude,
+        longitude,
+        scale: 28
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.list-container {
+  width: 100%;
+  margin-bottom: 60px;
+
+  .list-item {
+    position: relative;
+    width: list-item;
+    padding: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(190, 201, 208);
+    background: #FFF;
+    overflow: hidden;
+
+    /* fixed */
+    .list-item-fixed {
+      position: absolute;
+      top: 15px;
+      right: 10px;
+      padding: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+      text-align: center;
+      background: gold;
+    }
+    .list-user2 {
+      margin-left: 45px;
+    }
+    .list-user {
+      width: 100%;
+      overflow: hidden;
+
+      .list-user-avatar {
+        float: left;
+
+        .avatar {
+          width: 45px;
+          height: 45px;
+          border-radius: 3px;
+        }
+      }
+
+      .list-user-info {
+        float: left;
+        padding-left: 10px;
+
+        .list-user-nickname {
+          overflow: hidden;
+
+          .nickname {
+            float: left;
+            margin-top: 5px;
+            margin-right: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 20px;
+            color: rgb(35, 159, 100);
+            max-width:150px;
+          }
+
+          .verify {
+            float: left;
+            width: 15px;
+            height: 15px;
+            margin-top: 9px;
+          }
+        }
+
+        .time-and-from {
+          float: left;
+          margin-top: 2px;
+          font-size: 12px;
+          color: #777;
+        }
+
+
+      .list-item-location {
+        float: left;
+        margin-left: 5px;
+        margin-top: -2px;
+
+        .location-icon {
+          width: 15px;
+          height: 15px;
+          vertical-align: middle;
+        }
+
+        text {
+          font-size: 12px;
+          line-height: 24px;
+          font-weight: bold;
+          color: grey;
+          opacity: 0.5;
+        }
+      }
+      }
+    }
+
+    /* body */
+    .list-item-body {
+      width: 90%;
+      position: relative;
+      top: -10px;
+      padding: 0 0 0 55px;
+      box-sizing: border-box;
+      overflow: hidden;
+
+      .list-item-body-content {
+        float: left;
+        width: 100%;
+        font-size: 16px;
+        line-height: 28px;
+        color: #333;
+        text-align: justify;
+      }
+
+      .list-item-body-images {
+        float: left;
+        width: 100%;
+
+        .list-item-body-image {
+          float: left;
+          margin-right: 5px;
+          margin-top: 5px;
+        }
+      }
+    }
+
+    .list-item-operations {
+      width: 100%;
+      padding-top: 5px;
+      overflow: hidden;
+      view {
+        margin-left:10px;
+      }
+      .list-item-operation-like,
+      .list-item-operation-comment,
+      .list-item-operation-more {
+        float: right;
+        width: 40px;
+        position: relative;
+        text-align: center;
+
+        .list-item-operation-icon {
+          margin-right: 5px;
+          width: 20px;
+          height: 20px;
+        }
+
+        .number {
+          position: absolute;
+          top: 5px;
+          left: 50%;
+          margin-left: 10px;
+          color: #999;
+          font-size: 10px;
+          line-height: 14px;
+          font-weight: bold;
+        }
+
+        .active {
+          color: #FA6570;
+        }
+      }
+
+      .list-item-operation-like-scale {
+        animation: clickAnimation 300ms ease;
+      }
+
+      .list-item-operation-more {
+        float: right;
+        text-align: center;
+      }
+    }
+  }
+}
+
+@keyframes clickAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.list-category text {
+  font-size:12px;
+  opacity:0.7;
+  border:1px solid gold;
+  border-radius:4px;
+  padding: 0 2px;
+}
+</style>

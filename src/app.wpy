@@ -1,0 +1,134 @@
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+import api from './api/api'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/list',
+      'pages/new',
+      'pages/message',
+      'pages/detail'
+    ],
+    window: {
+      navigationBarTitleText: '金科院小圈圈',
+      navigationBarBackgroundColor: '#FA6570',
+      navigationBarTextStyle: 'white',
+      backgroundColor: '#F8F8F8',
+      enablePullDownRefresh: true
+    }
+  }
+  globalData = {
+    userInfo: null
+    // sysWidth: wx.getSystemInfoSync().windowWidth //图片宽度
+  }
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+  }
+  async onLaunch() {
+    let userInfoBank = wepy.getStorageSync('user_info_bank') || {}
+    console.log('userInfoBank.nickName: ' + userInfoBank.nickName)
+
+    // if(!userInfoBank.openid || !userInfoBank.nickName)
+    if (true) {
+      let res = await wepy.login()
+      if (res.code) {
+        //  存储userInfo
+        let c = await wepy.getUserInfo()
+        wepy.setStorageSync('user_info_bank', c.userInfo)
+
+        // 存储系统信息
+        let systemInfo = wepy.getSystemInfoSync()
+        wepy.setStorageSync('system_info_bank', systemInfo)
+
+        await api.wechatActivity({
+          query: {
+            code: res.code
+          }
+        }).then(resp => {
+          console.log('wechatActivity info from server to client: ' + JSON.stringify(resp))
+
+          // var rlt = resp.data;
+          // console.log("wxJsCode2Session..." + JSON.stringify(rlt));
+          // if (rlt.result) {
+          //   var data = rlt.data;
+          //   if (data.openid) {
+          //     let obj = {};
+          //     obj.openid = data.openid;
+          //     obj.expires_in = Date.now() + data.expires_in;
+          //     //存储openid
+          //     wepy.setStorageSync(USER_SPECICAL_INFO, obj);
+          //   }
+          // } else {
+          //   let obj = {};
+          //   obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0";
+          //   obj.expires_in = "7200";
+          //   //存储openid
+          //   wepy.setStorageSync(USER_SPECICAL_INFO, obj);
+          // }
+        })
+
+        /* let b = await wepy.request({
+             url: url,
+             data: {},
+             method: 'POST',
+             header: {
+                 'content-Type': 'application/x-www-form-urlencoded'
+             }
+         });
+         if (b.data.openid) {
+             let obj = {};
+             obj.openid = b.data.openid;
+             obj.expires_in = Date.now() + b.data.expires_in;
+
+             // 存储openid
+             wepy.setStorageSync(USER_SPECICAL_INFO, obj);
+
+             // 存储userInfo
+             let c = await wepy.getUserInfo();
+             wepy.setStorageSync(USER_INFO, c.userInfo);
+
+             // 存储系统信息
+             let systemInfo = await wepy.getSystemInfoSync();
+             wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+             console.log(b, '登陆成功')
+         } */
+      } else {
+        console.log('获取用户登录态失败！' + res.errMsg)
+      }
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+page {
+  background: #EEE;
+  height: 100%;
+}
+
+view,
+navigator,
+textarea,
+input {
+  box-sizing: border-box;
+}
+
+/** 修改默认的 navigator 点击态 **/
+.navigator-hover {
+    opacity: 1;
+}
+/** 自定义其他点击态样式类 **/
+.other-navigator-hover {
+    opacity: 1;
+}
+
+.container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+</style>

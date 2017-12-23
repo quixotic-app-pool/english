@@ -1,0 +1,664 @@
+<template>
+  <view>
+    <!-- comments -->
+    <view class="comments" wx:if="{{ !loading && !isTest }}">
+      <view class="comments-tabs">
+        <text class="comments-tabs-1">评论 {{ commentNum }}</text>
+        <view
+          @tap.stop="likeBlog({{ blog._id }})"
+          hover-class="list-item-operation-like-scale"
+          class="list-item-operation-like">
+          <image
+            class="list-item-operation-icon"
+            style="padding-right:10px;"
+            src="{{ blog.like ? '../assets/images/like-fill.png' : '../assets/images/like.png' }}"></image>
+          <text class="number {{ blog.like ? 'active' : '' }}" wx:if="{{ blog.likeNum !== 0 }}"> {{ blog.likeNum }}</text>
+        </view>
+      </view>
+      <view class="comments-list">
+        <view
+          class="comments-item"
+          wx:for="{{ blog.comments }}"
+          wx:for-item="comment"
+          wx:for-index="i"
+          wx:key="{{ i }}"
+          @tap.stop="showAction({{ comment.nickname }}, {{ comment.openid }}, {{ comment.isAdmin }}, {{ comment.isAuthor }}, {{ comment.cid }}, {{ i }})">
+          <view class="comment-user-info">
+            <image
+              class="comment-user-avatar"
+              src="{{ comment.isanonymous ? comment.gender === 'male' ? '../assets/icons/avatar-male.png' : '../assets/icons/avatar-female.png': comment.avatar }}">
+            </image>
+          </view>
+          <view class="comment-info">
+            <view style="width: 80%; float: left;">
+              <text wx:if="{{ comment.isanonymous }}" class="nickname">{{ comment.gender === 'male' ? '隔壁老王': '宿管阿姨'}}</text>
+              <text wx:else class="nickname">{{ comment.nickname }}</text>
+              <text class="comment-time">{{comment.time}}</text>
+              <text class="comment-content">{{ comment.content }}</text>
+            </view>
+            <view style="width: 20%;"
+              @tap.stop="likeComment({{ comment }})"
+              hover-class="list-item-operation-like-scale"
+              class="list-item-operation-like">
+              <image
+                class="list-item-operation-icon"
+                style="padding-right:10px; width: 15px; height: 15px;margin-right:-8px;"
+                src="{{ blog.like ? '../assets/images/like-fill.png' : '../assets/images/like.png' }}"></image>
+              <text class="number {{ blog.like ? 'active' : '' }}" wx:if="{{ blog.likeNum !== 0 }}"> {{ comment.likeNum }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- comment -->
+    <view class="comment" wx:if="{{ !loading }}">
+      <view class="isanonymous" >
+        <view
+          class="isanonymous-btn {{ isAnonymous ? 'anonymous' : 'named' }}"
+          @tap.stop="anonymousChange">
+          <text class="anonymous-text">匿名</text>
+          <text class="named-text">实名</text>
+          <view class="isanonymous-btn-key"></view>
+        </view>
+      </view>
+      <input
+        class="comment-input"
+        type="text"
+        placeholder="{{ placeholder }}"
+        bindinput="inputChange"
+        bindfocus="inputFocus"
+        bindblur="inputBlur"
+        bindconfirm="inputConfirm"
+        focus="{{ focusComment }}"
+        value="{{ inputContent }}"
+        confirm-type="send"
+        cursor-spacing="42"/>
+      <image
+        class="send-btn"
+        wx:if="{{ !disable }}"
+        @tap.stop="send"
+        src="../assets/svgs/send-fill.svg">
+      </image>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import api from '../api/api'
+import sensitiveWordChecker from '../utils/sensitiveWordChecker'
+
+export default class Comment extends wepy.component {
+  props= {
+    blog: Object
+  }
+  data = {
+    loading: true,
+    placeholder: '写点评论...',
+    focusComment: false,
+    disable: true,
+    comment: '',
+    isAnonymous: true,
+    replyTo: '',
+    inputContent: '',
+    commentNum: 10
+  }
+  computed = {
+    commentNum() {
+      return this.blog && this.blog.comments && this.blog.comments.length
+    }
+  }
+  async onLoad (options) {
+    this.loading = true
+    this.$apply()
+    await this.fetchDetail()
+    this.focusComment = options && !!options.focusComment
+    // this.isTest = !Boolean(wepy.getStorageSync(`isInTest-${version}`))
+    // this.$apply()
+  }
+  async fetchDetail (id) {
+    // 暂时留在这， 没有这个comment无法显示，说明component 的sync不能同步啊，坑
+
+    this.loading = false
+    this.$apply()
+  }
+  methods = {
+    async likeComment (comment) {
+      comment.like = !comment.like
+
+      if (comment.like) {
+        comment.likeNum++
+      } else {
+        comment.likeNum--
+      }
+
+      // apply change
+      this.$apply()
+
+      // TODO: step 1 done -> updateCommentLikeNum
+      try {
+        await api.updateCommentLikeNum({
+          query: {
+            id: '?',
+            commentid: '?'
+          }
+        })
+      } catch (e) {
+        // roll back when request failed
+        console.log(e)
+
+        comment.like = !comment.like
+
+        if (comment.like) {
+          comment.likeNum++
+        } else {
+          comment.likeNum--
+        }
+
+        this.$apply()
+      }
+    },
+    async likeBlog (id) {
+      this.blog.like = !this.blog.like
+
+      if (this.blog.like) {
+        this.blog.likeNum++
+      } else {
+        this.blog.likeNum--
+      }
+
+      // apply change
+      this.$apply()
+
+      // TODO: step 1 done -> updateBlogLikeNumber
+      var like = this.blog.like ? 1 : -1
+      try {
+        await api.updateBlogLikeNumber({
+          query: {
+            blogId: this.blog._id,
+            like: like
+          },
+          method: 'POST'
+        })
+      } catch (e) {
+        // roll back when request failed
+        console.log(e)
+
+        this.blog.like = !this.blog.like
+
+        if (this.blog.like) {
+          this.blog.likeNum++
+        } else {
+          this.blog.likeNum--
+        }
+
+        this.$apply()
+      }
+    },
+    async showAction (nickname, openid, isAdmin, isAuthor, id, idx) {
+      console.log(arguments)
+      const itemList = [`回复 ${nickname}:`]
+
+      if (isAdmin || isAuthor) {
+        itemList.push('删除评论')
+      }
+
+      try {
+        const { tapIndex } = await wepy.showActionSheet({
+          itemList
+        })
+
+        if (tapIndex === 0) {
+          // TODO: reply
+          this.methods.reply.call(this, nickname, openid)
+        } else if (tapIndex === 1) {
+          await this.methods.deleteComment.call(this, id, idx)
+        }
+      } catch (e) {}
+    },
+    async showMore (nickname, openid, isAdmin, isAuthor, id, idx, user) {
+      try {
+        var option = ''
+        if (user.isAuthor) {
+          option = ['删除']
+          const { tapIndex } = await wepy.showActionSheet({
+            itemList: option
+          })
+          if (tapIndex === 0) {
+            const status = await wepy.showModal({
+              title: '删除',
+              content: '确定要删除这条评论吗？',
+              cancelText: '不删了',
+              cancelColor: '#666666',
+              confirmText: '确定',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              this.list.splice(idx, 1)
+              this.$apply()
+
+              // TODO: step 1 done -> deleteComment
+              api.deleteComment({
+                query: {
+                  bid: '?'
+                }
+              })
+            }
+          }
+        } else if (user.isAdmin) {
+          option = ['回复', '删除', '全屏封印']
+          const { tapIndex } = await wepy.showActionSheet({
+            itemList: option
+          })
+          if (tapIndex === 0) {
+            this.methods.reply.call(this, nickname, openid)
+          } else if (tapIndex === 1) {
+            const status = await wepy.showModal({
+              title: '删除',
+              content: '确定要删除这条评论吗？',
+              cancelText: '不删了',
+              cancelColor: '#666666',
+              confirmText: '删除吧',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              this.list.splice(idx, 1)
+              this.$apply()
+
+              // TODO: step 1 done -> deleteComment
+              api.deleteComment({
+                query: {
+                  bid: '?'
+                }
+              })
+            }
+          } else if (tapIndex === 1) {
+            const status = await wepy.showModal({
+              title: '全屏封印',
+              content: '确定要封印TA吗？',
+              cancelText: '算了',
+              cancelColor: '#666666',
+              confirmText: '没错',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              // TODO: step 1 done -> banUser
+              api.banUser({
+                query: {
+                  bid: '?'
+                }
+              })
+            }
+          } else {
+              // other users
+            option = ['回复', '举报', '屏蔽']
+            const { tapIndex } = await wepy.showActionSheet({
+              itemList: option
+            })
+            if (tapIndex === 0) {
+              this.methods.reply.call(this, nickname, openid)
+            } else if (tapIndex === 1) {
+              const status = await wepy.showModal({
+                title: '举报',
+                content: '确定要举报这个评论吗？',
+                cancelText: '算了',
+                cancelColor: '#666666',
+                confirmText: '坚决的很',
+                confirmColor: '#3CC51F'
+              })
+
+              if (status.confirm) {
+                // TODO: step 1 done -> reportComment
+                api.reportComment({
+                  query: {
+                    cid: '?'
+                  }
+                })
+              }
+            } else if (tapIndex === 1) {
+              const status = await wepy.showModal({
+                title: '屏蔽',
+                content: '不想再看到TA吗？',
+                cancelText: '算了',
+                cancelColor: '#666666',
+                confirmText: '已心冷',
+                confirmColor: '#3CC51F'
+              })
+
+              if (status.confirm) {
+                // TODO: step 1 done -> screenUser
+                api.screenUser({
+                  query: {
+                    bid: '?'
+                  }
+                })
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.log('User cancel')
+      }
+    },
+
+    /**
+     * 回复指定人
+     * @param {String} nickname 回复对象的昵称
+     * @param {String} openid   回复对象的 openid
+     */
+    reply (nickname, openid) {
+      this.inputContent = '回复 ' + nickname + '：'
+      this.focusComment = true
+      this.replyTo = openid
+      this.$apply()
+    },
+
+    /**
+     * 直接回复评论
+     */
+    comment () {
+      this.inputContent = ''
+      this.placeholder = '写点评论...'
+      this.focusComment = true
+      this.$apply()
+    },
+
+    /**
+     * 输入监听器
+     * 自动映射到 content
+     * @param {Event} e 输入事件
+     */
+    inputChange (e) {
+      this.comment = e.detail.value
+      this.disable = e.detail.value === ''
+    },
+
+    /**
+     * 输入框聚焦
+     */
+    inputFocus () {
+      this.focusComment = true
+      this.$apply()
+    },
+
+    /**
+     * 输入框失去焦点
+     */
+    inputBlur () {
+      this.focusComment = false
+      this.$apply()
+    },
+
+    async inputConfirm () {
+      await this.methods.send.call(this)
+    },
+
+    /**
+     * 切换实名、匿名
+     */
+    anonymousChange () {
+      this.isAnonymous = !this.isAnonymous
+      this.$apply()
+    },
+
+    /**
+     * 发送评论
+     */
+    async send () {
+      wepy.showToast({
+        title: '发送中...',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
+      })
+
+      if (sensitiveWordChecker(this.comment)) {
+        wepy.hideToast()
+        wepy.showModal({
+          title: '提示',
+          content: '包含敏感词汇，发送失败：）'
+        })
+        return
+      }
+
+      const pack = {
+        blogId: this.blog._id,
+        // from_uid: '2312321123221',
+        content: this.comment,
+        // replyTo_id: this.replyTo,
+        isAnonymous: this.isAnonymous
+      }
+
+      try {
+        // TODO: step 1 done -> postComment
+        await api.postComment({
+          query: {
+            pack: pack
+          },
+          method: 'POST'
+        })
+
+        // init input
+        this.$apply()
+        this.comment = ''
+        this.replyTo = ''
+        this.inputContent = ''
+        this.disable = true
+        this.focusComment = false
+        this.isAnonymous = false
+
+        console.log('going to post comment ... ' + this.blog._id)
+        // reload detail
+        this.$emit('reloadDetail')
+        this.$apply()
+
+        wepy.hideToast()
+      } catch (e) {
+        wepy.hideToast()
+        wepy.showModal({
+          title: '提示',
+          content: '发送评论失败。请重试或截图本提示，联系陈泽铭,WX: takeiteasydude。' + e.message
+        })
+      }
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.comment-time {
+  font-size:12px;
+  color:#777;
+  margin-left: 10px;
+}
+.list-item-operation-like {
+  float: right;
+  width: 40px;
+  position: relative;
+  text-align: center;
+
+  .list-item-operation-icon {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .number {
+    position: absolute;
+    left: 50%;
+    margin-left: 10px;
+    color: #999;
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: bold;
+  }
+
+  .active {
+    color: #FA6570;
+  }
+}
+
+.list-item-operation-like-scale {
+  animation: clickAnimation 300ms ease;
+}
+.comments {
+  width: 100%;
+  background: #FFF;
+  overflow: hidden;
+
+  .comments-tabs {
+    width: 100%;
+    height: 40px;
+    line-height:40px;
+    padding: 0 20px;
+    overflow: hidden;
+
+    text {
+      color: #777;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 40px;
+    }
+    .comments-tabs-1 {
+      float: left;
+      color: #FA6570;
+    }
+  }
+
+  .comments-list {
+    width: 100%;
+    padding: 0 10px;
+
+    .comments-item {
+      float: left;
+      width: 100%;
+      border-top: 1px solid #EEE;
+      background: #FFF;
+
+      .comment-user-info {
+        float: left;
+        width: 20%;
+        height: 60px;
+        text-align: center;
+
+        .comment-user-avatar {
+          width: 40px;
+          height: 40px;
+          margin: 10px 0;
+          border-radius: 50%;
+        }
+      }
+
+      .comment-info {
+        float: left;
+        width: 80%;
+        padding: 10px 10px 10px 0;
+
+        .comment-nickname {
+          color: #333;
+          font-size: 15px;
+          font-weight: bold;
+          line-height: 24px;
+          display: block;
+        }
+        .comment-content {
+          color: #666;
+          font-size: 13px;
+          line-height: 18px;
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+.comment {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #FFF;
+  border-top: 1px solid #DDD;
+
+  .comment-input {
+    padding: 15px;
+    padding-right: 60px;
+    min-height: 50px;
+    max-height: 100px;
+    font-size: 15px;
+    color: #333;
+    line-height: 20px;
+    border-bottom: 1px solid #EEE;
+  }
+
+  .send-btn {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .isanonymous {
+    background: #FFF;
+    padding: 5px;
+    overflow: hidden;
+    float:left;
+    min-height:50px;
+    max-height:100px;
+
+    .isanonymous-btn {
+      position: relative;
+      top:3px;
+      float: left;
+      width: 66px;
+      height: 32px;
+      padding: 0 6px;
+      border-radius: 18px;
+      transition: all 300ms ease;
+
+      text {
+        color: #FFF;
+        font-size: 12px;
+        line-height: 32px;
+      }
+      .anonymous-text {
+        float: left;
+      }
+      .named-text {
+        float: right;
+      }
+
+      .isanonymous-btn-key {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #FFF;
+        box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+        transition: all 300ms ease;
+      }
+    }
+    .anonymous {
+      background: #FA6570;
+
+      .isanonymous-btn-key {
+        transform: translateX(34px);
+      }
+    }
+    .named {
+      background: #2ECC71;
+
+      .isanonymous-btn-key {
+        transform: translateX(0);
+      }
+    }
+  }
+}
+</style>
