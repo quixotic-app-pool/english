@@ -17,9 +17,9 @@ export default class extends wepy.app {
     ],
     window: {
       navigationBarTitleText: '英语角',
-      navigationBarBackgroundColor: '#FA6570',
-      navigationBarTextStyle: 'white',
-      backgroundColor: '#F8F8F8',
+      navigationBarBackgroundColor: 'white',
+      navigationBarTextStyle: 'black',
+      backgroundColor: 'white',
       enablePullDownRefresh: true
     }
   }
