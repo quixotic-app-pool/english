@@ -25,10 +25,27 @@
               <text>河边的杨柳人</text>
               <text>30min</text>
             </view>
-            <view class="question-item" hover-class="click" style="box-shadow: 2px 2px 10px 0 white; width:{{screenWidth * 0.7}}px; min-height: 80px; margin-bottom:10px;">
+            <view class="question-item"  style="box-shadow: 2px 2px 10px 0 white; width:{{screenWidth * 0.7}}px; min-height: 80px;">
               <view style="padding:10px;font-size: 18px;">
-                <text>The animation property in CSS can be used to animate many other CSS properties such as color, background-color, height, or width. Each animation needs to be defined with the @keyframes at-rule which is then called with the animation property
-                </text>
+                  <text>The animation property in CSS can be used to animate many other CSS properties such as color, background-color, height, or width. Each animation needs to be defined with the @keyframes at-rule which is then called with the animation property
+                  </text>
+              </view>
+            </view>
+
+            <view style="display:flex; padding-bottom: 10px; position:relative;background-color:white; width: 100%; border-radius: 0 0 8px 8px; box-shadow: 2px 2px 10px 0 white;">
+              <view
+                @tap.stop="like({{ idx }}, {{ item.id }})"
+                hover-class="list-item-operation-like-scale"
+                style="padding-left:10px;display:flex; flex-direction:row; width: 60px; justify-content:flex-start; align-items:center;">
+                <image
+                  class="list-item-operation-icon"
+                  src="../assets/images/like.png"
+                  style="margin-right:5px;"></image>
+                  <text style="opacity: 0.5; font-size: 12px;" >12</text>
+              </view>
+              <view @tap.stop="comment()" hover-class="list-item-operation-like-scale" style="display:flex;justify-content:flex-start; align-items:center;">
+                <image class="list-item-operation-icon" src="../assets/images/comment.png" style="margin-right:5px;"></image>
+                <text style="opacity: 0.5;font-size: 12px;">3</text>
               </view>
             </view>
           </view>
@@ -64,16 +81,47 @@ export default class TestPage extends wepy.page {
   methods = {
     navigate () {
       wepy.navigateTo({url: 'page3'})
+    },
+    async like (idx, id) {
+      // const list = this.list
+      // list[idx].like = !list[idx].like
+      //
+      // if (list[idx].like) {
+      //   list[idx].likeNum++
+      // } else {
+      //   list[idx].likeNum--
+      // }
+    },
+    comment () {
+
     }
   }
 }
 </script>
 
 <style lang="less">
+.list-item-operation-like-scale {
+  animation: clickLike 300ms ease;
+}
+@keyframes clickLike {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.list-item-operation-icon {
+  width: 20px;
+  height: 20px;
+}
 .question-item {
   position: relative;
 	background: white;
-	border-radius: .4em;
+	border-radius: 8px 8px 0 0;
 }
 .question-item:after {
 	content: '';
@@ -87,20 +135,6 @@ export default class TestPage extends wepy.page {
 	border-left: 0;
 	margin-top: -10px;
 	margin-left: -10px;
-}
-.click {
-  animation: clickAnimation 500ms ease;
-}
-@keyframes clickAnimation {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 .el {
   margin-bottom: 5px;

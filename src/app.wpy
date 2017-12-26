@@ -6,7 +6,7 @@ import api from './api/api'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/page1',
+      // 'pages/page1',
       'pages/page2',
       'pages/page3',
       'pages/test',
