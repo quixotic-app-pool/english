@@ -6,13 +6,17 @@ import api from './api/api'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/page1',
+      'pages/page2',
+      'pages/page3',
+      'pages/test',
       'pages/list',
       'pages/new',
       'pages/message',
       'pages/detail'
     ],
     window: {
-      navigationBarTitleText: '金科院小圈圈',
+      navigationBarTitleText: '英语角',
       navigationBarBackgroundColor: '#FA6570',
       navigationBarTextStyle: 'white',
       backgroundColor: '#F8F8F8',

@@ -1,0 +1,130 @@
+<template>
+  <view class="center">
+    <view class='bg' style="width: {{screenWidth}}px; height: {{screenHeight}}px;"></view>
+    <view class="a" style="z-index:3; position: fixed; top:0;width: {{screenWidth}}px; height: 10px; background-color:#FA6570"></view>
+    <view style="z-index:1;position: fixed; top:10px; width: {{screenWidth}}px; height: 10px; background-color:#FA6570"></view>
+    <view style="z-index:2; margin-top:100px; width: 300px; height: 700px;">
+      <view class='zm-block1 center'>
+        <text>user information</text>
+      </view>
+      <navigator
+        hover-class="click"
+        url="/pages/page2"
+        open-type="navigate"
+        class="zm-block2 center" style="flex-direction: row;">
+        <text>ASK</text>
+        <text class="question">?</text>
+      </navigator>
+      <navigator
+        hover-class="click"
+        url="/pages/page3"
+        open-type="navigate"
+        class="zm-block3 center">
+        <text>Common Questions</text>
+      </navigator>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: '英语角',
+    backgroundColor: 'white',
+    enablePullDownRefresh: false
+  }
+
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight
+  }
+  onReady() {
+  }
+  methods = {
+  }
+}
+</script>
+
+<style lang="less">
+.click {
+  animation: clickAnimation 500ms ease;
+}
+@keyframes clickAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.question {
+  font-size:100px;
+  margin-left:50px;
+  animation: swing 2s ease-in-out infinite alternate;
+}
+@keyframes swing {
+  0% {
+    transform: rotate(-30deg);
+  }
+  100% {
+    transform: rotate(30deg);
+  }
+}
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.zm-block1 {
+  height: 100px;
+  background-image: linear-gradient(
+      45deg,
+      #3F44F4, #3FC5F4
+    );
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 0px white;
+}
+.zm-block2 {
+  height: 200px;
+  background-image: linear-gradient(
+      45deg,
+      #3FF46E, #7EF43F
+    );
+  margin-bottom: 10px;
+  border-radius: 10px;
+  font-size:42px;
+  color:white;
+  box-shadow: 1px 1px 10px 0px white;
+}
+.zm-block3 {
+  height: 100px;
+  background-image: linear-gradient(
+      45deg,
+      #F43FC8, #F13FF4
+    );
+  border-radius: 10px;
+  font-size:25px;
+  color:white;
+  box-shadow: 1px 1px 10px 0px white;
+}
+.a {
+  box-shadow: 0 1px 10px 10px #FA6570;
+}
+.bg {
+  top: 0px;
+  position: fixed;
+  background-image: url("https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX8469023.jpg");
+  animation: moveIt 10s linear infinite;
+}
+@keyframes moveIt {
+  from {background-position: bottom left;}
+  to {background-position: top right;}
+}
+</style>

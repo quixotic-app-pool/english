@@ -1,0 +1,216 @@
+<template>
+    <view class='box' style="width: {{screenWidth}}px">
+      <view class='bg' style="width: {{screenWidth}}px; height: {{screenHeight}}px;"></view>
+      <view class='topa' style="z-index:4;width: {{screenWidth}}px;position: fixed;height: 50px; background-color:#FA6570"></view>
+      <view class="topb" style="z-index:1;width: {{screenWidth}}px;position: fixed;height: 30px; background-color:#FA6570;box-shadow: 0 0 20px 0 white;"></view>
+
+      <view class='header' style="z-index: 5">
+        <input placeholder="search question..." style="height: 30px; border-radius: 8px; box-shadow: inset 0 0 5px 0 white;" placeholder-style="padding-left:10px;color: white;" type="text" value="{{searchText}}"/>
+      </view>
+      <view class="slota" style="z-index: 5; width: 80%;position:fixed; height: 5px; top: 45px; "></view>
+      <view class="slotb" style="z-index: 2; width: 80%;position:fixed; height: 5px; top: 50px; "></view>
+
+      <view class="body" scroll-y style="width: 80%; margin-top:-100px;z-index: 3; height:700px;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-top="{{scrollTop}}">
+        <repeat
+         for="{{dataList}}"
+         item= "item"
+         index= "index"
+         key= "index"
+         style="width:100%;"
+        >
+        <view style="border-radius:4px; box-shadow: 2px 2px 10px 0 white; width:100%; height: 100px; margin-bottom:10px;background-color: yellow;">
+          something
+        </view>
+        </repeat>
+      </view>
+
+      <view class="slota-btm" style="box-shadow:inset 0 1px 4px 1px rgba(244,63,63,.3);border-radius: 0 0 15px 15px;box-shadow: inset 0 1px 4px 1px rgb(244,63,63); z-index: 5; width: 305px;position:fixed; height: 5px; bottom: 45px;;"></view>
+      <view class="slotb-btm" style="border-radius: 5px 5px 0 0;box-shadow:inset 0 1px 4px 1px rgba(244,63,63,.3);z-index: 2; width: 305px;position:fixed; height: 5px; bottom: 50px;"></view>
+      <view class='topb-btm' style="bottom: 50px; z-index:1;width: 100%;position: fixed;height: 30px; background-color:#FA6570;box-shadow: 0 0 20px 0 white;border-radius: 30px 30px 0 0;"></view>
+      <view class='topa-btm' style="bottom:0px; z-index:4;width: 100%;position: fixed;height: 50px; background-color:#FA6570;"></view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: 'ASK',
+    backgroundColor: 'white',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight,
+    dataList: ['', '', '', '', '', '', '', '', '', '', '', '']
+  }
+  onReady() {
+  }
+  methods = {
+  }
+}
+</script>
+
+<style lang="less">
+.el {
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-image:repeating-radial-gradient(
+      circle at 0 0,
+      #eee,
+      #ccc 50px
+    );
+}
+@keyframes bar-a {
+  0% {
+    top: -35px;
+  }
+  100% {
+    top: 45px;
+  }
+}
+@keyframes bar-b {
+  0% {
+    top: -30px;
+  }
+  100% {
+    top: 50px;
+  }
+}
+.topa {
+  animation: topa 1s 1;
+  top: 0px;
+}
+.topa-btm {
+  animation: topabtm 1s 1;
+  bottom: 0px;
+}
+.topb {
+  animation: topb 1s 1;
+  top: 50px;
+  border-radius: 0 0 10px 10px;
+}
+.topb-btm {
+  animation: topbbtm 1s 1;
+  bottm: 50px;
+}
+@keyframes topa {
+  0% {
+    top: -80px;
+  }
+  100% {
+    top: 0px;
+  }
+}
+@keyframes topabtm {
+  0% {
+    bottom: -80px;
+  }
+  100% {
+    bottom: 0px;
+  }
+}
+@keyframes topbbtm {
+  0% {
+    bottom: -30px;
+  }
+  100% {
+    bottom: 50px;
+  }
+}
+@keyframes topb {
+  0% {
+    top: -30px;
+  }
+  100% {
+    top: 50px;
+  }
+}
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.slota {
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 0 1px 4px 1px rgb(244,63,63);
+  animation: bar-a 1s 1;
+}
+.slota-btm {
+  animation: bar-a-btm 1s 1;
+}
+@keyframes bar-a-btm {
+  0% {
+    bottom: -35px
+  }
+  100% {
+    bottom: 45px;
+  }
+}
+.slotb-btm {
+  animation: bar-b-btm 1s 1;
+}
+@keyframes bar-b-btm {
+  0% {
+    bottom: -30px
+  }
+  100% {
+    bottom: 50px;
+  }
+}
+.slotb {
+  box-shadow:inset 0 1px 4px 1px rgba(244,63,63,.3);
+  animation: bar-b 1s 1;
+  border-radius: 0 0 15px 15px;
+}
+.box {
+  height: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+.header {
+  position: fixed;
+  top: 5px;
+  animation: header 1s 1;
+}
+@keyframes header {
+  0% {
+    opacity: 0;
+    top: -75px;
+  }
+  100% {
+    opacity: 1;
+    top: 5px;
+  }
+}
+.body {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ animation: body-anime 1s 1;
+}
+@keyframes body-anime {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.bg {
+  top: 0px;
+  position: fixed;
+  background-image: url("https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX8469023.jpg");
+  animation: moveIt 10s linear infinite;
+}
+@keyframes moveIt {
+  from {background-position: bottom left;}
+  to {background-position: top right;}
+}
+</style>

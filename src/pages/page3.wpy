@@ -1,0 +1,35 @@
+<template>
+  <view class="center">
+    page3
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: 'page3',
+    backgroundColor: 'white',
+    enablePullDownRefresh: false
+  }
+
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight
+  }
+  onReady() {
+  }
+  methods = {
+  }
+}
+</script>
+
+<style lang="less">
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+</style>
