@@ -1,6 +1,6 @@
 <template>
   <view class="center">
-    page3
+    <view animation="{{animationData}}" style="background:red;height:100rpx;width:100rpx"></view>
   </view>
 </template>
 
@@ -13,10 +13,20 @@ export default class TestPage extends wepy.page {
     backgroundColor: 'white',
     enablePullDownRefresh: false
   }
-
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
-    screenHeight: wepy.getSystemInfoSync().windowHeight
+    screenHeight: wepy.getSystemInfoSync().windowHeight,
+    animationData: {}
+  }
+  onShow () {
+    var animation = wepy.createAnimation({
+        duration: 1000,
+        timingFunction: 'ease'
+    })
+
+    animation.translateY(50).step()
+
+    this.animationData = animation.export()
   }
   onReady() {
   }
