@@ -1,0 +1,59 @@
+<template>
+  <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;background-color:# 6fe0e7;">
+    <view class="center" style="height: 100px; width: 100%; background-color:white;">
+      <image src="./girl.jpeg" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
+      <text style="font-size:30px; ">Manford</text>
+    </view>
+    <view style="width: {{screenWidth}}px;margin-top:20px;">
+      <view  @tap.stop="go('我的问题')" class="center" style="background-color:white; justify-content:flex-start;padding: 10px;margin-bottom:5px;">
+        <image src="./question.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+        <text style="font-size:20px;">我的问题</text>
+      </view>
+
+      <view  @tap.stop="go('我的收藏')" class="center" style="background-color:white; justify-content:flex-start;padding: 10px;">
+        <image src="./favorite.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+        <text style="font-size:20px;">我的收藏</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: 'Levels',
+    backgroundColor: '#6fe0e7',
+    navigationBarBackgroundColor: '#6fe0e7',
+    navigationBarTextStyle: 'white',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight
+  }
+  onLoad (option) {
+    console.log(option)
+  }
+  onShow () {
+  }
+  onReady() {
+  }
+  methods = {
+    go (topic) {
+      wepy.navigateTo({
+        url: "page8?topic=" + topic
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.center {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+</style>

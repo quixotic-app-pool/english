@@ -1,0 +1,57 @@
+<template>
+  <scroll-view scroll-y style="width: {{screenWidth}}px; eight: {{screenHeight}}px;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+    <repeat
+     for="{{dataList}}"
+     item= "item"
+     index= "index"
+     key= "index"
+     style="width:100%;"
+    >
+    <view @tap.stop="go('id')" style="width: {{screenWidth}}px;margin-top:10px;">
+      <view  class="center" style="background-color:white; justify-content:flex-start;padding: 10px;margin-bottom:5px;">
+        <text style="font-size:20px;">What is the difference between get and take?</text>
+      </view>
+    </view>
+    </repeat>
+ </scroll-view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    backgroundColor: '#6fe0e7',
+    navigationBarBackgroundColor: '#6fe0e7',
+    navigationBarTextStyle: 'white',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight,
+    dataList: ['', '', '', '', '', '', '', '', '', '', '', '']
+  }
+  onLoad (option) {
+    wepy.setNavigationBarTitle({title: option.topic})
+  }
+  onShow () {
+  }
+  onReady() {
+  }
+  methods = {
+    go (id) {
+      wepy.navigateTo({
+        url: "page3?id=??"
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.center {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+</style>

@@ -1,0 +1,102 @@
+<template>
+  <view class="center" style="margin: 20px 0 50px 0;background-color:rgb(236,236,236)">
+
+    <view>
+      <view>
+        <text class="title">Start here</text>
+      </view>
+      <view @tap.stop="translate(0)" class="kind" style="">
+        <view>
+          <image src="./translation.png" class="image"/>
+        </view>
+        <text>How do you say this?</text>
+      </view>
+    </view>
+
+    <view>
+      <view>
+        <text class="title">Ask about grammar/vocab</text>
+      </view>
+      <view @tap.stop="translate(1)" class="kind" style="">
+        <view>
+          <image src="./example.png" class="image"/>
+        </view>
+        <text>Please show me example sentences with **.</text>
+      </view>
+      <view @tap.stop="translate(2)" class="kind" style="">
+        <view>
+          <image src="./meaning.png" class="image"/>
+        </view>
+        <text>What does this mean?</text>
+      </view>
+      <view @tap.stop="translate(3)" class="kind" style="">
+        <view>
+          <image src="./difference.png" class="image"/>
+        </view>
+        <view style="display:flex; flex-direction:column;">
+          <text>What's the difference?</text>
+          <text style="font-size:12px;opacity:0.5;">Difference between A and B. Feel free to provide example sentences.</text>
+        </view>
+      </view>
+      <view @tap.stop="translate(4)" class="kind" style="">
+        <view>
+          <image src="./question.png" class="image"/>
+        </view>
+        <view style="display:flex; flex-direction:column;">
+          <text>Free questions</text>
+          <text style="font-size:12px;opacity:0.5;">Ask about language, culture or anything else you want.</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: '选择问题',
+    backgroundColor: '#7EF43F',
+    navigationBarBackgroundColor: '#7EF43F',
+    navigationBarTextStyle: 'white',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight
+  }
+  onShow () {
+  }
+  onReady() {
+  }
+  methods = {
+    translate (index) {
+      wepy.navigateTo({url: 'page5?paramm=' + index})
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.image {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+.title {
+  font-size:12px;
+  opacity:0.5;
+  padding-left:15px;
+}
+.kind {
+  display: flex;
+  height:70px;
+  background-color:white;
+  font-size:20px;
+  margin-bottom: 10px;
+  padding: 0 15px;
+  align-items: center;
+}
+</style>
