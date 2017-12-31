@@ -18,6 +18,10 @@
  </scroll-view>
 </template>
 
+
+语音问题
+https://segmentfault.com/p/1210000012492182
+
 <script>
 import wepy from 'wepy'
 
