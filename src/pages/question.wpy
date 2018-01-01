@@ -1,0 +1,306 @@
+<template>
+  <view class="center" >
+    <view class='bg' style="width: {{screenWidth}}px; height: {{screenHeight}}px;"></view>
+    <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #3FC5F4;">
+      <view @tap.stop="showModal()" >
+        <text style="color:white;">Answer</text>
+      </view>
+    </view>
+
+    <view class="{{showModal? 'gray': ''}}" style="display:flex;flex-direction:column;align-items:center;justify-content:center; position:fixed;top:0;">
+      <view style="padding:10px 0;background-color:white;display:none;" class="{{ showModal ? 'show' : ''}}">
+          <view>
+            <text style="color: #3FC5F4;font-size:20px;font-weight: bold;">Write your answer: </text>
+          </view>
+          <view style="width:80%;margin: 10px; color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseLanguage(0)">
+            <textarea style="height:100px;width:100%;" maxlength="1000" placeholder-style="width:100%;" value="{{replyMsg}}" placeholder=""/>
+          </view>
+          <view class="center" style="flex-direction:row; width:70%;">
+            <view @tap.stop="closeModal()" class="center" hover-class="clickSend" style="flex:1;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;">
+              <image src="./cross.png" style="width: 35px; height:35px;" />
+            </view>
+            <view @tap.stop="closeModal()" class="center" hover-class="clickSend" style="flex:1;width:30%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;">
+              <image src="./send-fill.svg" style="width: 35px; height:35px;" />
+            </view>
+          </view>
+      </view>
+    </view>
+
+
+    <scroll-view scroll-y style="width: {{screenWidth * 0.9}}px;z-index: 1; height:{{screenHeight}}px;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+      <repeat
+       for="{{dataList}}"
+       item= "item"
+       index= "index"
+       key= "index"
+       style="width:100%;"
+      >
+      <view  @tap="navigate()" style="display:flex; flex-direction:row; justify-content: space-between; width:100%; min-height: 100px; margin-bottom:10px;">
+        <image src="./girl.jpeg" style="width: {{screenWidth * 0.15}}px; height: {{screenWidth * 0.15}}px; border-radius: 100%;"/>
+        <view>
+          <view style="color:white; font-size: 12px; display:flex; flex-direction:row; justify-content: space-between;">
+            <text>河边的杨柳人</text>
+            <text>30min</text>
+          </view>
+          <view class="question-item"  style="margin-right:4px;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); width:{{screenWidth * 0.7}}px; min-height: 80px;">
+            <!-- <view class="center" style="flex-direction:row;justify-content:flex-start;border-radius:8px 8px 0 0;background-color:gold;color:white;">
+              <image src="./feature-fill.png"  style="width:30px; height:30px;padding:0 10px;"/>
+              <text>Featured Answer</text>
+            </view> -->
+            <view class="center" style="border-bottom:1px solid rgb(236,236,236);flex-direction:row;justify-content:flex-start;border-radius:8px 8px 0 0;color:#3FC5F4;">
+              <image src="./closed.png"  style="width:30px; height:30px;padding:0 10px;"/>
+              <text>Closed question</text>
+            </view>
+            <view style="padding:10px;font-size: 18px;">
+                <text>
+                  The animation property in CSS can be used to animate many other CSS properties such as color, background-color, height, or width.
+                </text>
+            </view>
+            <view style="padding:3px 0;border-top: 1px solid rgb(236,236,236);display:flex; justify-content:space-around;position:relative; width: 100%;">
+              <view hover-class="click" class="center" @tap.stop="reply()">
+                <image src="./reply.png" style="width:20px; height:20px;" />
+              </view>
+              <view hover-class="click" class="center" @tap.stop="bookmark()">
+                <image wx:if="{{!bookmark}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
+                <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
+              </view>
+              <view hover-class="click" class="center" @tap.stop="addLike()">
+                <image wx:if="{{!like}}" src="./like-empty.png" style="width:20px; height:20px;" />
+                <image wx:else src="./like-fill.png" style="width:20px; height:20px;" />
+              </view>
+              <view hover-class="click" class="center" @tap.stop="addFeature()">
+                <image wx:if="{{!feature}}" src="./feature-empty.png" style="width:20px; height:20px;" />
+                <image wx:else src="./feature-fill.png" style="width:20px; height:20px;" />
+              </view>
+              <view hover-class="click" class="center" @tap.stop="more()">
+                <image src="./more2.png" style="width:20px; height:20px;" />
+              </view>
+
+            </view>
+          </view>
+        </view>
+      </view>
+      </repeat>
+     </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  onShareAppMessage (res) {
+  //  if (res.from === 'button') {
+  //    // 来自页面内转发按钮
+  //    console.log(res.target)
+  //  }
+   return {
+     title: 'Nice question!',
+     path: '/page/page3?id=123',
+     success: function(res) {
+       // 转发成功
+     },
+     fail: function(res) {
+       // 转发失败
+     }
+   }
+  }
+  config = {
+    navigationBarTitleText: 'Question',
+    backgroundColor: '#3FC5F4',
+    navigationBarBackgroundColor: '#3FC5F4',
+    navigationBarTextStyle: 'white',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight,
+    dataList: ['', '', '', '', '', '', '', '', '', '', '', ''],
+    bookmark: false,
+    like: false,
+    replyMsg: '',
+    showModal: false,
+    feature: false,
+    closed: false,
+    reported: false
+  }
+  onShow () {
+  }
+  onReady() {
+  }
+  methods = {
+    addFeature () {
+      var self = this
+      wepy.showModal({
+        title: 'Confirm',
+        content: 'Make this the featured answer?'
+      }).then(function(res){
+        if (res.confirm) {
+          self.feature = true
+          self.$apply()
+          wepy.showModal({
+            title: 'Confirm',
+            content: 'Close thise question?'
+          }).then(function(res){
+            if (res.confirm) {
+              self.closed = true
+              self.$apply()
+            } else if (res.cancel) {
+
+            }
+          })
+        } else if (res.cancel) {
+
+        }
+      })
+    },
+    showModal () {
+      this.replyMsg = ''
+      this.showModal = true
+    },
+    closeModal () {
+      this.showModal = !this.showModal
+    },
+    reply () {
+      this.replyMsg = '@someone: '
+      this.showModal = true
+    },
+    addLike () {
+      this.like = !this.like
+    },
+    more () {
+      var self = this
+      wepy.showActionSheet({
+        itemList: ['Report']
+      }).then(function(res){
+        if(res.confirm) {
+          self.reported = true
+        } else if (res.cancel) {
+
+        }
+      })
+    },
+    bookmark () {
+      this.bookmark = !this.bookmark
+    },
+    send () {
+      console.log('send an answer');
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.show {
+  // display: block !important;
+  animation: showModal 500ms 1;
+  width: 80%;
+  display:flex !important;
+  border-radius: 5px;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+@keyframes showModal {
+  0% {
+    transform: scale(0);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.gray {
+  background-color: rgba(63,197,244,0.9);
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+}
+.body {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+.clickSend {
+  animation: pushBtn 300ms ease;
+}
+@keyframes pushBtn {
+  0% {
+    transform: scale(1);
+    box-shadow:0 0 10px #3FC5F4;
+  }
+  50% {
+    transform: scale(0.95);
+    box-shadow:inset 0 0 10px #3FC5F4;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow:0 0 10px #3FC5F4;
+  }
+}
+.click {
+  animation: clickLike 300ms ease;
+}
+@keyframes clickLike {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.list-item-operation-icon {
+  width: 20px;
+  height: 20px;
+}
+.question-item {
+  position: relative;
+	background: white;
+	border-radius: 8px;
+}
+.question-item:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 20px;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-right-color: white;
+	border-left: 0;
+	margin-top: -10px;
+	margin-left: -10px;
+}
+.bg {
+  top: 0px;
+  position: fixed;
+  // background-image: url("https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX8469023.jpg");
+  // animation: moveIt 10s linear infinite;
+  background-image: linear-gradient(
+      45deg,
+      #3fc5f4, #ffffff
+    );
+}
+// @keyframes moveIt {
+//   from {background-position: bottom left;}
+//   to {background-position: top right;}
+// }
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+</style>

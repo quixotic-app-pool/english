@@ -7,20 +7,22 @@ export default class extends wepy.app {
   config = {
     pages: [
       // 'pages/page10',
-      'pages/page1',
-      'pages/page7',
-      'pages/page6',
-      'pages/page9',
-      'pages/page8',
-      'pages/page4',
-      'pages/page5',
-      'pages/page2',
-      'pages/page3',
-      'pages/test',
-      'pages/list',
-      'pages/new',
-      'pages/message',
-      'pages/detail'
+      'pages/mainPage',
+      'pages/about',
+      'pages/minePage',
+      // 'pages/page6',
+      // 'pages/page9',
+      'pages/chooseQuestion',
+      'pages/newQuestion',
+      'pages/questionList',
+      'pages/notificationList',
+      'pages/myList',
+      'pages/question'
+      // 'pages/test',
+      // 'pages/list',
+      // 'pages/new',
+      // 'pages/message',
+      // 'pages/detail'
     ],
     window: {
       navigationBarTitleText: '英语角',

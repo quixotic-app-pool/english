@@ -3,36 +3,29 @@
     <view class='bg' style="width: {{screenWidth}}px; height: {{screenHeight}}px;"></view>
     <view class="a" style="z-index:3; position: fixed; top:0;width: {{screenWidth}}px; height: 10px; background-color:white"></view>
     <view style="z-index:1;position: fixed; top:10px; width: {{screenWidth}}px; height: 10px; background-color:white"></view>
-    <view style="width:{{screenWidth * 0.8}}px; z-index:2; margin:100px 0 200px 0;">
+    <view class="center" style="height: {{screenHeight}}px; width:{{screenWidth * 0.8}}px; z-index:2;">
 
       <navigator
         hover-class="click"
-        url="/pages/page4"
+        url="/pages/chooseQuestion"
         open-type="navigate"
-        class="zm-block2 center" style="flex-direction: row;">
+        class="zm-block2 center" style="flex-direction: row;width: 100%;">
         <text>Ask</text>
         <text class="question">?</text>
       </navigator>
-      <navigator
-        hover-class="click"
-        url="/pages/page2"
-        open-type="navigate"
-        class="zm-block1 center" style="font-size:40px; color: white;">
-        <text>Questions</text>
-      </navigator>
-      <view style="display:flex; flex-direction:row;">
+      <view style="display:flex; flex-direction:row;width: 100%;">
         <navigator
           hover-class="click"
-          url="/pages/page6"
+          url="/pages/questionList"
           open-type="navigate"
-          class="zm-block3 center"
+          class="zm-block1 center"
           style="flex:2; margin-right: 5px">
-          <text style="font-size:40px;">Learn</text>
+          <text style="font-size:30px;">Questions</text>
         </navigator>
 
         <navigator
           hover-class="click"
-          url="/pages/page7"
+          url="/pages/minePage"
           open-type="navigate"
           class="zm-block4 center"
           style="flex:1;margin-left: 5px">
@@ -107,6 +100,7 @@ export default class TestPage extends wepy.page {
   border-radius: 10px;
   box-shadow: 1px 1px 10px 0px white;
   opacity: 0.98;
+  color:white;
 }
 .zm-block2 {
   height: 200px;

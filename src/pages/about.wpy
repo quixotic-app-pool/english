@@ -1,0 +1,46 @@
+<template>
+  <view class="center" style="flex-direction:column; padding:10px;width:100%;height:100%;background-color:white;">
+    <image src="./team.png" style="width:{{screenWidth * 0.4}}px; height:{{screenWidth * 0.4}}px;"/>
+    <view style="padding: 20px 100px;">
+      we are consist of excellent friends such as ...
+    </view>
+    <view>
+      We are team of helping offer our friends all over the world a place to learn the best English.
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: 'About us',
+    backgroundColor: 'white',
+    navigationBarBackgroundColor: 'white',
+    navigationBarTextStyle: 'black',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight
+  }
+  onLoad (option) {
+    console.log(option)
+  }
+  onShow () {
+  }
+  onReady() {
+  }
+  methods = {
+  }
+}
+</script>
+
+<style lang="less">
+.center {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+</style>

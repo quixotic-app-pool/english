@@ -1,20 +1,34 @@
 <template>
   <view style="height: {{screenHeight + 100}}px;background-color:white;">
-    <view style="padding: 0 15px;z-index:1;">
+    <view style="padding: 0 15px;">
       <view style="padding-top:20px;padding-bottom:10px;">
-        <text class="title">Need answer with:</text>
+        <text class="title">{{text1[index]}}</text>
       </view>
       <view @tap.stop="showModal()" hover-class="click" style="box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 40px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
         <text>English(US)</text>
       </view>
     </view>
 
-    <view style="margin-top:20px; padding: 0 15px;z-index:1;">
+    <view  wx:if="{{!showModal}}" style="margin-top:20px; padding: 0 15px;">
       <view style="padding-bottom:10px;">
-        <text class="title">Please show me example sentences with:</text>
+        <text class="title">{{text2[index]}}</text>
       </view>
-      <textarea placeholder-style="z-index:0;" style="margin-bottom:5px; z-index:0;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
-      <text class="title">You can write a word, phrase or sentence.</text>
+      <textarea placeholder="{{text3[index]}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <text class="title">{{text4[index]}}</text>
+      <view class="{{index == 3 ? '' : 'hidden'}}">
+        <textarea placeholder="Write a word, phrase or sentence." placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+        <text class="title">Feel free to provide example sentences.</text>
+      </view>
+    </view>
+
+    <view style="padding: 0 15px;" @tap.stop = "moreInfo()" >
+      <image src="./more.png" style="width: 30px; height:30px;"/>
+    </view>
+    <view  wx:if="{{!showModal}}" style="padding: 0 15px;" class="{{more ? '' : 'hidden'}}">
+      <view style="padding-bottom:10px;">
+        <text class="title">Additional information:</text>
+      </view>
+      <textarea placeholder="Write additional information here. You can write in any language." placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
     </view>
 
 
@@ -51,16 +65,25 @@ export default class TestPage extends wepy.page {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
     showModal: false,
-    lan: ''
+    lan: '',
+    more: false,
+    text1: ['How do you say this in', 'This question is about', 'This question is about', 'This question is about', 'This question is about'],
+    text2: ['', 'Please show me example sentences with', 'what does', 'What is the difference between', ''],
+    text3: ['Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.'],
+    text4: ['', 'Tell me as many daily expressions as possible.', 'mean?', 'and', ''],
+    index: undefined
   }
   onLoad (option) {
-    console.log(option)
+    this.index = option.param
   }
   onShow () {
   }
   onReady() {
   }
   methods = {
+    moreInfo () {
+      this.more = !this.more
+    },
     send () {
 
     },
@@ -84,6 +107,9 @@ export default class TestPage extends wepy.page {
 </script>
 
 <style lang="less">
+.hidden {
+  display: none;
+}
 .gray {
   background-color: rgba(126,244,63,0.9);
   z-index: 100;
@@ -141,7 +167,7 @@ export default class TestPage extends wepy.page {
   }
 }
 .title {
-  font-size:12px;
+  font-size:15px;
   opacity:0.5;
 }
 </style>

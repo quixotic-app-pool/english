@@ -21,6 +21,7 @@ import wepy from 'wepy'
 
 export default class TestPage extends wepy.page {
   config = {
+    navigationBarTitleText: 'Notification',
     backgroundColor: '#6fe0e7',
     navigationBarBackgroundColor: '#6fe0e7',
     navigationBarTextStyle: 'white',

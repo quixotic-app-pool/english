@@ -1,0 +1,102 @@
+<template>
+  <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;background-color:# 6fe0e7;">
+    <view class="center" style="padding-left:10px;justify-content:flex-start;height: 100px; width: 100%; background-color:white;">
+      <image src="./girl.jpeg" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
+      <text style="font-size:30px; ">Manford</text>
+    </view>
+    <view style="width: {{screenWidth}}px;margin-top:20px;">
+      <view class="center" style="margin-bottom:5px;">
+        <view  @tap.stop="go('questions')" class="center" style="flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
+          <image src="./question.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">Questions</text>
+        </view>
+
+        <view  @tap.stop="go('answers')" class="center" style="border-left:1px solid rgb(236,236,236);flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
+          <image src="./answer.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">Answer</text>
+        </view>
+      </view>
+
+      <view  @tap.stop="go('likes')" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+        <view class="center" style="flex:3;justify-content:flex-start;">
+          <image src="./like-fill.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">Number of likes</text>
+        </view>
+        <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
+          <text>11</text>
+        </view>
+      </view>
+
+      <view  @tap.stop="go('featured')" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+        <view class="center" style="flex:3;justify-content:flex-start;">
+          <image src="./feature-fill.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">Featured answers</text>
+        </view>
+        <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
+          <text>26</text>
+        </view>
+      </view>
+
+      <view  @tap.stop="go('bookmarks')" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+
+        <view class="center" style="flex:3;justify-content:flex-start;">
+          <image src="./favorite.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">Bookmarks</text>
+        </view>
+        <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
+          <text>36</text>
+        </view>
+      </view>
+
+      <view  @tap.stop="about()" class="center" style="margin-bottom:5px;background-color:white; padding: 10px;">
+        <image src="./about.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+        <text style="font-size:20px;">About us</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class TestPage extends wepy.page {
+  config = {
+    navigationBarTitleText: 'Levels',
+    backgroundColor: '#6fe0e7',
+    navigationBarBackgroundColor: '#6fe0e7',
+    navigationBarTextStyle: 'white',
+    enablePullDownRefresh: false
+  }
+  data = {
+    screenWidth: wepy.getSystemInfoSync().windowWidth,
+    screenHeight: wepy.getSystemInfoSync().windowHeight
+  }
+  onLoad (option) {
+    console.log(option)
+  }
+  onShow () {
+  }
+  onReady() {
+  }
+  methods = {
+    about () {
+      wepy.navigateTo({
+        url: "about"
+      })
+    },
+    go (topic) {
+      wepy.navigateTo({
+        url: "myList?topic=" + topic
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.center {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+</style>

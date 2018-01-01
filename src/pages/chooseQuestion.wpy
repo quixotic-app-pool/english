@@ -9,7 +9,10 @@
         <view>
           <image src="./translation.png" class="image"/>
         </view>
-        <text>How do you say this?</text>
+        <view style="display:flex; flex-direction:column;">
+          <text>How do you say this?</text>
+          <text style="font-size:12px;opacity:0.5;">How do you say this in ~~?</text>
+        </view>
       </view>
     </view>
 
@@ -21,7 +24,7 @@
         <view>
           <image src="./example.png" class="image"/>
         </view>
-        <text>Please show me example sentences with **.</text>
+        <text>Please show me example sentences with ~~.</text>
       </view>
       <view @tap.stop="translate(2)" class="kind" style="">
         <view>
@@ -43,7 +46,7 @@
           <image src="./question.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
-          <text>Free questions</text>
+          <text>Free question</text>
           <text style="font-size:12px;opacity:0.5;">Ask about language, culture or anything else you want.</text>
         </view>
       </view>
@@ -73,7 +76,7 @@ export default class TestPage extends wepy.page {
   }
   methods = {
     translate (index) {
-      wepy.navigateTo({url: 'page5?paramm=' + index})
+      wepy.navigateTo({url: 'newQuestion?param=' + index})
     }
   }
 }
