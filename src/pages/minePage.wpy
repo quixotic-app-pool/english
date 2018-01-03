@@ -6,42 +6,42 @@
     </view>
     <view style="width: {{screenWidth}}px;margin-top:20px;">
       <view class="center" style="margin-bottom:5px;">
-        <view  @tap.stop="go('questions')" class="center" style="flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
+        <view  @tap.stop="go(0)" class="center" style="flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
           <image src="./question.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">Questions</text>
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Questions' : '提问'}}</text>
         </view>
 
-        <view  @tap.stop="go('answers')" class="center" style="border-left:1px solid rgb(236,236,236);flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
+        <view  @tap.stop="go(1)" class="center" style="border-left:1px solid rgb(236,236,236);flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
           <image src="./answer.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">Answer</text>
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Answer' : '回答'}}</text>
         </view>
       </view>
 
-      <view  @tap.stop="go('likes')" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+      <view  @tap.stop="go(2)" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
         <view class="center" style="flex:3;justify-content:flex-start;">
           <image src="./like-fill.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">Number of likes</text>
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Number of likes' : '点赞'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
           <text>11</text>
         </view>
       </view>
 
-      <view  @tap.stop="go('featured')" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+      <view  @tap.stop="go(3)" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
         <view class="center" style="flex:3;justify-content:flex-start;">
           <image src="./feature-fill.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">Featured answers</text>
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Featured answers' : '最佳答案'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
           <text>26</text>
         </view>
       </view>
 
-      <view  @tap.stop="go('bookmarks')" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+      <view  @tap.stop="go(4)" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
 
         <view class="center" style="flex:3;justify-content:flex-start;">
           <image src="./favorite.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">Bookmarks</text>
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Bookmarks' : '收藏'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
           <text>36</text>
@@ -50,7 +50,7 @@
 
       <view  @tap.stop="about()" class="center" style="margin-bottom:5px;background-color:white; padding: 10px;">
         <image src="./about.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-        <text style="font-size:20px;">About us</text>
+        <text style="font-size:20px;">{{lang == 'EN' ? 'About us' : '关于我们'}}</text>
       </view>
     </view>
   </view>
@@ -61,7 +61,7 @@ import wepy from 'wepy'
 
 export default class TestPage extends wepy.page {
   config = {
-    navigationBarTitleText: 'Levels',
+    navigationBarTitleText: '',
     backgroundColor: '#6fe0e7',
     navigationBarBackgroundColor: '#6fe0e7',
     navigationBarTextStyle: 'white',
@@ -69,10 +69,19 @@ export default class TestPage extends wepy.page {
   }
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
-    screenHeight: wepy.getSystemInfoSync().windowHeight
+    screenHeight: wepy.getSystemInfoSync().windowHeight,
+    lang: ''
   }
   onLoad (option) {
     console.log(option)
+    var lang = wepy.getStorageSync('lang')
+    if (lang && lang === 'EN') {
+      this.lang = 'EN'
+      wepy.setNavigationBarTitle({title: 'Mine'})
+    } else {
+      this.lang = '中文'
+      wepy.setNavigationBarTitle({title: '我的'})
+    }
   }
   onShow () {
   }
@@ -84,9 +93,9 @@ export default class TestPage extends wepy.page {
         url: "about"
       })
     },
-    go (topic) {
+    go (index) {
       wepy.navigateTo({
-        url: "myList?topic=" + topic
+        url: "questionList?index=" + index
       })
     }
   }

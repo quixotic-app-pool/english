@@ -8,6 +8,7 @@ export default class extends wepy.app {
     pages: [
       // 'pages/page10',
       'pages/mainPage',
+      'pages/notificationList',
       'pages/about',
       'pages/minePage',
       // 'pages/page6',
@@ -15,7 +16,6 @@ export default class extends wepy.app {
       'pages/chooseQuestion',
       'pages/newQuestion',
       'pages/questionList',
-      'pages/notificationList',
       'pages/myList',
       'pages/question'
       // 'pages/test',

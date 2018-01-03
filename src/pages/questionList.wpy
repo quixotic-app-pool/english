@@ -2,28 +2,28 @@
     <view class='box' style="width: {{screenWidth}}px">
       <view class='bg' style="width: {{screenWidth}}px; height: {{screenHeight}}px;"></view>
       <view @tap.stop="filter()" hover-class="click" style="box-shadow:0 0 2px 2px #3FC5F4;background-color:#3FC5F4;z-index:10; position: fixed; left: 10px; bottom: 20px;width:50px;height:50px;display:flex;justify-content:center;align-items:center;border-radius: 100%;color: white;">
-        <text>filter</text>
+        <text>{{lang == 'EN' ? 'filter' : '分类'}}</text>
       </view>
 
       <view @tap.stop="closeModal()" class="{{showModal? 'gray': ''}}" style="display:flex;flex-direction:column;align-items:center;justify-content:center; position:fixed;top:0;">
         <view style="padding:10px 0;background-color:white;display:none;" class="modal {{ showModal ? 'show' : ''}}">
             <view>
-              <text style="color: #3FC5F4;font-size:30px;font-weight: bold;">Question Type</text>
+              <text style="color: #3FC5F4;font-size:30px;font-weight: bold;">{{lang == 'EN' ? 'Question Type' : '问题类型'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseLanguage(0)">
-              <text>How do you say this?</text>
+              <text>{{lang == 'EN' ? 'How do you say this?' : '这个怎么说？'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseLanguage(0)">
-              <text>Please show me example sentences with ~~.</text>
+              <text>{{lang == 'EN' ? 'Please show me example sentences with ~~.' : '请用 ~~ 帮我举个例子。'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseLanguage(0)">
-              <text>What does this mean?</text>
+              <text>{{lang == 'EN' ? 'What does this mean?' : '这是什么意思？'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseLanguage(0)">
-              <text>What's the difference?</text>
+              <text>{{lang == 'EN' ? "What's the difference?" : '区别是什么？'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseLanguage(0)">
-              <text>Free question.</text>
+              <text>{{lang == 'EN' ? "Free question." : '自由发问。'}}</text>
             </view>
         </view>
       </view>
@@ -34,7 +34,7 @@
       <view class="slota" style="width: {{screenWidth * 0.9}}px; top: -35px;z-index: 5; position:fixed; height: 5px; top: 0px; "></view>
       <view class="slotb" style="width: {{screenWidth * 0.9}}px; top: -30px;z-index: 2; position:fixed; height: 5px; top: 5px; "></view>
 
-      <view class="body" style="width: {{screenWidth * 0.9}}px;z-index: 3; min-height:700px;">
+      <view class="body" style="width: {{screenWidth * 0.9}}px;z-index: 3;">
         <repeat
          for="{{dataList}}"
          item= "item"
@@ -50,17 +50,66 @@
               <text>30min</text>
             </view>
             <view class="question-item"  style="box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); width:{{screenWidth * 0.7}}px; min-height: 80px;">
-              <view style="padding:10px;font-size: 18px;">
-                  <text>What does 'awesome' mean?
-                  </text>
+              <view wx:if="{{lang == 'EN'}}" style="padding:10px;font-size: 18px;">
+                  <view wx:if='{{item.type == 0}}'>
+                    <text>How do you say </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 + "'"}}</text>
+                    <text> in </text>
+                    <text style="font-weight:bold;">{{item.lang}}</text>
+                    <text> ?</text>
+                  </view>
+                  <view wx:if='{{item.type == 1}}'>
+                    <text>Please show me example sentences with </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text> ?</text>
+                  </view>
+                  <view wx:if='{{item.type == 2}}'>
+                    <text>what does </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text> mean ?</text>
+                  </view>
+                  <view wx:if='{{item.type == 3}}'>
+                    <text>What's the difference between </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text> and </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value1 +  "'"}}</text>
+                    <text> ?</text>
+                  </view>
+                  <text wx:if='{{item.type == 4}}' style="font-weight:bold;">{{item.value0}} ?</text>
+              </view>
+              <view wx:if="{{lang == '中文'}}" style="padding:10px;font-size: 18px;">
+                  <view wx:if='{{item.type == 0}}'>
+                    <text>用 </text>
+                    <text style="font-weight:bold;">{{item.lang}}</text>
+                    <text> 怎么说 </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 + "'"}}</text>
+                    <text> ？</text>
+                  </view>
+                  <view wx:if='{{item.type == 1}}'>
+                    <text>请用 </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text> 列举例句</text>
+                    <text>。</text>
+                  </view>
+                  <view wx:if='{{item.type == 2}}'>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text> 是什么意思？</text>
+                  </view>
+                  <view wx:if='{{item.type == 3}}'>
+                    <text>请问 </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text> 和 </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value1 +  "'"}}</text>
+                    <text> 的区别是什么？</text>
+                  </view>
+                  <text wx:if='{{item.type == 4}}' style="font-weight:bold;">{{item.value0}} ?</text>
               </view>
               <view style="padding:5px 10px;display:flex; position:relative;width: 100%;">
                 <view class="center" style="border-radius:100%;background-color:#3FC5F4;height:30px;width:30px;">
-                  <text style="color: white;font-size:15px;">16</text>
+                  <text style="color: white;font-size:15px;">{{item.numOfAns}}</text>
                 </view>
               </view>
             </view>
-
 
           </view>
         </view>
@@ -77,9 +126,10 @@
 <script>
 import wepy from 'wepy'
 
+
 export default class TestPage extends wepy.page {
   config = {
-    navigationBarTitleText: '发现问题',
+    navigationBarTitleText: '',
     backgroundColor: '#3FC5F4',
     navigationBarBackgroundColor: '#3FC5F4',
     navigationBarTextStyle: 'white',
@@ -88,8 +138,35 @@ export default class TestPage extends wepy.page {
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
-    dataList: ['', '', '', '', '', '', '', '', '', '', '', ''],
-    showModal: false
+    dataList: [{type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)'}, {type: 1, value0: 'fabulous', value1: '', numOfAns: 2, user: {}, lang: 'English(US)'}, {type: 2, value0: 'numerous', value1: '', numOfAns: 22, user: {}, lang: 'English(US)'}, {type: 3, value0: 'get', value1: 'take', numOfAns: 11, user: {}, lang: 'English(US)'}, {type: 4, value0: 'Is there any English teacher who can help me', value1: '', numOfAns: 1, user: {}, lang: 'English(US)'}],
+    showModal: false,
+    lang: '',
+    titleArray: [['Question', '提问'], ['Answer', '回答'], ['Like!', '点赞'], ['Featured answer', '最佳答案'], ['Bookmark', '收藏']]
+  }
+  onLoad (option) {
+    var lang = wepy.getStorageSync('lang')
+
+      // 0: Questions/提问
+      // 1: Answer/回答
+      // 2: Like！/点赞
+      // 3: Featured answers/最佳答案
+      // 4: Bookmarks/收藏
+    if (lang && lang === 'EN') {
+      this.lang = 'EN'
+
+      if (option && option.index) {
+        wepy.setNavigationBarTitle({title: this.titleArray[option.index][0]})
+      } else {
+        wepy.setNavigationBarTitle({title: 'Discover Question'})
+      }
+    } else {
+      this.lang = '中文'
+      if (option && option.index) {
+        wepy.setNavigationBarTitle({title: this.titleArray[option.index][1]})
+      } else {
+        wepy.setNavigationBarTitle({title: '发现问题'})
+      }
+    }
   }
   methods = {
     closeModal () {
@@ -205,7 +282,7 @@ export default class TestPage extends wepy.page {
   border-radius: 0 0 15px 15px;
 }
 .box {
-  min-height: 900px;
+  // min-height: 900px;
   margin-top: 20px;
   margin-bottom: 100px;
   display: flex;

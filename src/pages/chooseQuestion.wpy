@@ -3,42 +3,42 @@
 
     <view>
       <view>
-        <text class="title">Start here</text>
+        <text class="title">{{lang === 'EN' ? 'Start here' : '从这里开始'}}</text>
       </view>
       <view @tap.stop="translate(0)" class="kind" style="">
         <view>
           <image src="./translation.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
-          <text>How do you say this?</text>
-          <text style="font-size:12px;opacity:0.5;">How do you say this in ~~?</text>
+          <text>{{lang === 'EN' ? 'How do you say this' : '这个怎么说'}}?</text>
+          <text style="font-size:12px;opacity:0.5;">{{lang === 'EN' ? 'How do you say this in ~~' : '这个用 ~~ 怎么说'}}?</text>
         </view>
       </view>
     </view>
 
     <view>
       <view>
-        <text class="title">Ask about grammar/vocab</text>
+        <text class="title">{{lang === 'EN' ? 'Ask about grammar/vocab' : '关于语法/词汇的问题'}}</text>
       </view>
       <view @tap.stop="translate(1)" class="kind" style="">
         <view>
           <image src="./example.png" class="image"/>
         </view>
-        <text>Please show me example sentences with ~~.</text>
+        <text>{{lang === 'EN' ? 'Please show me example sentences with ~~.' : '请用 ~~ 帮我举个例子。'}}</text>
       </view>
       <view @tap.stop="translate(2)" class="kind" style="">
         <view>
           <image src="./meaning.png" class="image"/>
         </view>
-        <text>What does this mean?</text>
+        <text>{{lang === 'EN' ? 'What does this mean' : '这是什么意思'}}?</text>
       </view>
       <view @tap.stop="translate(3)" class="kind" style="">
         <view>
           <image src="./difference.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
-          <text>What's the difference?</text>
-          <text style="font-size:12px;opacity:0.5;">Difference between A and B. Feel free to provide example sentences.</text>
+          <text>{{lang === 'EN' ? "What's the difference" : '区别是什么'}}?</text>
+          <text style="font-size:12px;opacity:0.5;">{{lang === 'EN' ? 'Difference between A and B. Feel free to provide example sentences.' : 'A和B的区别。请任意提供例句。'}}</text>
         </view>
       </view>
       <view @tap.stop="translate(4)" class="kind" style="">
@@ -46,8 +46,8 @@
           <image src="./question.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
-          <text>Free question</text>
-          <text style="font-size:12px;opacity:0.5;">Ask about language, culture or anything else you want.</text>
+          <text>{{lang === 'EN' ? 'Free question' : '自由发问'}}</text>
+          <text style="font-size:12px;opacity:0.5;">{{lang === 'EN' ? 'Ask about language, culture or anything else you want.' : '请教关于语言，文化或者其他感兴趣的问题。'}}</text>
         </view>
       </view>
     </view>
@@ -60,7 +60,7 @@ import wepy from 'wepy'
 
 export default class TestPage extends wepy.page {
   config = {
-    navigationBarTitleText: '选择问题',
+    // navigationBarTitleText: '选择问题',
     backgroundColor: '#7EF43F',
     navigationBarBackgroundColor: '#7EF43F',
     navigationBarTextStyle: 'white',
@@ -68,7 +68,18 @@ export default class TestPage extends wepy.page {
   }
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
-    screenHeight: wepy.getSystemInfoSync().windowHeight
+    screenHeight: wepy.getSystemInfoSync().windowHeight,
+    lang: ''
+  }
+  onLoad () {
+    var lang = wepy.getStorageSync('lang')
+    if (lang && lang === 'EN') {
+      this.lang = 'EN'
+      wepy.setNavigationBarTitle({title: 'Choose Question Type'})
+    } else {
+      this.lang = '中文'
+      wepy.setNavigationBarTitle({title: '选择问题'})
+    }
   }
   onShow () {
   }

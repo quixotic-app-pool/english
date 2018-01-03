@@ -2,22 +2,22 @@
   <view style="height: {{screenHeight + 100}}px;background-color:white;">
     <view style="padding: 0 15px;">
       <view style="padding-top:20px;padding-bottom:10px;">
-        <text class="title">{{text1[index]}}</text>
+        <text class="title">{{lang === 'EN' ? text1EN[index] : text1CN[index]}}</text>
       </view>
       <view @tap.stop="showModal()" hover-class="click" style="box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 40px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
-        <text>English(US)</text>
+        <text>{{choosedLang}}</text>
       </view>
     </view>
 
     <view  wx:if="{{!showModal}}" style="margin-top:20px; padding: 0 15px;">
       <view style="padding-bottom:10px;">
-        <text class="title">{{text2[index]}}</text>
+        <text class="title">{{lang === 'EN' ? text2EN[index] : text2CN[index]}}</text>
       </view>
-      <textarea placeholder="{{text3[index]}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
-      <text class="title">{{text4[index]}}</text>
+      <textarea placeholder="{{lang === 'EN' ? text3EN[index] : text3CN[index]}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <text class="title">{{lang === 'EN' ? text4EN[index] : text4CN[index]}}</text>
       <view class="{{index == 3 ? '' : 'hidden'}}">
-        <textarea placeholder="Write a word, phrase or sentence." placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
-        <text class="title">Feel free to provide example sentences.</text>
+        <textarea placeholder="{{lang === 'EN' ? 'Write a word, phrase or sentence.' : '单词短语或者句子...'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+        <text class="title">{{lang == 'EN' ? 'Feel free to provide example sentences.' : '请任意列举例句。'}}</text>
       </view>
     </view>
 
@@ -26,18 +26,18 @@
     </view>
     <view  wx:if="{{!showModal}}" style="padding: 0 15px;" class="{{more ? '' : 'hidden'}}">
       <view style="padding-bottom:10px;">
-        <text class="title">Additional information:</text>
+        <text class="title">{{lang == 'EN' ? 'Additional information' : '更多信息'}}:</text>
       </view>
-      <textarea placeholder="Write additional information here. You can write in any language." placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <textarea placeholder="{{lang == 'EN' ? 'Write additional information here. You can write in any language.' : '写下额外说明。可以用中文或者英文'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
     </view>
 
 
     <view @tap="closeModal()" class="{{showModal? 'gray': ''}}" style="display:flex;flex-direction:column;align-items:center;justify-content:center; position:fixed;top:0;">
       <view style="display:none;top: {{screenHeight/2 - 150}}px;" class="modal {{ showModal ? 'show' : ''}}">
-          <view hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;" @tap="chooseLanguage(0)">
-            <text>English</text>
+          <view @tap="chooseLanguage('English(US)')" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
+            <text>English(US)</text>
           </view>
-          <view hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;" @tap="chooseLanguage(1)">
+          <view @tap="chooseLanguage('中文')" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
             <text>中文</text>
           </view>
       </view>
@@ -55,7 +55,7 @@ import wepy from 'wepy'
 
 export default class TestPage extends wepy.page {
   config = {
-    navigationBarTitleText: '新问题',
+    // navigationBarTitleText: '新问题',
     backgroundColor: '#7EF43F',
     navigationBarBackgroundColor: '#7EF43F',
     navigationBarTextStyle: 'white',
@@ -67,20 +67,37 @@ export default class TestPage extends wepy.page {
     showModal: false,
     lan: '',
     more: false,
-    text1: ['How do you say this in', 'This question is about', 'This question is about', 'This question is about', 'This question is about'],
-    text2: ['', 'Please show me example sentences with', 'what does', 'What is the difference between', ''],
-    text3: ['Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.'],
-    text4: ['', 'Tell me as many daily expressions as possible.', 'mean?', 'and', ''],
-    index: undefined
+    text1EN: ['How do you say this in', 'This question is about', 'This question is about', 'This question is about', 'This question is about'],
+    text1CN: ['这个怎么说，用', '这个问题是关于', '这个问题是关于', '这个问题是关于', '这个问题是关于'],
+    text2EN: ['', 'Please show me example sentences with', 'what does', 'What is the difference between', ''],
+    text2CN: ['', '请给出例句，用', '', '区别是什么', ''],
+    text3EN: ['Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.'],
+    text3CN: ['单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '关于语言文化或者其他感兴趣的问题，可以用中文或者英文。'],
+    text4EN: ['', 'Tell me as many daily expressions as possible.', 'mean?', 'and', ''],
+    text4CN: ['', '请告诉我们尽可能多的表达方式。', '什么意思?', '和', ''],
+    index: undefined,
+    choosedLang: 'English(US)',
+    lang: ''
   }
   onLoad (option) {
     this.index = option.param
+    var lang = wepy.getStorageSync('lang')
+    if (lang && lang === 'EN') {
+      this.lang = 'EN'
+      wepy.setNavigationBarTitle({title: 'New Question'})
+    } else {
+      this.lang = '中文'
+      wepy.setNavigationBarTitle({title: '新问题'})
+    }
   }
   onShow () {
   }
   onReady() {
   }
   methods = {
+    chooseLanguage (lang) {
+      this.choosedLang = lang
+    },
     moreInfo () {
       this.more = !this.more
     },
@@ -93,14 +110,6 @@ export default class TestPage extends wepy.page {
     },
     closeModal () {
       this.showModal = !this.showModal
-    },
-    chooseLanguage (index) {
-      if (index === 0) {
-        this.lan = 'English'
-      } else {
-        this.lan = '中文'
-      }
-      console.log(index);
     }
   }
 }
