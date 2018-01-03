@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: api.js
  * @Last modified by:   mymac
- * @Last modified time: 2018-01-03T14:31:47+08:00
+ * @Last modified time: 2018-01-03T16:55:00+08:00
  */
 
 import {
@@ -24,17 +24,18 @@ const host = 'https://www.takeiteasydude.com'
 const wechatActivity = (params) => wxRequest(params, host + "/api/wechatactivity");
 
 // NOTIFICATION
-const fetchNotification = (params) => wxRequest(params, host + "/api/fetchnotification");
+const fetchNotificationNum = (params) => wxRequest(params, host + "/api/fetchnotificationnum");
+const fetchNotificationList = (params) => wxRequest(params, host + "/api/fetchnotificationlist");
 const updateNotification = (params) => wxRequest(params, host + "/api/updatenotification");
+const enOrDisableNotification = (params) => wxRequest(params, host + "/api/enordisablenotification");
 
 // Question
 // fetch, update by filter or not; like/featured/bookmark categorized ones
-const fetchQuestions = (params) => wxRequest(params, host + "/api/fetchquestions");
+const fetchQuestionList = (params) => wxRequest(params, host + "/api/fetchquestionlist");
+const fetchQuestion = (params) => wxRequest(params, host + "/api/fetchquestion");
 const postQuestion = (params) => wxRequest(params, host + "/api/postquestion");
 const editQuestion = (params) => wxRequest(params, host + "/api/editquestion");
 const closeQuestion = (params) => wxRequest(params, host + "/api/closequestion");
-const enableNotification = (params) => wxRequest(params, host + "/api/enablenotification");
-const disableNotification = (params) => wxRequest(params, host + "/api/disablenotification");
 const delQuestion = (params) => wxRequest(params, host + "/api/delquestion");
 
 const answer = (params) => wxRequest(params, host + "/api/answer");
@@ -42,15 +43,19 @@ const like = (params) => wxRequest(params, host + "/api/like");
 const bookmark = (params) => wxRequest(params, host + "/api/bookmark");
 const report = (params) => wxRequest(params, host + "/api/report");
 
+//user
+const userInfo = (params) => wxRequest(params, host + "/api/user");
+
 module.exports = {
   //wechatActivity
   wechatActivity,
   //NOTIFICATION
-  fetchNotification,
+  fetchNotificationNum,
+  fetchNotificationList,
   updateNotification,
-  enableNotification,
-  disableNotification,
+  enOrDisableNotification,
   //question
+  fetchQuestionList,
   fetchQuestions,
   postQuestion,
   editQuestion,
