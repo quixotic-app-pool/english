@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: api.js
  * @Last modified by:   mymac
- * @Last modified time: 2018-01-03T14:25:00+08:00
+ * @Last modified time: 2018-01-03T14:31:47+08:00
  */
 
 import {
@@ -44,5 +44,20 @@ const report = (params) => wxRequest(params, host + "/api/report");
 
 module.exports = {
   //wechatActivity
-  wechatActivity
+  wechatActivity,
+  //NOTIFICATION
+  fetchNotification,
+  updateNotification,
+  enableNotification,
+  disableNotification,
+  //question
+  fetchQuestions,
+  postQuestion,
+  editQuestion,
+  closeQuestion,
+  delQuestion,
+  answer,
+  like,
+  bookmark,
+  report
 }

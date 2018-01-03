@@ -181,16 +181,16 @@ export default class TestPage extends wepy.page {
   //    // 来自页面内转发按钮
   //    console.log(res.target)
   //  }
-   return {
+    return {
      title: 'Nice question!',
      path: '/page/page3?id=123',
      success: function(res) {
        // 转发成功
      },
-     fail: function(res) {
+     fail: function (res) {
        // 转发失败
      }
-   }
+    }
   }
   config = {
     // navigationBarTitleText: 'Question',
@@ -232,20 +232,20 @@ export default class TestPage extends wepy.page {
   methods = {
     addFeature () {
       var self = this
-      var title= this.lang == 'EN' ? 'Confirm' : '确认'
-      var content1 = this.lang == 'EN' ? 'Make this the featured answer?' : '确认设为最佳答案吗？'
-      var content2 = this.lang == 'EN' ? 'Close thise question?' : '确认结束问题吗？'
+      var title = this.lang === 'EN' ? 'Confirm' : '确认'
+      var content1 = this.lang === 'EN' ? 'Make this the featured answer?' : '确认设为最佳答案吗？'
+      var content2 = this.lang === 'EN' ? 'Close thise question?' : '确认结束问题吗？'
       wepy.showModal({
         title: title,
         content: content1
-      }).then(function(res){
+      }).then(function (res) {
         if (res.confirm) {
           self.feature = true
           self.$apply()
           wepy.showModal({
             title: title,
             content: content2
-          }).then(function(res){
+          }).then(function (res) {
             if (res.confirm) {
               self.closed = true
               self.$apply()
@@ -274,19 +274,19 @@ export default class TestPage extends wepy.page {
     },
     more (index) {
       var titleArray = []
-      if (index == '0') {
+      if (index === '0') {
         var notifi = this.question.notificationIsOn ? ['Turn off notification', '关闭消息通知'] : ['Turn on notification', '开启消息通知']
         titleArray = [['Close the question', '结束问题'], notifi, ['Edit', '修改'], ['Delete', '删除']]
-        titleArray = this.lang == 'EN' ? [titleArray[0][0], titleArray[1][0], titleArray[2][0], titleArray[3][0]] : [titleArray[0][1], titleArray[1][1], titleArray[2][1], titleArray[3][1]]
+        titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0], titleArray[2][0], titleArray[3][0]] : [titleArray[0][1], titleArray[1][1], titleArray[2][1], titleArray[3][1]]
       } else {
         titleArray = ['Report', '举报']
-        titleArray = this.lang == 'EN' ? [titleArray[0]] : [titleArray[1]]
+        titleArray = this.lang === 'EN' ? [titleArray[0]] : [titleArray[1]]
       }
       var self = this
       wepy.showActionSheet({
         itemList: titleArray
-      }).then(function(res){
-        if(res.confirm) {
+      }).then(function (res) {
+        if (res.confirm) {
           self.reported = true
         } else if (res.cancel) {
 

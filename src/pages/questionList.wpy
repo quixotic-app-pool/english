@@ -126,7 +126,6 @@
 <script>
 import wepy from 'wepy'
 
-
 export default class TestPage extends wepy.page {
   config = {
     navigationBarTitleText: '',

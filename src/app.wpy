@@ -6,23 +6,15 @@ import api from './api/api'
 export default class extends wepy.app {
   config = {
     pages: [
-      // 'pages/page10',
       'pages/mainPage',
       'pages/notificationList',
       'pages/about',
       'pages/minePage',
-      // 'pages/page6',
-      // 'pages/page9',
       'pages/chooseQuestion',
       'pages/newQuestion',
       'pages/questionList',
       'pages/myList',
       'pages/question'
-      // 'pages/test',
-      // 'pages/list',
-      // 'pages/new',
-      // 'pages/message',
-      // 'pages/detail'
     ],
     window: {
       navigationBarTitleText: '英语角',
