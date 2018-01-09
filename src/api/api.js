@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: api.js
  * @Last modified by:   mymac
- * @Last modified time: 2018-01-03T16:55:00+08:00
+ * @Last modified time: 2018-01-09T04:23:36+08:00
  */
 
 import {
@@ -16,8 +16,8 @@ let env = "-test" //-dev 或者 -test
 // production
 // const host = ?
 // development
-// const host = 'http://127.0.0.1:8080'
-const host = 'https://www.takeiteasydude.com'
+const host = 'http://127.0.0.1:9000'
+// const host = 'https://www.takeiteasydude.com'
 
 
 //wechat
@@ -56,7 +56,7 @@ module.exports = {
   enOrDisableNotification,
   //question
   fetchQuestionList,
-  fetchQuestions,
+  fetchQuestion,
   postQuestion,
   editQuestion,
   closeQuestion,

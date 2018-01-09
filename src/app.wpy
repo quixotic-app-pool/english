@@ -17,7 +17,6 @@ export default class extends wepy.app {
       'pages/question'
     ],
     window: {
-      navigationBarTitleText: '英语角',
       navigationBarBackgroundColor: 'white',
       navigationBarTextStyle: 'black',
       backgroundColor: 'white',
@@ -34,6 +33,13 @@ export default class extends wepy.app {
     this.use('promisify')
   }
   async onLaunch() {
+    var lang = wepy.getStorageSync('lang')
+    if (lang && lang === 'EN') {
+      wepy.setNavigationBarTitle({title: 'English Corner'})
+    } else {
+      wepy.setNavigationBarTitle({title: '英语角'})
+    }
+
     let userInfoBank = wepy.getStorageSync('user_info_bank') || {}
     console.log('userInfoBank.nickName: ' + userInfoBank.nickName)
 
