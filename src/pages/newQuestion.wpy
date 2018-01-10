@@ -82,7 +82,7 @@ export default class TestPage extends wepy.page {
     mainInput: '',
     difSecInput: '',
     moreInput: '',
-    user_id: '000000000000000000000001'
+    user_id: '5a541af57794326cc69a331c'
   }
   onLoad (option) {
     this.index = option.param

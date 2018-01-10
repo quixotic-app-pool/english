@@ -106,6 +106,11 @@
                 <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
                 <text style="font-size:12px; opacity:0.7;">{{question.numOfBM}}</text>
               </view>
+              <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike('question')">
+                <image wx:if="{{question.likedBy == false}}" src="./like-empty.png" style="width:20px; height:20px;" />
+                <image wx:else src="./like-fill.png" style="width:20px; height:20px;" />
+                <text style="font-size:12px; opacity:0.7;">{{item.numOfLike}}</text>
+              </view>
               <view hover-class="click" class="center" @tap.stop="more('0')">
                 <image src="./more2.png" style="width:20px; height:20px;" />
               </view>
@@ -145,8 +150,8 @@
                 <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
                 <text style="font-size:12px; opacity:0.7;">{{item.numOfBM}}</text>
               </view>
-              <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike({{item._id}})">
-                <image wx:if="{{!like}}" src="./like-empty.png" style="width:20px; height:20px;" />
+              <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike('reply', {{item._id}})">
+                <image wx:if="{{item.likedBy == false}}" src="./like-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./like-fill.png" style="width:20px; height:20px;" />
                 <text style="font-size:12px; opacity:0.7;">{{item.numOfLike}}</text>
               </view>
@@ -198,7 +203,6 @@ export default class TestPage extends wepy.page {
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
-    like: false,
     replyMsg: '',
     showModal: false,
     feature: false,
@@ -402,9 +406,6 @@ export default class TestPage extends wepy.page {
       this.replyMsg = '@' + q.from_user.name + ': '
       this.showModal = true
     },
-    addLike () {
-      this.like = !this.like
-    },
     more (index) {
       var titleArray = []
       if (index === '0') {
@@ -425,6 +426,38 @@ export default class TestPage extends wepy.page {
 
         }
       })
+    },
+    async addLike (type, id) {
+      //坑爹，小程序不是引用传递
+      var self = this
+      var post = {}
+      if(type == 'question') {
+        post = self.question
+      } else if (type == 'reply') {
+        post = self.question.reply.find(function(item) {
+          return item._id == id
+        })
+      }
+      console.log('post: ' + JSON.stringify(post));
+      var res = await api.like({
+        query : {
+          pack: {
+            user_id: self.currentUser._id,
+            post_id: post._id,
+            likedBy: post.likedBy
+          }
+        },
+        method: 'POST'
+      })
+      console.log("likedBy server info: " + JSON.stringify(res))
+      if(res.data && res.data.flag === 'success') {
+        console.log(post);
+        // console.log(post.bookmarkedBy);
+        post.likedBy = !(post.likedBy)
+        // console.log(post.bookmarkedBy);
+        console.log(post);
+        this.$apply()
+      }
     },
     async bookmark (type, id) {
       //坑爹，小程序不是引用传递
