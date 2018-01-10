@@ -102,7 +102,7 @@
                 <image src="./reply.png" style="width:20px; height:20px;" />
               </view>
               <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="bookmark('question')">
-                <image wx:if="{{!question.bookmarkedBy}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
+                <image wx:if="{{question.bookmarkedBy == false}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
                 <text style="font-size:12px; opacity:0.7;">{{question.numOfBM}}</text>
               </view>
@@ -141,7 +141,7 @@
                 <image src="./reply.png" style="width:20px; height:20px;" />
               </view>
               <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="bookmark('reply', {{item._id}})">
-                <image wx:if="{{!item.bookmarkedBy}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
+                <image wx:if="{{item.bookmarkedBy == false}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
                 <text style="font-size:12px; opacity:0.7;">{{item.numOfBM}}</text>
               </view>
