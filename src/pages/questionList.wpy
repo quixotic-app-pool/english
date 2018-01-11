@@ -109,7 +109,7 @@
               </view>
               <view style="padding:5px 10px;display:flex; position:relative;width: 100%;">
                 <view class="center" style="border-radius:100%;background-color:#3FC5F4;height:30px;width:30px;">
-                  <text style="color: white;font-size:15px;">{{item.numOfAns}}</text>
+                  <text style="color: white;font-size:15px;">{{item.reply.length || 0}}</text>
                 </view>
               </view>
             </view>

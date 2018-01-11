@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: api.js
  * @Last modified by:   mymac
- * @Last modified time: 2018-01-09T04:23:36+08:00
+ * @Last modified time: 2018-01-11T16:15:53+08:00
  */
 
 import {
@@ -35,7 +35,7 @@ const fetchQuestionList = (params) => wxRequest(params, host + "/api/fetchquesti
 const fetchQuestion = (params) => wxRequest(params, host + "/api/fetchquestion");
 const postQuestion = (params) => wxRequest(params, host + "/api/postquestion");
 const editQuestion = (params) => wxRequest(params, host + "/api/editquestion");
-const closeQuestion = (params) => wxRequest(params, host + "/api/closequestion");
+const featurecloseQuestion = (params) => wxRequest(params, host + "/api/featureclose");
 const delQuestion = (params) => wxRequest(params, host + "/api/delquestion");
 
 const answer = (params) => wxRequest(params, host + "/api/answer");
@@ -59,10 +59,12 @@ module.exports = {
   fetchQuestion,
   postQuestion,
   editQuestion,
-  closeQuestion,
+  featurecloseQuestion,
   delQuestion,
   answer,
   like,
   bookmark,
-  report
+  report,
+  //USER
+  userInfo
 }

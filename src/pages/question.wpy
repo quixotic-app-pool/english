@@ -104,14 +104,14 @@
               <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="bookmark('question')">
                 <image wx:if="{{question.bookmarkedBy == false}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
-                <text style="font-size:12px; opacity:0.7;">{{question.numOfBM}}</text>
+                <text wx:if="{{question.numOfBM}}" style="font-size:12px; opacity:0.7;">{{question.numOfBM}}</text>
               </view>
               <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike('question')">
                 <image wx:if="{{question.likedBy == false}}" src="./like-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./like-fill.png" style="width:20px; height:20px;" />
-                <text style="font-size:12px; opacity:0.7;">{{item.numOfLike}}</text>
+                <text wx:if="{{question.numOfLike}}" style="font-size:12px; opacity:0.7;">{{question.numOfLike}}</text>
               </view>
-              <view hover-class="click" class="center" @tap.stop="more('0')">
+              <view hover-class="click" class="center" @tap.stop="more(0, {{question}})">
                 <image src="./more2.png" style="width:20px; height:20px;" />
               </view>
 
@@ -148,18 +148,18 @@
               <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="bookmark('reply', {{item._id}})">
                 <image wx:if="{{item.bookmarkedBy == false}}" src="./bookmark-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./bookmark-fill.png" style="width:20px; height:20px;" />
-                <text style="font-size:12px; opacity:0.7;">{{item.numOfBM}}</text>
+                <text wx:if="{{item.numOfBM}}" style="font-size:12px; opacity:0.7;">{{item.numOfBM}}</text>
               </view>
               <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike('reply', {{item._id}})">
                 <image wx:if="{{item.likedBy == false}}" src="./like-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./like-fill.png" style="width:20px; height:20px;" />
-                <text style="font-size:12px; opacity:0.7;">{{item.numOfLike}}</text>
+                <text wx:if="{{item.numOfLike}}" style="font-size:12px; opacity:0.7;">{{item.numOfLike}}</text>
               </view>
               <view wx:if="{{!question.featuredApplied}}" hover-class="click" class="center" @tap.stop="addFeature({{item._id}})">
-                <image wx:if="{{!feature}}" src="./feature-empty.png" style="width:20px; height:20px;" />
+                <image wx:if="{{!question.featuredApplied}}" src="./feature-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="./feature-fill.png" style="width:20px; height:20px;" />
               </view>
-              <view hover-class="click" class="center" @tap.stop="more('1')">
+              <view hover-class="click" class="center" @tap.stop="more(1, {{item}})">
                 <image src="./more2.png" style="width:20px; height:20px;" />
               </view>
 
@@ -205,8 +205,6 @@ export default class TestPage extends wepy.page {
     screenHeight: wepy.getSystemInfoSync().windowHeight,
     replyMsg: '',
     showModal: false,
-    feature: false,
-    closed: false,
     reported: false,
     lang: '',
     // question: {id:'12', notificationIsOn: true, additional: 'here is additional content.... I have question regarding this point, anyone can help me out sovle it will be highly rewarded.', featuredApplied: true, closed: true, type: 0, numOfBM: 20, numOfLike:1, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)', reply: [
@@ -214,7 +212,7 @@ export default class TestPage extends wepy.page {
     //   {id:'123', featured: false, type: 0, numOfBM: 10, numOfLike:3, value0: 'second answer', value1: '', user: {}, lang: 'English(US)', reply: []}
     // ]}
     question: {},
-    currentUser: { _id: '5a541af57794326cc69a331c' },
+    currentUser: { _id: '5a5727ed440b31170b5baca9' },
     to_user: {}
   }
   async onLoad (option) {
@@ -302,7 +300,7 @@ export default class TestPage extends wepy.page {
     replyMsg (e) {
       this.replyMsg = e.detail.value
     },
-    addFeature () {
+    addFeature (id) {
       var self = this
       var title = this.lang === 'EN' ? 'Confirm' : '确认'
       var content1 = this.lang === 'EN' ? 'Make this the featured answer?' : '确认设为最佳答案吗？'
@@ -312,19 +310,54 @@ export default class TestPage extends wepy.page {
         content: content1
       }).then(function (res) {
         if (res.confirm) {
-          self.feature = true
-          self.$apply()
           wepy.showModal({
             title: title,
             content: content2
-          }).then(function (res) {
+          }).then(async function (res) {
             if (res.confirm) {
-              self.closed = true
+              var res = await api.featurecloseQuestion({
+                query: {
+                  pack: {
+                    closed: true,
+                    feature_id: id,
+                    post_id: self.question._id,
+                    user_id: self.currentUser._id
+                  }
+                },
+                method: 'POST'
+              })
+              if(res.data && res.data.flag == 'success') {
+                var post = self.question.reply.find(function(item) {
+                  return item._id == id
+                })
+                post.featured = true
+                self.question.featuredApplied = true
+                self.question.closed = true
+              }
               self.$apply()
             } else if (res.cancel) {
-
-            }
-          })
+              console.log('cancel');
+              var res = await api.featurecloseQuestion({
+                query: {
+                  pack: {
+                    closed: false,
+                    feature_id: id,
+                    post_id: self.question._id,
+                    user_id: self.currentUser._id
+                  }
+                },
+                method: 'POST'
+              })
+              // console.log(JSON.stringify(res));
+              if(res.data && res.data.flag == 'success') {
+                var post = self.question.reply.find(function(item) {
+                  return item._id == id
+                })
+                post.featured = true
+                self.question.featuredApplied = true
+                self.$apply()
+              }
+          }})
         } else if (res.cancel) {
 
         }
@@ -406,25 +439,106 @@ export default class TestPage extends wepy.page {
       this.replyMsg = '@' + q.from_user.name + ': '
       this.showModal = true
     },
-    more (index) {
+    more (index, post) {
       var titleArray = []
-      if (index === '0') {
-        var notifi = this.question.notificationIsOn ? ['Turn off notification', '关闭消息通知'] : ['Turn on notification', '开启消息通知']
-        titleArray = [['Close the question', '结束问题'], notifi, ['Edit', '修改'], ['Delete', '删除']]
+      if (index == 0) {
+        titleArray = [['Close the question', '结束问题'], ['Edit', '修改'], ['Delete', '删除'], ['Report', '举报']]
         titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0], titleArray[2][0], titleArray[3][0]] : [titleArray[0][1], titleArray[1][1], titleArray[2][1], titleArray[3][1]]
       } else {
-        titleArray = ['Report', '举报']
-        titleArray = this.lang === 'EN' ? [titleArray[0]] : [titleArray[1]]
+        titleArray =  [['Delete', '删除'], ['Report', '举报']]
+        titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0]] : [titleArray[0][1], titleArray[1][1]]
       }
       var self = this
       wepy.showActionSheet({
         itemList: titleArray
       }).then(function (res) {
-        if (res.confirm) {
-          self.reported = true
-        } else if (res.cancel) {
+        var result;
+        if(res.tapIndex == 0) {
+          //close question
+          wepy.showModal({
+            title: '确定',
+            content: '确定结束问题吗？'
+          }).then(async function(res){
+            if(res.confirm) {
+              result = await api.featurecloseQuestion({
+                query: {
+                  pack: {
+                    closeOnly: true,
+                    closed: true,
+                    post_id: self.question._id
+                  }
+                },
+                method: 'POST'
+              })
+              console.log(JSON.stringify(res));
+              if(result.data && result.data.flag == 'success') {
+                self.question.closed = true
+                console.log('closed');
+              }
+              self.$apply()
+            }
+          })
+        } else if(res.tapIndex == 1) {
+          wepy.navigateTo({
+            url: 'newQuestion?index=' + index + '&post_id=' + self.question._id + '&value0=' + self.question.value0 + '&value1=' + self.question.value1 + '&additional=' + self.question.additional + '&lang=' + self.question.lang
+          })
+        } else if(res.tapIndex == 2) {
+          wepy.showModal({
+            title: '确定',
+            content: '确定删除吗？'
+          }).then(async function(res){
+            if(res.confirm) {
+              // console.log('going to remove');
+              // TODO: clean related connection should be done later when people try to access
+              result = await api.delQuestion({
+                query: {
+                  pack: {
+                    post_id: post._id,
+                    type: post.type
+                  }
+                },
+                method: 'POST'
+              })
+              if(result.data && result.data.flag == 'success') {
+                wepy.reLaunch({
+                  url: 'questionList'
+                })
+              }
+            }
+          })
 
+        } else if(res.tapIndex == '3') {
+          wepy.showModal({
+            title: '确定',
+            content: '确定要举报吗？'
+          }).then(async function(res){
+            if(res.confirm) {
+              // console.log('going to remove');
+              result = await api.report({
+                query: {
+                  pack: {
+                    to_id: id,
+                    from_user_id: self.currentUser._id
+                  }
+                },
+                method: 'POST'
+              })
+              if(result.data && result.data.flag == 'success') {
+                await wepy.showToast({
+                  title: '举报成功！',
+                  icon: 'success',
+                  duration: 1500,
+                  mask: true
+                })
+                // wepy.reLaunch({
+                //   url: 'questionList'
+                // })
+              }
+            }
+          })
         }
+
+        console.log(JSON.stringify(res));
       })
     },
     async addLike (type, id) {
@@ -454,8 +568,14 @@ export default class TestPage extends wepy.page {
         console.log(post);
         // console.log(post.bookmarkedBy);
         post.likedBy = !(post.likedBy)
+        if(post.likedBy){
+          post.numOfLike++
+        } else {
+          post.numOfLike--
+        }
         // console.log(post.bookmarkedBy);
         console.log(post);
+        // the code below is necessary
         this.$apply()
       }
     },
@@ -486,6 +606,11 @@ export default class TestPage extends wepy.page {
         // console.log(post);
         // console.log(post.bookmarkedBy);
         post.bookmarkedBy = !(post.bookmarkedBy)
+        if(post.bookmarkedBy){
+          post.numOfBM++
+        } else {
+          post.numOfBM--
+        }
         // console.log(post.bookmarkedBy);
         // console.log(post);
         this.$apply()

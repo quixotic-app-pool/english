@@ -2,28 +2,27 @@
   <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;background-color:# 6fe0e7;">
     <view class="center" style="padding-left:10px;justify-content:flex-start;height: 100px; width: 100%; background-color:white;">
       <image src="./girl.jpeg" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
-      <text style="font-size:30px; ">Manford</text>
+      <text style="font-size:30px; ">{{info.name}}</text>
     </view>
     <view style="width: {{screenWidth}}px;margin-top:20px;">
-      <view class="center" style="margin-bottom:5px;">
-        <view  @tap.stop="go(0)" class="center" style="flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
+
+      <view  @tap.stop="go(0)" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+        <view class="center" style="flex:3;justify-content:flex-start;">
           <image src="./question.png"style="width: 50px; height: 50px;margin-right: 20px;" />
           <text style="font-size:20px;">{{lang == 'EN' ? 'Questions' : '提问'}}</text>
         </view>
-
-        <view  @tap.stop="go(1)" class="center" style="border-left:1px solid rgb(236,236,236);flex:1;background-color:white; justify-content:flex-start;padding: 10px;">
-          <image src="./answer.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">{{lang == 'EN' ? 'Answer' : '回答'}}</text>
+        <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
+          <text>{{info.questions.length || 0}}</text>
         </view>
       </view>
 
-      <view  @tap.stop="go(2)" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+      <view  @tap.stop="go(1)" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
         <view class="center" style="flex:3;justify-content:flex-start;">
-          <image src="./like-fill.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">{{lang == 'EN' ? 'Number of likes' : '点赞'}}</text>
+          <image src="./answer.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Answer' : '回答'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
-          <text>11</text>
+          <text>{{info.answers.length || 0}}</text>
         </view>
       </view>
 
@@ -33,7 +32,17 @@
           <text style="font-size:20px;">{{lang == 'EN' ? 'Featured answers' : '最佳答案'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
-          <text>26</text>
+          <text>{{info.featuredAns.length || 0}}</text>
+        </view>
+      </view>
+
+      <view  @tap.stop="go(3)" class="center" style="margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
+        <view class="center" style="flex:3;justify-content:flex-start;">
+          <image src="./like-fill.png"style="width: 50px; height: 50px;margin-right: 20px;" />
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Liked answers' : '点赞'}}</text>
+        </view>
+        <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
+          <text>{{info.likes.length || 0}}</text>
         </view>
       </view>
 
@@ -44,7 +53,7 @@
           <text style="font-size:20px;">{{lang == 'EN' ? 'Bookmarks' : '收藏'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
-          <text>36</text>
+          <text>{{info.bookmarks.length || 0}}</text>
         </view>
       </view>
 
@@ -58,6 +67,7 @@
 
 <script>
 import wepy from 'wepy'
+import api from './../api/api'
 
 export default class TestPage extends wepy.page {
   config = {
@@ -70,10 +80,12 @@ export default class TestPage extends wepy.page {
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
-    lang: ''
+    lang: '',
+    user_id: '5a5727ed440b31170b5baca9',
+    info: {}
   }
-  onLoad (option) {
-    console.log(option)
+  async onLoad (option) {
+    // console.log(option)
     var lang = wepy.getStorageSync('lang')
     if (lang && lang === 'EN') {
       this.lang = 'EN'
@@ -81,6 +93,18 @@ export default class TestPage extends wepy.page {
     } else {
       this.lang = '中文'
       wepy.setNavigationBarTitle({title: '我的'})
+    }
+
+    // TODO: user info
+    var res = await api.userInfo({
+      query: {
+          user_id: this.user_id
+      }
+    })
+    if(res.data && res.data.flag == 'success') {
+      this.info = res.data.data
+      this.$apply()
+      console.log('info: ' + JSON.stringify(res.data.data));
     }
   }
   onShow () {

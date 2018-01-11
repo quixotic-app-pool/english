@@ -87,7 +87,7 @@ export default class TestPage extends wepy.page {
   }
   methods = {
     translate (index) {
-      wepy.navigateTo({url: 'newQuestion?param=' + index})
+      wepy.navigateTo({url: 'newQuestion?index=' + index})
     }
   }
 }
