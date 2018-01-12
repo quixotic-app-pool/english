@@ -52,7 +52,7 @@
               <text>{{item.from_user.name}}</text>
               <text>{{item.timeDiff}}</text>
             </view>
-            <view class="question-item"  style="box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); width:{{screenWidth * 0.7}}px; min-height: 80px;">
+            <view  wx:if="{{item.type !== 'reply'}}" class="question-item"  style="box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); width:{{screenWidth * 0.7}}px; min-height: 80px;">
               <view wx:if="{{lang == 'EN'}}" style="padding:10px;font-size: 18px;">
                   <view wx:if='{{item.type == 0}}'>
                     <text>How do you say </text>
@@ -114,6 +114,29 @@
               </view>
             </view>
 
+            <view wx:if="{{item.type == 'reply'}}" class="question-item"  style="margin-right:4px;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); width:{{screenWidth * 0.7}}px; min-height: 70px;">
+              <view wx:if="{{item.featured}}" class="center" style="flex-direction:row;justify-content:flex-start;border-radius:8px 8px 0 0;background-color:gold;color:white;">
+                <image src="./feature-fill.png"  style="width:30px; height:30px;padding:0 10px;"/>
+                <text>{{lang == 'EN' ? 'Featured Answer' : '最佳回答'}}</text>
+              </view>
+              <view style="padding:10px;font-size: 18px;">
+                  <text>{{item.value0}}</text>
+              </view>
+              <view style="padding:3px 0;border-top: 1px solid rgb(236,236,236);display:flex; justify-content:space-around;position:relative; width: 100%;">
+                <view hover-class="click" class="center" style="flex-direction:row;">
+                  <image src="./bookmark-fill.png" style="width:20px; height:20px;" />
+                  <text wx:if="{{item.numOfBM}}" style="font-size:12px; opacity:0.7;">{{item.numOfBM}}</text>
+                </view>
+                <view hover-class="click" class="center" style="flex-direction:row;">
+                  <image src="./like-fill.png" style="width:20px; height:20px;" />
+                  <text wx:if="{{item.numOfLike}}" style="font-size:12px; opacity:0.7;">{{item.numOfLike}}</text>
+                </view>
+                <view wx:if="{{!question.featuredApplied}}" hover-class="click" class="center">
+                  <image src="./feature-fill.png" style="width:20px; height:20px;" />
+                </view>
+              </view>
+            </view>
+
           </view>
         </view>
         </repeat>
@@ -148,30 +171,52 @@ export default class TestPage extends wepy.page {
     lang: '',
     type: '',
     by: 'all',
-    titleArray: [['Question', '提问'], ['Answer', '回答'], ['Like!', '点赞'], ['Featured answer', '最佳答案'], ['Bookmark', '收藏']]
+    titleArray: [['Question', '提问'], ['Answer', '回答'], ['Like!', '点赞'], ['Featured answer', '最佳答案'], ['Bookmark', '收藏']],
+    user_id: ''
   }
   computed = {
 
   }
   async onLoad (option) {
-    var lang = wepy.getStorageSync('lang')
-
+    //check if from minePage
+    // console.log('questinlist  option: ' + JSON.stringify(option));
       // 0: Questions/提问
       // 1: Answer/回答
       // 2: Like！/点赞
       // 3: Featured answers/最佳答案
       // 4: Bookmarks/收藏
-    if (lang && lang === 'EN') {
-      this.lang = 'EN'
-      if (option && option.index) {
-        wepy.setNavigationBarTitle({title: this.titleArray[option.index][0]})
-      } else {
-        wepy.setNavigationBarTitle({title: 'Discover Question'})
+    var index = ''
+    if (option && option.type) {
+
+      this.type = option.type
+      this.by = 'user'
+      this.user_id = option.user_id
+
+      if(option.type=='questions'){
+        index = 0
+      } else if(option.type=='answers') {
+        index = 1
+      } else if(option.type=='likes') {
+        index = 2
+      } else if(option.type=='featuredAns') {
+        index = 3
+      } else if(option.type=='bookmarks') {
+        index = 4
       }
+    }
+    var lang = wepy.getStorageSync('lang')
+      // console.log('index: ' + this.titleArray[index][0]);
+    if (lang && lang === 'EN') {
+      if (option && option.type) {
+        this.lang = 'EN'
+          wepy.setNavigationBarTitle({title: this.titleArray[index][0]})
+       } else {
+          wepy.setNavigationBarTitle({title: 'Discover Question'})
+       }
     } else {
       this.lang = '中文'
-      if (option && option.index) {
-        wepy.setNavigationBarTitle({title: this.titleArray[option.index][1]})
+      if (option && option.type) {
+        wepy.setNavigationBarTitle({title: this.titleArray[index][1]})
       } else {
         wepy.setNavigationBarTitle({title: '发现问题'})
       }
@@ -188,7 +233,8 @@ export default class TestPage extends wepy.page {
       query: {
         currentPage: self.currentPage,
         by: self.by,
-        type: self.type
+        type: self.type,
+        user_id: self.user_id
       }
     })
     console.log('request get result from server: ' + JSON.stringify(res))
