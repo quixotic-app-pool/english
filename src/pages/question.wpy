@@ -216,7 +216,7 @@ export default class TestPage extends wepy.page {
     to_user: {}
   }
   async onLoad (option) {
-    // console.log('option: ' + JSON.stringify(option));
+    console.log('option: ' + JSON.stringify(option));
     var lang = wepy.getStorageSync('lang')
     if (lang && lang === 'EN') {
       this.lang = 'EN'
@@ -563,7 +563,7 @@ export default class TestPage extends wepy.page {
         },
         method: 'POST'
       })
-      console.log("likedBy server info: " + JSON.stringify(res))
+      // console.log("likedBy server info: " + JSON.stringify(res))
       if(res.data && res.data.flag === 'success') {
         console.log(post);
         // console.log(post.bookmarkedBy);

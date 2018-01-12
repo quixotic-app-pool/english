@@ -45,7 +45,7 @@
          key= "index"
          style="width:100%;"
         >
-        <view  @tap="navigate({{item._id}})" style="display:flex; flex-direction:row; justify-content: space-between; width:100%; min-height: 100px; margin-bottom:10px;">
+        <view  @tap="navigate({{item.to_post ? item.to_post : item._id}})" style="display:flex; flex-direction:row; justify-content: space-between; width:100%; min-height: 100px; margin-bottom:10px;">
           <image src="./girl.jpeg" style="width: {{screenWidth * 0.15}}px; height: {{screenWidth * 0.15}}px; border-radius: 100%;"/>
           <view>
             <view style="color:white; font-size: 12px; display:flex; flex-direction:row; justify-content: space-between;">

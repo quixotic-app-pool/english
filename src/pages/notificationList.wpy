@@ -7,89 +7,89 @@
      key= "index"
      style="width:100%;"
     >
-    <view @tap.stop="go('id')" class="center {{item.unread ? 'unread' : ''}}" style="border-bottom:1px solid rgb(236,236,236); min-height:70px;width: {{screenWidth}}px;padding: 5px 10px;">
+    <view @tap.stop="go({{item}})" class="center {{item.unRead ? 'unread' : ''}}" style="border-bottom:1px solid rgb(236,236,236); min-height:70px;width: {{screenWidth}}px;padding: 5px 10px;">
       <view style="flex:1;">
         <image src="./girl.jpeg" style="width:30px; height:30px; border-radius:100%;"/>
       </view>
       <view style="flex:6;">
-        <view wx:if="{{item.type == 0}}" style="font-size:15px;">
+        <view wx:if="{{item.type == 'reply'}}" style="font-size:15px;">
           <text style="font-weight:bold;">{{item.from_user.name}}</text>
           <text wx:if="{{lang == 'EN'}}"> answered </text>
           <text wx:else> 回答了 </text>
         </view>
 
-        <view wx:if="{{item.type == 1}}" style="font-size:15px;">
+        <view wx:if="{{item.type == 'like'}}" style="font-size:15px;">
           <text style="font-weight:bold;">{{item.from_user.name}}</text>
           <text wx:if="{{lang == 'EN'}}"> liked your answer to </text>
           <text wx:else> 对你的答案点赞 </text>
         </view>
 
-        <view wx:if="{{item.type == 2}}" style="font-size:15px;">
+        <view wx:if="{{item.type == 'feature'}}" style="font-size:15px;">
           <text wx:if="{{lang == 'EN'}}">Your answer has been chosed as the featured answer to </text>
           <text wx:else>你的答案被选为最佳答案 </text>
         </view>
 
         <view>
           <view wx:if="{{lang == 'EN'}}" style="font-size: 15px;">
-              <view wx:if='{{item.question.type == 0}}'>
+              <view wx:if='{{item.post.type == 0}}'>
                 <text>How do you say </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 + "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 + "'"}}</text>
                 <text> in </text>
-                <text style="font-weight:bold;">{{item.question.lang}}</text>
+                <text style="font-weight:bold;">{{item.post.lang}}</text>
                 <text> ?</text>
               </view>
-              <view wx:if='{{item.question.type == 1}}'>
+              <view wx:if='{{item.post.type == 1}}'>
                 <text>Please show me example sentences with </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
                 <text> ?</text>
               </view>
-              <view wx:if='{{item.question.type == 2}}'>
+              <view wx:if='{{item.post.type == 2}}'>
                 <text>what does </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
                 <text> mean ?</text>
               </view>
-              <view wx:if='{{item.question.type == 3}}'>
+              <view wx:if='{{item.post.type == 3}}'>
                 <text>What's the difference between </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
                 <text> and </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value1 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
                 <text> ?</text>
               </view>
-              <text wx:if='{{item.question.type == 4}}' style="font-weight:bold;">{{item.question.value0}} ?</text>
+              <text wx:if='{{item.post.type == 4}}' style="font-weight:bold;">{{item.question.value0}} ?</text>
           </view>
           <view wx:if="{{lang == '中文'}}" style="font-size: 15px;">
-              <view wx:if='{{item.question.type == 0}}'>
+              <view wx:if='{{item.post.type == 0}}'>
                 <text>用 </text>
-                <text style="font-weight:bold;">{{item.question.lang}}</text>
+                <text style="font-weight:bold;">{{item.post.lang}}</text>
                 <text> 怎么说 </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 + "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 + "'"}}</text>
                 <text> ？</text>
               </view>
-              <view wx:if='{{item.question.type == 1}}'>
+              <view wx:if='{{item.post.type == 1}}'>
                 <text>请用 </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
                 <text> 列举例句</text>
                 <text>。</text>
               </view>
-              <view wx:if='{{item.question.type == 2}}'>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 +  "'"}}</text>
+              <view wx:if='{{item.post.type == 2}}'>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
                 <text> 是什么意思？</text>
               </view>
-              <view wx:if='{{item.question.type == 3}}'>
+              <view wx:if='{{item.post.type == 3}}'>
                 <text>请问 </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value0 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
                 <text> 和 </text>
-                <text style="font-weight:bold;">{{ "'" + item.question.value1 +  "'"}}</text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
                 <text> 的区别是什么？</text>
               </view>
-              <text wx:if='{{item.question.type == 4}}' style="font-weight:bold;">{{item.question.value0}} ?</text>
+              <text wx:if="{{item.post.type == 'reply'}}" style="font-weight:bold;">{{item.post.value0}} ?</text>
           </view>
         </view>
         <view class="center" style="justify-content:space-between;">
-          <image wx:if="{{item.type == 0}}" src="./answer.png" style="width:20px; height:20px; border-radius:5px;"/>
-          <image wx:if="{{item.type == 1}}" src="./like-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
-          <image wx:if="{{item.type == 2}}" src="./feature-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
-          <text style="font-size:12px; opacity:0.7;">10 minutes</text>
+          <image wx:if="{{item.type == 'reply'}}" src="./answer.png" style="width:20px; height:20px; border-radius:5px;"/>
+          <image wx:if="{{item.type == 'like'}}" src="./like-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
+          <image wx:if="{{item.type == 'feature'}}" src="./feature-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
+          <text style="font-size:12px; opacity:0.7;">{{item.timeDiff}}</text>
         </view>
       </view>
     </view>
@@ -133,10 +133,9 @@ EN： Your answer has been chosed as the featured answer to ???
 CN:  你的答案被选为最佳答案 ？？？？
 -->
 
-
-
 <script>
 import wepy from 'wepy'
+import api from './../api/api'
 
 export default class TestPage extends wepy.page {
   config = {
@@ -149,10 +148,14 @@ export default class TestPage extends wepy.page {
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
-    dataList: [{id: '12', unread: false, from_user: {id: '45', name: 'Manford'}, type:'0', question: {type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)'}}, {id: '12', unread: true, from_user: {id: '45', name: 'Manford'}, type:'1', question: {type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)'}}, {id: '12', unread: false, from_user: {id: '45', name: 'Manford'}, type:'2', question: {type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)'}}],
-    lang: ''
+    // dataList: [{id: '12', unRead: false, from_user: {id: '45', name: 'Manford'}, type:'0', post: {type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)'}}, {id: '12', unRead: true, from_user: {id: '45', name: 'Manford'}, type:'1', post: {type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)'}}, {id: '12', unRead: false, from_user: {id: '45', name: 'Manford'}, type:'2', post: {type: 0, value0: 'awesome', value1: '', numOfAns: 9, user: {},
+    // lang: 'English(US)'}}],
+    dataList: [],
+    lang: '',
+    currentPage: -1,
+    user_id: '5a5727ed440b31170b5baca9'
   }
-  onLoad (option) {
+  async onLoad (option) {
     // wepy.setNavigationBarTitle({title: option.topic})
     var lang = wepy.getStorageSync('lang')
     if (lang && lang === 'EN') {
@@ -162,16 +165,98 @@ export default class TestPage extends wepy.page {
       this.lang = '中文'
       wepy.setNavigationBarTitle({title: '新消息'})
     }
+    //load notification list
+    await this.loadData()
   }
   onShow () {
   }
   onReady() {
   }
+  calcTime(t) {
+    var str = '';
+    if (t) {
+      var createdAt = new Date(t)
+      var now = new Date()
+      var s = now - createdAt
+      if (s < (86400000 * 7)) {
+        var day = Math.floor(s / 86400000);
+        var hour = Math.floor((s % 86400000) / 3600000);
+        var minute = Math.floor((s % 86400000 % 3600000) / 60000);
+        var seconds = Math.floor(s % 86400000 % 3600000 % 60000) / 1000;
+        if (day > 0) {
+            str = day + "天前";
+            return str;
+        }
+        if (hour > 0) {
+            str = hour + "小时前";
+            return str;
+        }
+        if (minute > 0) {
+            str = minute + "分钟前";
+            return str;
+        }
+        if (seconds < 60) {
+            str = "刚刚";
+            return str;
+        }
+       } else {
+            return t.substring(0, 16);
+      }
+  } else {
+     return str;
+  }
+ }
+ async loadData () {
+   // wepy.startPullDownRefresh()
+   var self = this
+   self.currentPage++
+   var res = await api.fetchNotificationList({
+     query: {
+       currentPage: self.currentPage,
+       user_id: self.user_id
+     }
+   })
+   console.log('request notification result from server: ' + JSON.stringify(res))
+   var data = res.data
+   if (data.length) {
+     data.forEach(function(item, index) {
+       item.timeDiff = self.calcTime(item.createdAt)
+     })
+     if (self.dataList.length === 0) {
+       self.dataList = data
+     } else {
+       self.dataList.push(...data)
+     }
+   } else {
+     self.currentPage--
+   }
+   this.$apply()
+ }
   methods = {
-    go (id) {
-      wepy.navigateTo({
-        url: "question"
+    async go (item) {
+      var result = await api.updateNotification({
+        query: {
+          _id: item._id
+        },
+        method: 'POST'
       })
+      console.log('notification uddate: ' + JSON.stringify(result));
+      if(result.data && result.data.flag == 'success') {
+        var ob = this.dataList.find(function(o){
+          return o._id == item._id
+        })
+        ob.unRead = false
+        var post_id = item.post.to_post ? item.post.to_post : item.post._id
+        wepy.navigateTo({
+          url: "question?post_id=" + post_id
+        })
+      } else {
+        wepy.showModal({
+          title: '提示',
+          content: '抱歉，服务器发生异常，请联系泽铭: flyinghawker',
+          showCancel: false
+        })
+      }
     }
   }
 }

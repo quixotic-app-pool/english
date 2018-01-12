@@ -44,7 +44,7 @@ export default class extends wepy.app {
     console.log('userInfoBank.nickName: ' + userInfoBank.nickName)
 
     // if(!userInfoBank.openid || !userInfoBank.nickName)
-    if (true) {
+    if (false) {
       let res = await wepy.login()
       if (res.code) {
         //  存储userInfo

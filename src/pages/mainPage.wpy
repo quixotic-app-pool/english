@@ -6,7 +6,7 @@
 
     <view class="center" style="height: {{screenHeight * 1.1}}px; width:{{screenWidth * 0.8}}px; z-index:2;">
       <view style="margin-bottom:2px;display:flex; flex-direction:row;justify-content:flex-end; width:100%;">
-        <view @tap.stop="switchLang()" style="background-color:rgba(255,255,255,0.3);margin-right:10px;color:white;border-radius:2px;">
+        <view @tap.stop="switchLang()" style="padding:1px; background-color:rgba(255,255,255,0.3);margin-right:10px;color:white;border-radius:2px;">
           <text>{{lang}}</text>
         </view>
         <navigator
@@ -14,9 +14,9 @@
           url="/pages/notificationList"
           open-type="navigate"
           class="center"
-          style="background-color:rgba(235,46,120,0.9);color:white;border-radius:5px;"
+          style="padding:1px;min-width:30px; background-color:rgba(235,46,120,0.9);color:white;border-radius:5px;"
           >
-          <text>34</text>
+          <text>{{numOfNotif}}</text>
         </navigator>
       </view>
       <navigator
@@ -52,6 +52,7 @@
 
 <script>
 import wepy from 'wepy'
+import api from './../api/api'
 
 export default class TestPage extends wepy.page {
   config = {
@@ -62,9 +63,11 @@ export default class TestPage extends wepy.page {
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
-    lang: ''
+    lang: '',
+    user_id: '5a5727ed440b31170b5baca9',
+    numOfNotif: 0
   }
-  onLoad () {
+  async onLoad () {
     var lang = wepy.getStorageSync('lang')
     if(lang && lang == 'EN') {
       this.lang = '中文'
@@ -72,6 +75,17 @@ export default class TestPage extends wepy.page {
     } else {
       this.lang = 'EN'
       wepy.setNavigationBarTitle({title: '英语角'})
+    }
+    var result = await api.fetchNotificationNum({
+      query: {
+        user_id: this.user_id
+      }
+    })
+    console.log('result.data.numOfNotif: ' + JSON.stringify(result.data));
+    if(result.data && result.data.flag == 'success') {
+      this.numOfNotif = result.data.numOfNotif
+      console.log('insde' + JSON.stringify(this.numOfNotif));
+      this.$apply()
     }
   }
   onReady() {
