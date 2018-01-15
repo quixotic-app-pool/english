@@ -64,14 +64,15 @@ export default class TestPage extends wepy.page {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
     lang: '',
-    user_id: '5a5727ed440b31170b5baca9',
+    user_id: '',
     numOfNotif: 0
   }
   async onLoad () {
+    this.user_id = wepy.getStorageSync('UserId')
     var lang = wepy.getStorageSync('lang')
     if(lang && lang == 'EN') {
       this.lang = '中文'
-      wepy.setNavigationBarTitle({title: 'English Corner'})
+      wepy.setNavigationBarTitle({title: 'EnglishiSimple'})
     } else {
       this.lang = 'EN'
       wepy.setNavigationBarTitle({title: '英语角'})

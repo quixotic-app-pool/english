@@ -9,7 +9,7 @@
     >
     <view @tap.stop="go({{item}})" class="center {{item.unRead ? 'unread' : ''}}" style="border-bottom:1px solid rgb(236,236,236); min-height:70px;width: {{screenWidth}}px;padding: 5px 10px;">
       <view style="flex:1;">
-        <image src="./girl.jpeg" style="width:30px; height:30px; border-radius:100%;"/>
+        <image src="../assets/img/girl.jpeg" style="width:30px; height:30px; border-radius:100%;"/>
       </view>
       <view style="flex:6;">
         <view wx:if="{{item.type == 'reply'}}" style="font-size:15px;">
@@ -86,9 +86,9 @@
           </view>
         </view>
         <view class="center" style="justify-content:space-between;">
-          <image wx:if="{{item.type == 'reply'}}" src="./answer.png" style="width:20px; height:20px; border-radius:5px;"/>
-          <image wx:if="{{item.type == 'like'}}" src="./like-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
-          <image wx:if="{{item.type == 'feature'}}" src="./feature-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
+          <image wx:if="{{item.type == 'reply'}}" src="../assets/img/answer.png" style="width:20px; height:20px; border-radius:5px;"/>
+          <image wx:if="{{item.type == 'like'}}" src="../assets/img/like-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
+          <image wx:if="{{item.type == 'feature'}}" src="../assets/img/feature-fill.png" style="width:20px; height:20px; border-radius:5px;"/>
           <text style="font-size:12px; opacity:0.7;">{{item.timeDiff}}</text>
         </view>
       </view>
@@ -153,10 +153,11 @@ export default class TestPage extends wepy.page {
     dataList: [],
     lang: '',
     currentPage: -1,
-    user_id: '5a5727ed440b31170b5baca9'
+    user_id: ''
   }
   async onLoad (option) {
     // wepy.setNavigationBarTitle({title: option.topic})
+    this.user_id = wepy.getStorageSync('UserId')
     var lang = wepy.getStorageSync('lang')
     if (lang && lang === 'EN') {
       this.lang = 'EN'

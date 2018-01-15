@@ -13,7 +13,6 @@ export default class extends wepy.app {
       'pages/chooseQuestion',
       'pages/newQuestion',
       'pages/questionList',
-      'pages/myList',
       'pages/question'
     ],
     window: {
@@ -33,83 +32,44 @@ export default class extends wepy.app {
     this.use('promisify')
   }
   async onLaunch() {
-    var lang = wepy.getStorageSync('lang')
-    if (lang && lang === 'EN') {
-      wepy.setNavigationBarTitle({title: 'English Corner'})
-    } else {
-      wepy.setNavigationBarTitle({title: '英语角'})
-    }
-
-    let userInfoBank = wepy.getStorageSync('user_info_bank') || {}
-    console.log('userInfoBank.nickName: ' + userInfoBank.nickName)
-
-    // if(!userInfoBank.openid || !userInfoBank.nickName)
-    if (false) {
-      let res = await wepy.login()
+    var self = this
+    var userInfo = wepy.getStorageSync('userInfo') || {}
+    // console.log("userInfo: " + JSON.stringify(userInfo));
+    var UserSession = wepy.getStorageSync('UserSession') || {}
+    wepy.removeStorageSync('UserSession')
+    // if(false){
+    if((UserSession.createdAt || Date.now()) < (Date.now() + 86400000)) {
+      console.log('expire');
+      var res = await wepy.login()
       if (res.code) {
-        //  存储userInfo
-        let c = await wepy.getUserInfo()
-        wepy.setStorageSync('user_info_bank', c.userInfo)
+        console.log('res.code: ' + res.code)
 
-        // 存储系统信息
-        let systemInfo = wepy.getSystemInfoSync()
-        wepy.setStorageSync('system_info_bank', systemInfo)
+        //存储userInfo 
+        var c = await wepy.getUserInfo()
+        wepy.setStorageSync('UserInfo', c.userInfo)
 
-        await api.wechatActivity({
+        //存储系统信息 
+        var systemInfo = wepy.getSystemInfoSync()
+        wepy.setStorageSync('SystemInfo', systemInfo)
+
+        var u = await api.wechatActivity({
           query: {
-            code: res.code
+            code: res.code,
+            userInfo: JSON.stringify({nickName: c.userInfo.nickName, avatarUrl: c.userInfo.avatarUrl, gender: c.userInfo.gender}),
+            encryptedData: c.encryptedData,
+            iv: c.iv,
+            UserSession: UserSession.sessionId
           }
-        }).then(resp => {
-          console.log('wechatActivity info from server to client: ' + JSON.stringify(resp))
-
-          // var rlt = resp.data;
-          // console.log("wxJsCode2Session..." + JSON.stringify(rlt));
-          // if (rlt.result) {
-          //   var data = rlt.data;
-          //   if (data.openid) {
-          //     let obj = {};
-          //     obj.openid = data.openid;
-          //     obj.expires_in = Date.now() + data.expires_in;
-          //     //存储openid
-          //     wepy.setStorageSync(USER_SPECICAL_INFO, obj);
-          //   }
-          // } else {
-          //   let obj = {};
-          //   obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0";
-          //   obj.expires_in = "7200";
-          //   //存储openid
-          //   wepy.setStorageSync(USER_SPECICAL_INFO, obj);
-          // }
         })
-
-        /* let b = await wepy.request({
-             url: url,
-             data: {},
-             method: 'POST',
-             header: {
-                 'content-Type': 'application/x-www-form-urlencoded'
-             }
-         });
-         if (b.data.openid) {
-             let obj = {};
-             obj.openid = b.data.openid;
-             obj.expires_in = Date.now() + b.data.expires_in;
-
-             // 存储openid
-             wepy.setStorageSync(USER_SPECICAL_INFO, obj);
-
-             // 存储userInfo
-             let c = await wepy.getUserInfo();
-             wepy.setStorageSync(USER_INFO, c.userInfo);
-
-             // 存储系统信息
-             let systemInfo = await wepy.getSystemInfoSync();
-             wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-             console.log(b, '登陆成功')
-         } */
-      } else {
-        console.log('获取用户登录态失败！' + res.errMsg)
+        // console.log('info from wechat: ' + JSON.stringify(u));
+        if(u && u.data && u.data.flag == 'success') {
+          wepy.setStorageSync('UserId', u.data.user_id)
+          wepy.setStorageSync('UserSession', u.data.session)
+          // console.log('UserId: ' + JSON.stringify(u.data.user_id));
+          // console.log('UserSession: ' + JSON.stringify(u.data.session));
+        }
       }
+
     }
   }
 }

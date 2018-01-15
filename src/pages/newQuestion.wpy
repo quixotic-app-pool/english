@@ -22,7 +22,7 @@
     </view>
 
     <view style="padding: 0 15px;" @tap.stop = "moreInfo()" >
-      <image src="./more.png" style="width: 30px; height:30px;"/>
+      <image src="../assets/img/more.png" style="width: 30px; height:30px;"/>
     </view>
     <view  wx:if="{{!showModal}}" style="padding: 0 15px;" class="{{more ? '' : 'hidden'}}">
       <view style="padding-bottom:10px;">
@@ -45,7 +45,7 @@
 
 
     <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #7EF43F;">
-      <image @tap="send()" src="./send-fill.svg" style="width: 35px; height:35px;" />
+      <image @tap="send()" src="../assets/img/send-fill.svg" style="width: 35px; height:35px;" />
     </view>
   </view>
 </template>
@@ -82,12 +82,13 @@ export default class TestPage extends wepy.page {
     mainInput: '',
     difSecInput: '',
     moreInput: '',
-    user_id: '5a5727ed440b31170b5baca9',
+    user_id: '',
     post_id: ''
   }
   onLoad (option) {
     this.index = option.index
-    console.log('option: ' + JSON.stringify(option));
+    // console.log('option: ' + JSON.stringify(option));
+    this.user_id = wepy.getStorageSync('UserId')
     //redirect from question page to edit
     if(option.post_id) {
       this.post_id = option.post_id

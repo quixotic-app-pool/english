@@ -7,7 +7,7 @@
       </view>
       <view @tap.stop="translate(0)" class="kind" style="">
         <view>
-          <image src="./translation.png" class="image"/>
+          <image src="../assets/img/translation.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
           <text>{{lang === 'EN' ? 'How do you say this' : '这个怎么说'}}?</text>
@@ -22,19 +22,19 @@
       </view>
       <view @tap.stop="translate(1)" class="kind" style="">
         <view>
-          <image src="./example.png" class="image"/>
+          <image src="../assets/img/example.png" class="image"/>
         </view>
         <text>{{lang === 'EN' ? 'Please show me example sentences with ~~.' : '请用 ~~ 帮我举个例子。'}}</text>
       </view>
       <view @tap.stop="translate(2)" class="kind" style="">
         <view>
-          <image src="./meaning.png" class="image"/>
+          <image src="../assets/img/meaning.png" class="image"/>
         </view>
         <text>{{lang === 'EN' ? 'What does this mean' : '这是什么意思'}}?</text>
       </view>
       <view @tap.stop="translate(3)" class="kind" style="">
         <view>
-          <image src="./difference.png" class="image"/>
+          <image src="../assets/img/difference.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
           <text>{{lang === 'EN' ? "What's the difference" : '区别是什么'}}?</text>
@@ -43,7 +43,7 @@
       </view>
       <view @tap.stop="translate(4)" class="kind" style="">
         <view>
-          <image src="./question.png" class="image"/>
+          <image src="../assets/img/question.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
           <text>{{lang === 'EN' ? 'Free question' : '自由发问'}}</text>
