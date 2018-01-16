@@ -10,6 +10,7 @@
           <text>{{lang}}</text>
         </view>
         <navigator
+          wx:if="{{numOfNotif}}"
           hover-class="click"
           url="/pages/notificationList"
           open-type="navigate"

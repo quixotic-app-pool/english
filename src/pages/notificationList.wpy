@@ -9,17 +9,17 @@
     >
     <view @tap.stop="go({{item}})" class="center {{item.unRead ? 'unread' : ''}}" style="border-bottom:1px solid rgb(236,236,236); min-height:70px;width: {{screenWidth}}px;padding: 5px 10px;">
       <view style="flex:1;">
-        <image src="../assets/img/girl.jpeg" style="width:30px; height:30px; border-radius:100%;"/>
+        <image src="{{item.from_user.avatarUrl}}" style="width:30px; height:30px; border-radius:100%;"/>
       </view>
       <view style="flex:6;">
         <view wx:if="{{item.type == 'reply'}}" style="font-size:15px;">
-          <text style="font-weight:bold;">{{item.from_user.name}}</text>
+          <text style="font-weight:bold;">{{item.from_user.nickName}}</text>
           <text wx:if="{{lang == 'EN'}}"> answered </text>
           <text wx:else> 回答了 </text>
         </view>
 
         <view wx:if="{{item.type == 'like'}}" style="font-size:15px;">
-          <text style="font-weight:bold;">{{item.from_user.name}}</text>
+          <text style="font-weight:bold;">{{item.from_user.nickName}}</text>
           <text wx:if="{{lang == 'EN'}}"> liked your answer to </text>
           <text wx:else> 对你的答案点赞 </text>
         </view>
@@ -174,6 +174,7 @@ export default class TestPage extends wepy.page {
   onReady() {
   }
   calcTime(t) {
+    var lang = this.lang == 'EN'
     var str = '';
     if (t) {
       var createdAt = new Date(t)
@@ -185,19 +186,48 @@ export default class TestPage extends wepy.page {
         var minute = Math.floor((s % 86400000 % 3600000) / 60000);
         var seconds = Math.floor(s % 86400000 % 3600000 % 60000) / 1000;
         if (day > 0) {
-            str = day + "天前";
+          if(lang) {
+            if(day > 1) {
+              str = day + ' days ago'
+            } else {
+              str = day + ' day ago'
+            }
+          } else {
+             str = day + "天前";
+          }
             return str;
         }
         if (hour > 0) {
+          if(lang) {
+            if(hour > 1) {
+              str = hour + ' hours ago'
+            } else {
+              str = hour + ' hour ago'
+            }
+          } else {
             str = hour + "小时前";
+          }
             return str;
         }
         if (minute > 0) {
-            str = minute + "分钟前";
+          if(lang) {
+            if(minute > 1) {
+              str = minute + ' minutes ago'
+            } else {
+              str = minute + ' minute ago'
+            }
+          } else {
+             str = minute + "分钟前";
+          }
             return str;
         }
         if (seconds < 60) {
-            str = "刚刚";
+          if(lang) {
+            str = "just now";
+          } else {
+             str = "刚刚";
+          }
+
             return str;
         }
        } else {

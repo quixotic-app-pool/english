@@ -1,8 +1,8 @@
 <template>
   <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;background-color:# 6fe0e7;">
     <view class="center" style="padding-left:10px;justify-content:flex-start;height: 100px; width: 100%; background-color:white;">
-      <image src="../assets/img/girl.jpeg" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
-      <text style="font-size:30px; ">{{info.name}}</text>
+      <image src="{{info.avatarUrl}}" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
+      <text style="font-size:30px; ">{{info.nickName}}</text>
     </view>
     <view style="width: {{screenWidth}}px;margin-top:20px;">
 

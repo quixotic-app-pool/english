@@ -133,10 +133,16 @@ export default class TestPage extends wepy.page {
     send () {
       var self = this
       var check = this.index == 3 ? this.difSecInput.length : true
+      var textArray = []
+      if(this.lang == 'EN') {
+        textArray = ['Confirmation', 'Are you sure to upload?']
+      } else {
+        textArray = ['确认', '确定要上传吗？']
+      }
       if (this.mainInput.length && check) {
         wepy.showModal({
-          title: '确定',
-          content: '确定要上传吗？'
+          title: textArray[0],
+          content: textArray[1]
         }).then( async function (res) {
           if (res.confirm) {
             try {

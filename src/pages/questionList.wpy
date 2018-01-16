@@ -257,6 +257,7 @@ export default class TestPage extends wepy.page {
  * @param {String} t,yyyy-MM-dd HH:mm:ss格式
  */
    calcTime(t) {
+     var lang = this.lang == 'EN'
      var str = '';
      if (t) {
        var createdAt = new Date(t)
@@ -268,19 +269,48 @@ export default class TestPage extends wepy.page {
          var minute = Math.floor((s % 86400000 % 3600000) / 60000);
          var seconds = Math.floor(s % 86400000 % 3600000 % 60000) / 1000;
          if (day > 0) {
-             str = day + "天前";
+           if(lang) {
+             if(day > 1) {
+               str = day + ' days ago'
+             } else {
+               str = day + ' day ago'
+             }
+           } else {
+              str = day + "天前";
+           }
              return str;
          }
          if (hour > 0) {
+           if(lang) {
+             if(hour > 1) {
+               str = hour + ' hours ago'
+             } else {
+               str = hour + ' hour ago'
+             }
+           } else {
              str = hour + "小时前";
+           }
              return str;
          }
          if (minute > 0) {
-             str = minute + "分钟前";
+           if(lang) {
+             if(minute > 1) {
+               str = minute + ' minutes ago'
+             } else {
+               str = minute + ' minute ago'
+             }
+           } else {
+              str = minute + "分钟前";
+           }
              return str;
          }
          if (seconds < 60) {
-             str = "刚刚";
+           if(lang) {
+             str = "just now";
+           } else {
+              str = "刚刚";
+           }
+
              return str;
          }
         } else {
