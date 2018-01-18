@@ -7,11 +7,20 @@
       </view>
       <view @tap.stop="translate(0)" class="kind" style="">
         <view>
+          <image src="../assets/img/correct.png" class="image"/>
+        </view>
+        <view style="display:flex; flex-direction:column;">
+          <text>{{lang === 'EN' ? 'Is my sentence correct' : '我的句子正确吗'}}?</text>
+          <text style="font-size:12px;opacity:0.5;">{{lang === 'EN' ? 'Is my sentence correct in ~~' : '用 ~~ 说，我的句子正确吗'}} ?</text>
+        </view>
+      </view>
+      <view @tap.stop="translate(5)" class="kind" style="">
+        <view>
           <image src="../assets/img/translation.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
-          <text>{{lang === 'EN' ? 'How do you say this' : '这个怎么说'}}?</text>
-          <text style="font-size:12px;opacity:0.5;">{{lang === 'EN' ? 'How do you say this in ~~' : '这个用 ~~ 怎么说'}}?</text>
+          <text>{{lang === 'EN' ? 'Help me correct translation' : '请帮我修改翻译'}}?</text>
+          <text style="font-size:12px;opacity:0.5;">{{lang === 'EN' ? 'Is my translation correct in ~~' : '用 ~~ 说，我的翻译正确吗'}} ?</text>
         </view>
       </view>
     </view>

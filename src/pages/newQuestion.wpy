@@ -10,13 +10,13 @@
     </view>
 
     <view  wx:if="{{!showModal}}" style="margin-top:20px; padding: 0 15px;">
-      <view style="padding-bottom:10px;">
+      <view >
         <text class="title">{{lang === 'EN' ? text2EN[index] : text2CN[index]}}</text>
       </view>
       <textarea bindinput="mainInput" value="{{mainInput ? mainInput : ''}}" placeholder="{{lang === 'EN' ? text3EN[index] : text3CN[index]}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
       <text class="title">{{lang === 'EN' ? text4EN[index] : text4CN[index]}}</text>
-      <view class="{{index == 3 ? '' : 'hidden'}}">
-        <textarea bindinput="difSecInput" value="{{difSecInput ? difSecInput : ''}}" placeholder="{{lang === 'EN' ? 'Write a word, phrase or sentence.' : '单词短语或者句子...'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <view class="{{index == 3 || index == 5 ? '' : 'hidden'}}">
+        <textarea bindinput="difSecInput" value="{{difSecInput ? difSecInput : ''}}" placeholder="{{lang === 'EN' ? 'Write a word, phrase or sentence.' : '单词，短语或者句子...'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
         <text class="title">{{lang == 'EN' ? 'Feel free to provide example sentences.' : '请任意列举例句。'}}</text>
       </view>
     </view>
@@ -68,14 +68,14 @@ export default class TestPage extends wepy.page {
     showModal: false,
     lan: '',
     more: false,
-    text1EN: ['How do you say this in', 'This question is about', 'This question is about', 'This question is about', 'This question is about'],
-    text1CN: ['这个怎么说，用', '这个问题是关于', '这个问题是关于', '这个问题是关于', '这个问题是关于'],
-    text2EN: ['', 'Please show me example sentences with', 'what does', 'What is the difference between', ''],
-    text2CN: ['', '请给出例句，用', '', '区别是什么', ''],
-    text3EN: ['Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.'],
-    text3CN: ['单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '关于语言文化或者其他感兴趣的问题，可以用中文或者英文。'],
-    text4EN: ['', 'Tell me as many daily expressions as possible.', 'mean?', 'and', ''],
-    text4CN: ['', '请告诉我们尽可能多的表达方式。', '什么意思?', '和', ''],
+    text1EN: ['Is my sentence correct in', 'This question is about', 'This question is about', 'This question is about', 'This question is about', 'Leave your translation here'],
+    text1CN: ['我的句子正确吗，用', '这个问题是关于', '这个问题是关于', '这个问题是关于', '这个问题是关于', '在这里留下你的翻译'],
+    text2EN: ['', 'Please show me example sentences with', 'what does', 'What is the difference between', '', 'Native language text:'],
+    text2CN: ['', '请给出例句，用', '', '区别是什么', '', '母语原句：'],
+    text3EN: ['Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.', 'Write a word, phrase or sentence.'],
+    text3CN: ['单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '关于语言文化或者其他感兴趣的问题，可以用中文或者英文。', '单词，短语或者句子。'],
+    text4EN: ['', 'Tell me as many daily expressions as possible.', 'mean?', 'and', '', 'Translated text:'],
+    text4CN: ['', '请告诉我们尽可能多的表达方式。', '什么意思?', '和', '', '翻译句：'],
     index: undefined,
     choosedLang: 'English(US)',
     lang: '',

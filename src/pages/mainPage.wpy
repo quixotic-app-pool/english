@@ -59,7 +59,7 @@ export default class TestPage extends wepy.page {
   config = {
     // navigationBarTitleText: '英语角',
     backgroundColor: 'white',
-    enablePullDownRefresh: false
+    enablePullDownRefresh: true
   }
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
@@ -78,6 +78,15 @@ export default class TestPage extends wepy.page {
       this.lang = 'EN'
       wepy.setNavigationBarTitle({title: '英语角'})
     }
+    await this.fetchNotif()
+  }
+  onReady() {
+  }
+  async onPullDownRefresh () {
+    console.log('pull down')
+    await this.fetchNotif()
+  }
+  async fetchNotif () {
     var result = await api.fetchNotificationNum({
       query: {
         user_id: this.user_id
@@ -87,10 +96,9 @@ export default class TestPage extends wepy.page {
     if(result.data && result.data.flag == 'success') {
       this.numOfNotif = result.data.numOfNotif
       console.log('insde' + JSON.stringify(this.numOfNotif));
+      wepy.stopPullDownRefresh()
       this.$apply()
     }
-  }
-  onReady() {
   }
   methods = {
     switchLang () {

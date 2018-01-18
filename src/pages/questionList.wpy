@@ -11,7 +11,10 @@
               <text style="color: #3FC5F4;font-size:30px;font-weight: bold;">{{lang == 'EN' ? 'Question Type' : '问题类型'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(0)">
-              <text>{{lang == 'EN' ? 'How do you say this?' : '这个怎么说？'}}</text>
+              <text>{{lang == 'EN' ? 'Is my sentence correct?' : '我的句子正确吗？'}}</text>
+            </view>
+            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(5)">
+              <text>{{lang == 'EN' ? 'Help me correct translation?' : '请帮我修改翻译？'}}</text>
             </view>
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(1)">
               <text>{{lang == 'EN' ? 'Please show me example sentences with ~~.' : '请用 ~~ 帮我举个例子。'}}</text>
@@ -25,7 +28,7 @@
             <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(4)">
               <text>{{lang == 'EN' ? "Free question." : '自由发问。'}}</text>
             </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(5)">
+            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(6)">
               <text>{{lang == 'EN' ? "All" : '所有'}}</text>
             </view>
         </view>
@@ -55,7 +58,7 @@
             <view  wx:if="{{item.type !== 'reply'}}" class="question-item"  style="box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); width:{{screenWidth * 0.7}}px; min-height: 80px;">
               <view wx:if="{{lang == 'EN'}}" style="padding:10px;font-size: 18px;">
                   <view wx:if='{{item.type == 0}}'>
-                    <text>How do you say </text>
+                    <text>Is my sentence correct </text>
                     <text style="font-weight:bold;">{{ "'" + item.value0 + "'"}}</text>
                     <text> in </text>
                     <text style="font-weight:bold;">{{item.lang}}</text>
@@ -79,12 +82,19 @@
                     <text> ?</text>
                   </view>
                   <text wx:if='{{item.type == 4}}' style="font-weight:bold;">{{item.value0}} ?</text>
+                  <view wx:if='{{item.type == 5}}'>
+                    <text style="display: block;">Native language text: </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text style="display: block;">Translated text: </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value1 +  "'"}}</text>
+                    <text> ?</text>
+                  </view>
               </view>
               <view wx:if="{{lang == '中文'}}" style="padding:10px;font-size: 18px;">
                   <view wx:if='{{item.type == 0}}'>
                     <text>用 </text>
                     <text style="font-weight:bold;">{{item.lang}}</text>
-                    <text> 怎么说 </text>
+                    <text> 我的句子正确吗 </text>
                     <text style="font-weight:bold;">{{ "'" + item.value0 + "'"}}</text>
                     <text> ？</text>
                   </view>
@@ -106,6 +116,13 @@
                     <text> 的区别是什么？</text>
                   </view>
                   <text wx:if='{{item.type == 4}}' style="font-weight:bold;">{{item.value0}} ?</text>
+                  <view wx:if='{{item.type == 5}}'>
+                    <text style="display: block;">母语原句: </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
+                    <text style="display: block;">翻译句: </text>
+                    <text style="font-weight:bold;">{{ "'" + item.value1 +  "'"}}</text>
+                    <text> ?</text>
+                  </view>
               </view>
               <view style="padding:5px 10px;display:flex; position:relative;width: 100%;">
                 <view class="center" style="border-radius:100%;background-color:#3FC5F4;height:30px;width:30px;">
@@ -336,7 +353,7 @@ export default class TestPage extends wepy.page {
       wepy.pageScrollTo({
         scrollTop: 0
       })
-      if(index == 5) {
+      if(index == 6) {
         this.by = 'all'
         this.loadData()
       } else {

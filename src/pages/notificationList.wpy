@@ -25,14 +25,14 @@
         </view>
 
         <view wx:if="{{item.type == 'feature'}}" style="font-size:15px;">
-          <text wx:if="{{lang == 'EN'}}">Your answer has been chosed as the featured answer to </text>
+          <text wx:if="{{lang == 'EN'}}">Your answer has been chosen as the featured answer to </text>
           <text wx:else>你的答案被选为最佳答案 </text>
         </view>
 
         <view>
           <view wx:if="{{lang == 'EN'}}" style="font-size: 15px;">
               <view wx:if='{{item.post.type == 0}}'>
-                <text>How do you say </text>
+                <text>Is my sentence correct </text>
                 <text style="font-weight:bold;">{{ "'" + item.post.value0 + "'"}}</text>
                 <text> in </text>
                 <text style="font-weight:bold;">{{item.post.lang}}</text>
@@ -56,12 +56,19 @@
                 <text> ?</text>
               </view>
               <text wx:if='{{item.post.type == 4}}' style="font-weight:bold;">{{item.question.value0}} ?</text>
+              <view wx:if='{{item.post.type == 5}}'>
+                <text style="display: block;">Native language text: </text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
+                <text style="display: block;"> Translated text: </text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
+                <text> ?</text>
+              </view>
           </view>
           <view wx:if="{{lang == '中文'}}" style="font-size: 15px;">
               <view wx:if='{{item.post.type == 0}}'>
                 <text>用 </text>
                 <text style="font-weight:bold;">{{item.post.lang}}</text>
-                <text> 怎么说 </text>
+                <text> 我的句子正确吗 </text>
                 <text style="font-weight:bold;">{{ "'" + item.post.value0 + "'"}}</text>
                 <text> ？</text>
               </view>
@@ -83,6 +90,13 @@
                 <text> 的区别是什么？</text>
               </view>
               <text wx:if="{{item.post.type == 'reply'}}" style="font-weight:bold;">{{item.post.value0}} ?</text>
+              <view wx:if='{{item.post.type == 5}}'>
+                <text style="display: block;">母语原句: </text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
+                <text style="display: block;">翻译句: </text>
+                <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
+                <text> ?</text>
+              </view>
           </view>
         </view>
         <view class="center" style="justify-content:space-between;">

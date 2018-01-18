@@ -42,7 +42,7 @@
             </view>
             <view wx:if="{{lang == 'EN'}}" style="padding:10px;font-size: 18px;">
                 <view wx:if='{{question.type == 0}}'>
-                  <text>How do you say </text>
+                  <text>Is my sentence correct </text>
                   <text style="font-weight:bold;">{{ "'" + question.value0 + "'"}}</text>
                   <text> in </text>
                   <text style="font-weight:bold;">{{question.lang}}</text>
@@ -66,12 +66,19 @@
                   <text> ?</text>
                 </view>
                 <text wx:if='{{question.type == 4}}' style="font-weight:bold;">{{question.value0}} ?</text>
+                <view wx:if='{{question.type == 5}}'>
+                  <text style="display: block;">Native language text: </text>
+                  <text style="font-weight:bold;">{{ "'" + question.value0 +  "'"}}</text>
+                  <text style="display: block;">Translated text: </text>
+                  <text style="font-weight:bold;">{{ "'" + question.value1 +  "'"}}</text>
+                  <text> ?</text>
+                </view>
             </view>
             <view wx:if="{{lang == '中文'}}" style="padding:10px;font-size: 18px;">
                 <view wx:if='{{question.type == 0}}'>
                   <text>用 </text>
                   <text style="font-weight:bold;">{{question.lang}}</text>
-                  <text> 怎么说 </text>
+                  <text> 我的句子正确吗 </text>
                   <text style="font-weight:bold;">{{ "'" + question.value0 + "'"}}</text>
                   <text> ？</text>
                 </view>
@@ -93,6 +100,13 @@
                   <text> 的区别是什么？</text>
                 </view>
                 <text wx:if='{{question.type == 4}}' style="font-weight:bold;">{{question.value0}} ?</text>
+                <view wx:if='{{question.type == 5}}'>
+                  <text style="display: block;">母语原句: </text>
+                  <text style="font-weight:bold;">{{ "'" + question.value0 +  "'"}}</text>
+                  <text style="display: block;">翻译句: </text>
+                  <text style="font-weight:bold;">{{ "'" + question.value1 +  "'"}}</text>
+                  <text> ?</text>
+                </view>
             </view>
             <view wx:if="{{question.additional}}" class="center" style="margin:10px;border:1px solid rgb(236,236,236);padding:5px;font-size:15px;opacity:0.7;">
                 <text>{{question.additional}}</text>
@@ -106,7 +120,7 @@
                 <image wx:else src="../assets/img/bookmark-fill.png" style="width:20px; height:20px;" />
                 <text wx:if="{{question.numOfBM}}" style="font-size:12px; opacity:0.7;">{{question.numOfBM}}</text>
               </view>
-              <view hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike('question')">
+              <view wx:if="{{question.from_user._id !== currentUser._id}}" hover-class="click" class="center" style="flex-direction:row;" @tap.stop="addLike('question')">
                 <image wx:if="{{question.likedBy == false}}" src="../assets/img/like-empty.png" style="width:20px; height:20px;" />
                 <image wx:else src="../assets/img/like-fill.png" style="width:20px; height:20px;" />
                 <text wx:if="{{question.numOfLike}}" style="font-size:12px; opacity:0.7;">{{question.numOfLike}}</text>
@@ -139,7 +153,19 @@
               <text>{{lang == 'EN' ? 'Featured Answer' : '最佳回答'}}</text>
             </view>
             <view style="padding:10px;font-size: 18px;">
-                <text>{{item.value0}}</text>
+              <repeat
+               wx:if="{{question.type == 5}}"
+               for="{{item.value0}}"
+               item= "subItem"
+               index= "index"
+               key= "index"
+               style="width:100%;"
+              >
+                <text wx:if="{{subItem[0] == '0'}}" style="color: black">{{subItem[1]}}</text>
+                <text wx:if="{{subItem[0] == '1'}}" style="color: green">{{subItem[1]}}</text>
+                <text wx:if="{{subItem[0] == '-1'}}" style="color: red; text-decoration:line-through;">{{subItem[1]}}</text>
+              </repeat>
+              <text wx:if="{{question.type != 5}}">{{item.value0}}</text>
             </view>
             <view style="padding:3px 0;border-top: 1px solid rgb(236,236,236);display:flex; justify-content:space-around;position:relative; width: 100%;">
               <view hover-class="click" class="center" @tap.stop="reply({{item}})">
@@ -174,6 +200,7 @@
 
 <script>
 import wepy from 'wepy'
+import textDiff from 'text-diff'
 import api from './../api/api'
 
 export default class TestPage extends wepy.page {
@@ -239,8 +266,12 @@ export default class TestPage extends wepy.page {
     if (data) {
       data.timeDiff = self.calcTime(data.createdAt)
       if (data.reply.length) {
+        var diff = new textDiff()
         data.reply.forEach(function(item) {
           item.timeDiff = self.calcTime(item.createdAt)
+          if(data.type == '5') {
+            item.value0 = diff.main(data.value1, item.value0)
+          }
         })
       }
       self.question = data
@@ -331,7 +362,7 @@ export default class TestPage extends wepy.page {
     if(this.question.closed) {
       var textArr = []
       if(this.lang == 'EN') {
-        textArr = ['Warning', 'Sorry, question has been closed.']
+        textArr = ['Notice', 'Sorry, question has been closed.']
       } else {
         textArr = ['通知', '抱歉，问题已经结束。']
       }
@@ -426,9 +457,15 @@ export default class TestPage extends wepy.page {
         //going to send
         var self = this
         if (this.replyMsg.length) {
+          var textArr = []
+          if(this.lang == 'EN') {
+            textArr = ['Confrimation', 'Are you sure to reply?']
+          } else {
+            textArr = ['确认', '确定上传回复吗？']
+          }
           wepy.showModal({
-            title: '确定',
-            content: '确定上传回复吗？'
+            title: textArr[0],
+            content: textArr[1]
           }).then( async function (res) {
             if (res.confirm) {
               try {
@@ -499,7 +536,7 @@ export default class TestPage extends wepy.page {
           titleArray = [['Close the question', '结束问题'], ['Edit', '修改'], ['Delete', '删除'], ['Report', '举报']]
           titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0], titleArray[2][0], titleArray[3][0]] : [titleArray[0][1], titleArray[1][1], titleArray[2][1], titleArray[3][1]]
         } else {
-          titleArray = this.lang === 'EN' ? 'Report' : '举报'
+          titleArray = this.lang === 'EN' ? ['Report'] : ['举报']
         }
 
       } else {
@@ -507,7 +544,7 @@ export default class TestPage extends wepy.page {
           titleArray =  [['Delete', '删除'], ['Report', '举报']]
           titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0]] : [titleArray[0][1], titleArray[1][1]]
         } else {
-          titleArray = this.lang === 'EN' ? 'Report' : '举报'
+          titleArray = this.lang === 'EN' ? ['Report'] : ['举报']
         }
       }
       var self = this
