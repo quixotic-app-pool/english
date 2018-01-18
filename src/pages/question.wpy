@@ -154,7 +154,7 @@
             </view>
             <view style="padding:10px;font-size: 18px;">
               <repeat
-               wx:if="{{question.type == 5}}"
+               wx:if="{{question.type == 0 || question.type == 5}}"
                for="{{item.value0}}"
                item= "subItem"
                index= "index"
@@ -165,7 +165,7 @@
                 <text wx:if="{{subItem[0] == '1'}}" style="color: green">{{subItem[1]}}</text>
                 <text wx:if="{{subItem[0] == '-1'}}" style="color: red; text-decoration:line-through;">{{subItem[1]}}</text>
               </repeat>
-              <text wx:if="{{question.type != 5}}">{{item.value0}}</text>
+              <text wx:if="{{question.type != 5 && question.type != 0}}">{{item.value0}}</text>
             </view>
             <view style="padding:3px 0;border-top: 1px solid rgb(236,236,236);display:flex; justify-content:space-around;position:relative; width: 100%;">
               <view hover-class="click" class="center" @tap.stop="reply({{item}})">
@@ -271,6 +271,9 @@ export default class TestPage extends wepy.page {
           item.timeDiff = self.calcTime(item.createdAt)
           if(data.type == '5') {
             item.value0 = diff.main(data.value1, item.value0)
+          }
+          if(data.type == '0') {
+            item.value0 = diff.main(data.value0, item.value0)
           }
         })
       }
