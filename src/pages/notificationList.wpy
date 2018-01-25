@@ -1,5 +1,5 @@
 <template>
-  <scroll-view scroll-y style="background-color:white; width: {{screenWidth}}px; height: {{screenHeight}}px;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+  <scroll-view scroll-y style="background-color:white; width: {{screenWidth}}px; height: {{screenHeight}}px;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
     <repeat
      for="{{dataList}}"
      item= "item"
@@ -157,7 +157,7 @@ export default class TestPage extends wepy.page {
     backgroundColor: '#6fe0e7',
     navigationBarBackgroundColor: '#6fe0e7',
     navigationBarTextStyle: 'white',
-    enablePullDownRefresh: false
+    enablePullDownRefresh: true
   }
   data = {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
@@ -275,7 +275,16 @@ export default class TestPage extends wepy.page {
    } else {
      self.currentPage--
    }
+   wepy.stopPullDownRefresh()
    this.$apply()
+ }
+ async lower () {
+   await this.loadData()
+ }
+ async upper () {
+   this.dataList = []
+   this.currentPage = -1
+   await this.loadData()
  }
   methods = {
     async go (item) {

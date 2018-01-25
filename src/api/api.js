@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: api.js
  * @Last modified by:   mymac
- * @Last modified time: 2018-01-25T09:52:55+08:00
+ * @Last modified time: 2018-01-25T12:38:15+08:00
  */
 
 import {
@@ -16,8 +16,8 @@ let env = "-test" //-dev 或者 -test
 // production
 // const host = ?
 // development
-const host = 'http://127.0.0.1:9000'
-// const host = 'https://www.takeiteasydude.com'
+// const host = 'http://127.0.0.1:9000'
+const host = 'https://www.takeiteasydude.com'
 
 
 //wechat
