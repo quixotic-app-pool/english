@@ -19,7 +19,7 @@
       <view  @tap.stop="go('answers')" class="center" style="justify-content:space-between;margin-bottom:5px;background-color:white; justify-content:flex-start;padding: 10px;">
         <view class="center" style="flex:3;justify-content:flex-start;">
           <image src="../assets/img/answer.png"style="width: 50px; height: 50px;margin-right: 20px;" />
-          <text style="font-size:20px;">{{lang == 'EN' ? 'Answer' : '回答'}}</text>
+          <text style="font-size:20px;">{{lang == 'EN' ? 'Answers' : '回答'}}</text>
         </view>
         <view class="center" style="flex:1;margin-right:20px;font-size:30px;color:#6fe0e7;justify-content:flex-end;width:100px;">
           <text>{{info.answers.length || 0}}</text>

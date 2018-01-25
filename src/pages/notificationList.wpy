@@ -296,9 +296,10 @@ export default class TestPage extends wepy.page {
           url: "question?post_id=" + post_id
         })
       } else {
+        var failedTextArr = self.lang == 'EN' ? ['Notice', 'Sorry, the server works not well, please contact me by WeChat: flyinghawker'] : ['提示', '抱歉，服务器发生异常，请联系泽铭: flyinghawker']
         wepy.showModal({
-          title: '提示',
-          content: '抱歉，服务器发生异常，请联系泽铭: flyinghawker',
+          title: failedTextArr[0],
+          content: failedTextArr[1],
           showCancel: false
         })
       }

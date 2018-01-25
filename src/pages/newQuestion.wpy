@@ -34,18 +34,24 @@
 
     <view @tap="closeModal()" class="{{showModal? 'gray': ''}}" style="display:flex;flex-direction:column;align-items:center;justify-content:center; position:fixed;top:0;">
       <view style="display:none;top: {{screenHeight/2 - 150}}px;" class="modal {{ showModal ? 'show' : ''}}">
-          <view @tap="chooseLanguage('English(US)')" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
-            <text>English(US)</text>
+          <view @tap="chooseLanguage({{index == 5 ? '中文 => English(US)' : 'English(US)'}})" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
+            <text>{{index == 5 ? '中文 => English(US)' : 'English(US)'}}</text>
           </view>
-          <view @tap="chooseLanguage('中文')" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
-            <text>中文</text>
+          <view @tap="chooseLanguage({{index == 5 ? 'English(US) => 中文' : '中文'}})" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
+            <text>{{index == 5 ? 'English(US) => 中文' : '中文'}}</text>
           </view>
       </view>
     </view>
 
 
-    <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #7EF43F;">
+    <!-- <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #7EF43F;">
       <image @tap="send()" src="../assets/img/send-fill.svg" style="width: 35px; height:35px;" />
+    </view> -->
+
+    <view style="box-shadow:1px 1px 10px 0px #7EF43F;height: 60px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #7EF43F;">
+      <view @tap.stop="send()" >
+        <text style="color:white;font-size:30px;">{{lang == 'EN' ? 'Send' : '发送'}}</text>
+      </view>
     </view>
   </view>
 </template>
@@ -72,7 +78,7 @@ export default class TestPage extends wepy.page {
     text1CN: ['我的句子正确吗，用', '这个问题是关于', '这个问题是关于', '这个问题是关于', '这个问题是关于', '在这里留下你的翻译'],
     text2EN: ['', 'Please show me example sentences with', 'what does', 'What is the difference between', '', 'Native language text:'],
     text2CN: ['', '请给出例句，用', '', '区别是什么', '', '母语原句：'],
-    text3EN: ['Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.', 'Write a word, phrase or sentence.'],
+    text3EN: ['Write a phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Write a word, phrase or sentence.', 'Ask about language, culture or anything else you want. You can ask in any language.', 'Write a word, phrase or sentence.'],
     text3CN: ['单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '单词，短语或者句子...', '关于语言文化或者其他感兴趣的问题，可以用中文或者英文。', '单词，短语或者句子。'],
     text4EN: ['', 'Tell me as many daily expressions as possible.', 'mean?', 'and', '', 'Translated text:'],
     text4CN: ['', '请告诉我们尽可能多的表达方式。', '什么意思?', '和', '', '翻译句：'],
@@ -109,6 +115,7 @@ export default class TestPage extends wepy.page {
       this.lang = '中文'
       wepy.setNavigationBarTitle({title: '新问题'})
     }
+    this.choosedLang = this.index == 5 ? '中文 => English(US)' : 'English(US)'
   }
   onShow () {
   }
@@ -145,6 +152,8 @@ export default class TestPage extends wepy.page {
           content: textArray[1]
         }).then( async function (res) {
           if (res.confirm) {
+            var failedTextArr = self.lang == 'EN' ? ['Notice', 'Sorry, the server works not well, please contact me by WeChat: flyinghawker'] : ['提示','抱歉，服务器发生异常，请联系泽铭: flyinghawker']
+            console.log('user_id: ' + self.user_id)
             try {
                 var pack = {
                   type: self.index,
@@ -176,8 +185,9 @@ export default class TestPage extends wepy.page {
                 // console.log('data back from new post: ' + JSON.stringify(res))
                 wepy.hideToast()
                 if (result.data.flag == 'success') {
+                  var successText = self.lang == 'EN' ? 'Successfully Sent!' : '发送成功！'
                   await wepy.showToast({
-                    title: '发送成功！',
+                    title: successText,
                     icon: 'success',
                     duration: 1500,
                     mask: true
@@ -188,16 +198,16 @@ export default class TestPage extends wepy.page {
                   })
                 } else {
                   wepy.showModal({
-                    title: '提示',
-                    content: '抱歉，服务器发生异常，请联系泽铭: flyinghawker',
+                    title: failedTextArr[0],
+                    content: failedTextArr[1],
                     showCancel: false
                   })
                 }
               } catch (e) {
                 wepy.hideToast()
                 wepy.showModal({
-                  title: '提示',
-                  content: '抱歉，服务器发生异常，请联系泽铭: flyinghawker',
+                  title: failedTextArr[0],
+                  content: failedTextArr[1],
                   showCancel: false
                 })
                 return e
@@ -207,9 +217,10 @@ export default class TestPage extends wepy.page {
           }
         })
       } else {
+        var noticeTextArr = self.lang == 'EN' ? ['Notice', 'Please complete it?'] : ['提醒', '请填写完整？']
         wepy.showModal({
-          title: '提醒',
-          content: '请填写完整？'
+          title: noticeTextArr[0],
+          content: noticeTextArr[1]
         })
       }
     },
@@ -242,7 +253,7 @@ export default class TestPage extends wepy.page {
 .show {
   // display: block !important;
   animation: showModal 500ms 1;
-  width: 50%;
+  width: 80%;
   height: 200px;
   display:flex !important;
   border-radius: 5px;
