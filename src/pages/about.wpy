@@ -2,7 +2,7 @@
   <view class="center" style="flex-direction:column; padding:10px;width:100%;height:100%;background-color:white;">
     <image src="../assets/img/team.png" style="width:{{screenWidth * 0.4}}px; height:{{screenWidth * 0.4}}px;"/>
     <view>
-      {{lang == 'EN' ? 'We are team of helping offer our friends all over the world a place to learn the best English in simplest way.' : '我们是来自天南海北，世界各地的英语学习爱好者，我们喜欢并且希望能给全世界的朋友提供这样的平台来共同进步。'}}
+      {{lang == 'EN' ? "From all over the world, as English fans We offer a place to learn English together. Let's rock!" : '我们是来自天南海北，世界各地的英语学习爱好者，我们喜欢并且希望能给全世界的朋友提供这样的平台来共同进步。'}}
     </view>
   </view>
 </template>

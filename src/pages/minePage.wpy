@@ -1,5 +1,5 @@
 <template>
-  <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;background-color:# 6fe0e7;">
+  <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;">
     <view class="center" style="padding-left:10px;justify-content:flex-start;height: 100px; width: 100%; background-color:white;">
       <image src="{{info.avatarUrl}}" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
       <text style="font-size:30px; ">{{info.nickName}}</text>
@@ -72,8 +72,8 @@ import api from './../api/api'
 export default class TestPage extends wepy.page {
   config = {
     navigationBarTitleText: '',
-    backgroundColor: '#6fe0e7',
-    navigationBarBackgroundColor: '#6fe0e7',
+    backgroundColor: '#3FC5F4',
+    navigationBarBackgroundColor: '#3FC5F4',
     navigationBarTextStyle: 'white',
     enablePullDownRefresh: false
   }
@@ -84,7 +84,7 @@ export default class TestPage extends wepy.page {
     user_id: '',
     info: {}
   }
-  async onLoad (option) {
+  async onShow (option) {
     // console.log(option)
     this.user_id = wepy.getStorageSync('UserId')
     var lang = wepy.getStorageSync('lang')
@@ -108,8 +108,8 @@ export default class TestPage extends wepy.page {
       // console.log('info: ' + JSON.stringify(res.data.data));
     }
   }
-  onShow () {
-  }
+  // onShow () {
+  // }
   onReady() {
   }
   methods = {
@@ -120,7 +120,7 @@ export default class TestPage extends wepy.page {
     },
     go (type) {
       wepy.navigateTo({
-        url: "questionList?type=" + type + '&user_id=' + this.user_id
+        url: "userList?type=" + type + '&user_id=' + this.user_id
       })
     }
   }

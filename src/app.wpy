@@ -6,15 +6,35 @@ import api from './api/api'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/mainPage',
+      // 'pages/mainPage',
+      'pages/questionList',
+      'pages/minePage',
+      // 'pages/mainPage',
+      'pages/userList',
       'pages/notificationList',
       'pages/about',
-      'pages/minePage',
       'pages/chooseQuestion',
       'pages/newQuestion',
-      'pages/questionList',
       'pages/question'
     ],
+    tabBar: {
+      color: '#ffffff',
+      backgroundColor : '#3FC5F4',
+      borderStyle : 'white',
+      selectedColor: '#F5A623',
+      list: [
+        {
+        "pagePath": "pages/questionList",
+        "text": "Discover",
+        "iconPath": "assets/img/tab1-white-empty.png",
+        "selectedIconPath": "assets/img/tab1-orange-empty.png"
+        }, {
+        "pagePath": "pages/minePage",
+        "text": "Mine",
+        "iconPath": "assets/img/tab2-white-empty.png",
+        "selectedIconPath": "assets/img/tab2-orange-empty.png"
+        }]
+    },
     window: {
       navigationBarBackgroundColor: 'white',
       navigationBarTextStyle: 'black',
@@ -39,10 +59,10 @@ export default class extends wepy.app {
     wepy.removeStorageSync('UserSession')
     // if(false){
     if((UserSession.createdAt || Date.now()) < (Date.now() + 86400000)) {
-      console.log('expire');
+      // console.log('expire');
       var res = await wepy.login()
       if (res.code) {
-        console.log('res.code: ' + res.code)
+        // console.log('res.code: ' + res.code)
 
         //存储userInfo 
         var c = await wepy.getUserInfo()

@@ -1,0 +1,229 @@
+<template>
+    <view style="background-color: transparent;box-shadow:none;" class="newBtn" @tap.stop="showOptions" catchlongpress="longpress">
+      <image style="top:-3px;" src="../assets/img/light.png" class="newBtn-icon"></image>
+      <view wx:if="{{!toggle && numOfNotif > 0}}" class="center" style="z-index:10;position:absolute; right:5px; top:0; background-color:rgb(215,0,18);min-width:20px;font-size:12px;border-radius:100%;color:white;min-height:20px;">
+        <text>{{numOfNotif}}</text>
+      </view>
+    </view>
+
+    <view @tap.stop="filter" class="newBtn newBtn-nav newBtn-nav1"  animation="{{animationData1}}">
+      <text class="nb-title1">消息分类</text>
+      <image src="../assets/icons/filter.png" class="newBtn-icon newBtn-nav-icon"></image>
+    </view>
+    <!-- <navigator url="/pages/message" animation="{{animationData1}}" class="newBtn newBtn-nav newBtn-nav1">
+      <text class="nb-title1">消息分类</text>
+      <image src="../assets/icons/filter.png" class="newBtn-icon newBtn-nav-icon"></image>
+    </navigator> -->
+    <navigator url="/pages/chooseQuestion" animation="{{animationData2}}" class="newBtn newBtn-nav newBtn-nav2">
+      <text class="nb-title1">发布新帖</text>
+      <image src="../assets/icons/write.png" class="newBtn-icon newBtn-nav-icon"></image>
+    </navigator>
+    <navigator url="/pages/notificationList" animation="{{animationData3}}" class="newBtn newBtn-nav newBtn-nav3">
+      <text class="nb-title1">我的消息</text>
+      <view class="center" style="z-index:10;position:absolute; right:0; top:0; background-color:rgb(215,0,18);min-width:20px;font-size:12px;border-radius:100%;color:white;min-height:20px;">
+        <text>{{numOfNotif}}</text>
+      </view>
+      <image src="../assets/icons/message.png" class="newBtn-icon newBtn-nav-icon"></image>
+    </navigator>
+    <view @tap="switchLang" animation="{{animationData4}}" class="newBtn newBtn-nav newBtn-nav4">
+      <text class="nb-title1">切换语言</text>
+      <text style="font-size:24px; color:rgb(83, 77, 254)">{{lang}}</text>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import api from './../api/api'
+export default class Floatingbtn extends wepy.component {
+  data = {
+    animationData1: {},
+    animationData2: {},
+    animationData3: {},
+    animationData4: {},
+    pickerIndex: 0,
+    toggle: false,
+    lang: '',
+    numOfNotif: 0,
+    user_id: ''
+  }
+  async onLoad () {
+    this.user_id = wepy.getStorageSync('UserId')
+    var lang = wepy.getStorageSync('lang')
+    if(lang && lang == 'EN') {
+      this.lang = '中文'
+    } else {
+      this.lang = 'EN'
+    }
+    await this.fetchNotif()
+  }
+  async fetchNotif () {
+    console.log('?');
+    var result = await api.fetchNotificationNum({
+      query: {
+        user_id: this.user_id
+      }
+    })
+    // console.log('result.data.numOfNotif: ' + JSON.stringify(result.data));
+    if(result.data && result.data.flag == 'success') {
+      this.numOfNotif = result.data.numOfNotif
+      // console.log('insde' + JSON.stringify(this.numOfNotif));
+      wepy.stopPullDownRefresh()
+      this.$apply()
+    }
+  }
+  // events = {
+  //   'event-notif': (...args) => {
+  //     this.numOfNotif--
+  //     console.log('haha')
+  //   }
+  // }
+  methods = {
+    switchLang () {
+      if (this.lang === 'EN') {
+        this.lang = '中文'
+        wepy.setStorageSync('lang', 'EN')
+      } else {
+        this.lang = 'EN'
+        wepy.setStorageSync('lang', '中文')
+      }
+      this.$emit('floaingbtn-lang')
+    },
+    filter () {
+      this.$emit('floaingbtn-filter')
+    },
+    joinUs () {
+      wepy.showModal({
+        title: '反馈&加入我们',
+        content: `任何疑问建议甚至想加入我们的团队，请联系泽铭，微信： flyinghawker。`
+      })
+    },
+    longpress() {
+      console.log('long press')
+      wepy.pageScrollTo({
+        scrollTop: 0
+      })
+    },
+    showOptions () {
+      if (this.toggle) {
+        var animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(220, 0).step({ duration: 0 })
+        this.animationData1 = animation.export()
+
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(220, 0).step({ duration: 0 })
+        this.animationData2 = animation.export()
+
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(220, 0).step({ duration: 0 })
+        this.animationData3 = animation.export()
+
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(220, 0).step({ duration: 0 })
+        this.animationData4 = animation.export()
+      } else {
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(-220, 0).step({ duration: 0 })
+        this.animationData1 = animation.export()
+
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(-220, 0).step({ duration: 0 })
+        this.animationData2 = animation.export()
+
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(-220, 0).step({ duration: 0 })
+        this.animationData3 = animation.export()
+
+        animation = wepy.createAnimation({
+          duration: 1000,
+          timingFunction: 'ease'
+        })
+        animation.translate(-220, 0).step({ duration: 0 })
+        this.animationData4 = animation.export()
+      }
+      this.$apply()
+      this.toggle = !this.toggle
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.newBtn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 60px;
+  height: 60px;
+  background: #3FC5F4;
+  border-radius: 50%;
+  text-align: center;
+  transition: all 150ms ease;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+  .newBtn-icon {
+    // margin-top: 10px;
+    width:50px;
+    height:50px;
+    position:relative;
+  }
+}
+.newBtn-nav {
+  // right: -100px;
+  right: -200px;
+}
+.newBtn-nav1 {
+  bottom: 300px;
+}
+.newBtn-nav2 {
+  bottom: 230px;
+}
+.newBtn-nav3 {
+  bottom: 160px;
+}
+.newBtn-nav4 {
+  bottom: 90px;
+}
+// .newBtn-nav4 {
+//   bottom: 90px;
+// }
+.newBtn-opacity {
+  opacity: 0;
+}
+.nb-title1 {
+  right:70px;
+  position:absolute;
+  width:80px;
+  top:20px;
+  background-color: gold;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+}
+.newBtn-hover {
+  background: #D75760;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+</style>

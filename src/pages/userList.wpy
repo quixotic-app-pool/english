@@ -1,40 +1,6 @@
 <template>
     <view class='box' style="width: {{screenWidth}}px">
-      <view class='bg' style="width: {{screenWidth}}px; height: {{screenHeight}}px;"></view>
-      <!-- <view @tap.stop="filter()" hover-class="click" style="box-shadow:0 0 2px 2px #3FC5F4;background-color:#3FC5F4;z-index:10; position: fixed; left: 10px; bottom: 20px;width:50px;height:50px;display:flex;justify-content:center;align-items:center;border-radius: 100%;color: white;">
-        <text>{{lang == 'EN' ? 'Filter' : '分类'}}</text>
-      </view> -->
-
-      <floatingbtn />
-
-      <view @tap.stop="closeModal()" class="{{showModal? 'gray': ''}}" style="display:flex;flex-direction:column;align-items:center;justify-content:center; position:fixed;top:0;">
-        <view style="padding:10px 0;background-color:white;display:none;" class="modal {{ showModal ? 'show' : ''}}">
-            <view>
-              <text style="color: #3FC5F4;font-size:30px;font-weight: bold;">{{lang == 'EN' ? 'Question Type' : '问题类型'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(0)">
-              <text>{{lang == 'EN' ? 'Is my sentence correct?' : '我的句子正确吗？'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(5)">
-              <text>{{lang == 'EN' ? 'Help me correct translation?' : '请帮我修改翻译？'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(1)">
-              <text>{{lang == 'EN' ? 'Please show me example sentences with ~~.' : '请用 ~~ 帮我举个例子。'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(2)">
-              <text>{{lang == 'EN' ? 'What does this mean?' : '这是什么意思？'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(3)">
-              <text>{{lang == 'EN' ? "What's the difference?" : '区别是什么？'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(4)">
-              <text>{{lang == 'EN' ? "Free question." : '自由发问。'}}</text>
-            </view>
-            <view hover-class="click" style="text-align:center;width:80%;margin: 10px; box-shadow:0 0 10px #3FC5F4;color: #3FC5F4;border-radius:5px;border: 1px solid #3FC5F4;" @tap="chooseType(6)">
-              <text>{{lang == 'EN' ? "All" : '所有'}}</text>
-            </view>
-        </view>
-      </view>
+      <view class='bg' style="width: {{screenWidth}}px; height: 100%;"></view>
 
       <view style="top: 0px; z-index:4;width: {{screenWidth}}px;position: fixed;height: 5px; background-color:#3FC5F4"></view>
       <view style="top: 5px; border-radius: 0 0 10px 10px;z-index:1;width: {{screenWidth}}px;position: fixed;height: 10px; background-color:#3FC5F4;box-shadow: 0 0 20px 0 white;"></view>
@@ -43,10 +9,10 @@
       <view class="slotb" style="width: {{screenWidth * 0.9}}px; top: -30px;z-index: 2; position:fixed; height: 5px; top: 5px; "></view>
 
       <view class="body" style="width: {{screenWidth * 0.9}}px; height:{{screenHeight * 0.9}}px;z-index: 3;">
-        <view class="center" wx:if="{{dataList.length == 0}}" style="width:100%;height:100%;">
+        <view wx:if="{{dataList.length == 0}}" class="center" style="width:100%;height:100%;">
           <text style="color:white;">Hey my friend, it seems nothing here.</text>
         </view>
-        <view wx:if="{{dataList.length > 0}}" style="width:100%;height:100%;">
+        <view wx:if="{{dataList.length > 0}}" style="width:100%;">
           <repeat
            for="{{dataList}}"
            item= "item"
@@ -175,7 +141,6 @@
 
 <script>
 import wepy from 'wepy'
-import floatingbtn from '../components/floatingbtn'
 import api from './../api/api'
 
 export default class MainPage extends wepy.page {
@@ -197,13 +162,10 @@ export default class MainPage extends wepy.page {
     type: '',
     by: 'all',
     titleArray: [['Question', '提问'], ['Answer', '回答'], ['Like!', '点赞'], ['Featured answer', '最佳答案'], ['Bookmark', '收藏']],
-    user_id: ''
+    user_id: '',
+    index: undefined
   }
-  components = {
-    floatingbtn: floatingbtn
-  }
-  async onLoad () {
-    this.user_id = wepy.getStorageSync('UserId')
+  async onLoad (option) {
     //check if from minePage
     // console.log('questinlist  option: ' + JSON.stringify(option));
       // 0: Questions/提问
@@ -211,6 +173,24 @@ export default class MainPage extends wepy.page {
       // 2: Like！/点赞
       // 3: Featured answers/最佳答案
       // 4: Bookmarks/收藏
+    if (option && option.type) {
+
+      this.type = option.type
+      this.by = 'user'
+      this.user_id = option.user_id
+
+      if(option.type=='questions'){
+        this.index = 0
+      } else if(option.type=='answers') {
+        this.index = 1
+      } else if(option.type=='likes') {
+        this.index = 2
+      } else if(option.type=='featuredAns') {
+        this.index = 3
+      } else if(option.type=='bookmarks') {
+        this.index = 4
+      }
+    }
     this.setTitle()
     await this.loadData()
   }
@@ -219,22 +199,10 @@ export default class MainPage extends wepy.page {
       // console.log('index: ' + this.titleArray[index][0]);
     if (lang && lang === 'EN') {
       this.lang = 'EN'
-      wepy.setNavigationBarTitle({title: 'Discover Questions'})
+      wepy.setNavigationBarTitle({title: this.titleArray[this.index][0]})
     } else {
       this.lang = '中文'
-      wepy.setNavigationBarTitle({title: '发现问题'})
-    }
-  }
-  events = {
-    'floaingbtn-filter': (...args) => {
-      this.showModal = true
-    },
-    'floaingbtn-lang': (...args) => {
-      var self = this
-      self.setTitle()
-      self.dataList.forEach(function(item, index) {
-        item.timeDiff = self.calcTime(item.createdAt)
-      })
+      wepy.setNavigationBarTitle({title: this.titleArray[this.index][1]})
     }
   }
   async loadData () {
@@ -345,24 +313,6 @@ export default class MainPage extends wepy.page {
     await this.loadData()
   }
   methods = {
-    chooseType (index) {
-      this.dataList = []
-      this.currentPage = -1
-      wepy.pageScrollTo({
-        scrollTop: 0
-      })
-      if(index == 6) {
-        this.by = 'all'
-        this.loadData()
-      } else {
-        this.by = 'type'
-        this.type = index
-        this.loadData()
-      }
-    },
-    closeModal () {
-      this.showModal = !this.showModal
-    },
     navigate (_id) {
       // console.log(_id)
       wepy.navigateTo({url: 'question?post_id=' + _id})
@@ -375,33 +325,6 @@ export default class MainPage extends wepy.page {
 </script>
 
 <style lang="less">
-.show {
-  // display: block !important;
-  animation: showModal 500ms 1;
-  width: 80%;
-  display:flex !important;
-  border-radius: 5px;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-@keyframes showModal {
-  0% {
-    transform: scale(0);
-  }
-  25% {
-    transform: scale(1.2);
-  }
-  50% {
-    transform: scale(0.9);
-  }
-  75% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 .gray {
   background-color: rgba(63,197,244,0.9);
   z-index: 100;
@@ -493,22 +416,6 @@ export default class MainPage extends wepy.page {
 .bg {
   top: 0px;
   position: fixed;
-  // background-image: url("https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX8469023.jpg");
-  // animation: moveIt 10s linear infinite;
-  // background-image: linear-gradient(
-  //     45deg,
-  //     #3fc5f4, #ffffff
-  //   );
   background-color: #3FC5F4;
 }
-// .bg {
-//   top: 0px;
-//   position: fixed;
-//   background-image: url("https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX8469023.jpg");
-//   animation: moveIt 10s linear infinite;
-// }
-// @keyframes moveIt {
-//   from {background-position: bottom left;}
-//   to {background-position: top right;}
-// }
 </style>

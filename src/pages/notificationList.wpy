@@ -261,7 +261,7 @@ export default class TestPage extends wepy.page {
        user_id: self.user_id
      }
    })
-   console.log('request notification result from server: ' + JSON.stringify(res))
+  //  console.log('request notification result from server: ' + JSON.stringify(res))
    var data = res.data
    if (data.length) {
      data.forEach(function(item, index) {
@@ -294,7 +294,7 @@ export default class TestPage extends wepy.page {
         },
         method: 'POST'
       })
-      console.log('notification uddate: ' + JSON.stringify(result));
+      // console.log('notification uddate: ' + JSON.stringify(result));
       if(result.data && result.data.flag == 'success') {
         var ob = this.dataList.find(function(o){
           return o._id == item._id
@@ -304,6 +304,7 @@ export default class TestPage extends wepy.page {
         wepy.navigateTo({
           url: "question?post_id=" + post_id
         })
+        // this.$emit('event-notif')
       } else {
         var failedTextArr = self.lang == 'EN' ? ['Notice', 'Sorry, the server works not well, please contact me by WeChat: flyinghawker'] : ['提示', '抱歉，服务器发生异常，请联系泽铭: flyinghawker']
         wepy.showModal({

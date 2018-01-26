@@ -4,7 +4,7 @@
       <view style="padding-top:20px;padding-bottom:10px;">
         <text class="title">{{lang === 'EN' ? text1EN[index] : text1CN[index]}}</text>
       </view>
-      <view @tap.stop="showModal()" hover-class="click" style="box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 40px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
+      <view @tap.stop="showModal()" hover-class="click" style="box-shadow:0 0 10px silver;color: #4ce2a0;height: 40px; border-radius:5px;display:flex;justify-content:center;align-items:center;">
         <text>{{choosedLang}}</text>
       </view>
     </view>
@@ -34,22 +34,22 @@
 
     <view @tap="closeModal()" class="{{showModal? 'gray': ''}}" style="display:flex;flex-direction:column;align-items:center;justify-content:center; position:fixed;top:0;">
       <view style="display:none;top: {{screenHeight/2 - 150}}px;" class="modal {{ showModal ? 'show' : ''}}">
-          <view @tap="chooseLanguage({{index == 5 ? '中文 => English(US)' : 'English(US)'}})" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
+          <view @tap="chooseLanguage({{index == 5 ? '中文 => English(US)' : 'English(US)'}})" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px silver;color: #4ce2a0;height: 60px; border-radius:5px;display:flex;justify-content:center;align-items:center;">
             <text>{{index == 5 ? '中文 => English(US)' : 'English(US)'}}</text>
           </view>
-          <view @tap="chooseLanguage({{index == 5 ? 'English(US) => 中文' : '中文'}})" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px #4ce2a0;color: #4ce2a0;height: 60px; border-radius:5px;border: 1px solid #4ce2a0;display:flex;justify-content:center;align-items:center;">
+          <view @tap="chooseLanguage({{index == 5 ? 'English(US) => 中文' : '中文'}})" hover-class="click" style="width:80%;margin: 10px; box-shadow:0 0 10px silver;color: #4ce2a0;height: 60px; border-radius:5px;display:flex;justify-content:center;align-items:center;">
             <text>{{index == 5 ? 'English(US) => 中文' : '中文'}}</text>
           </view>
       </view>
     </view>
 
 
-    <!-- <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #7EF43F;">
+    <!-- <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #70C61B;">
       <image @tap="send()" src="../assets/img/send-fill.svg" style="width: 35px; height:35px;" />
     </view> -->
 
-    <view style="box-shadow:1px 1px 10px 0px #7EF43F;height: 60px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #7EF43F;">
-      <view @tap.stop="send()" >
+    <view @tap.stop="send()" style="box-shadow:1px 1px 10px 0px #70C61B;height: 60px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #70C61B;">
+      <view>
         <text style="color:white;font-size:30px;">{{lang == 'EN' ? 'Send' : '发送'}}</text>
       </view>
     </view>
@@ -63,8 +63,8 @@ import api from './../api/api'
 export default class TestPage extends wepy.page {
   config = {
     // navigationBarTitleText: '新问题',
-    backgroundColor: '#7EF43F',
-    navigationBarBackgroundColor: '#7EF43F',
+    backgroundColor: '#70C61B',
+    navigationBarBackgroundColor: '#70C61B',
     navigationBarTextStyle: 'white',
     enablePullDownRefresh: false
   }
@@ -240,7 +240,7 @@ export default class TestPage extends wepy.page {
   display: none;
 }
 .gray {
-  background-color: rgba(126,244,63,0.9);
+  background-color: rgba(0,0,0,0.6);
   z-index: 100;
   width: 100%;
   height: 100%;
@@ -284,15 +284,15 @@ export default class TestPage extends wepy.page {
 @keyframes pushBtn {
   0% {
     transform: scale(1);
-    box-shadow:0 0 10px #4ce2a0;
+    box-shadow:0 0 10px silver;
   }
   50% {
     transform: scale(0.95);
-    box-shadow:inset 0 0 10px #4ce2a0;
+    box-shadow:inset 0 0 10px silver;
   }
   100% {
     transform: scale(1);
-    box-shadow:0 0 10px #4ce2a0;
+    box-shadow:0 0 10px silver;
   }
 }
 .title {

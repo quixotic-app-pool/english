@@ -69,8 +69,8 @@ import wepy from 'wepy'
 export default class TestPage extends wepy.page {
   config = {
     // navigationBarTitleText: '选择问题',
-    backgroundColor: '#7EF43F',
-    navigationBarBackgroundColor: '#7EF43F',
+    backgroundColor: '#70C61B',
+    navigationBarBackgroundColor: '#70C61B',
     navigationBarTextStyle: 'white',
     enablePullDownRefresh: false
   }
