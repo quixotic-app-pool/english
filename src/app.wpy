@@ -9,7 +9,6 @@ export default class extends wepy.app {
       // 'pages/mainPage',
       'pages/questionList',
       'pages/minePage',
-      // 'pages/mainPage',
       'pages/userList',
       'pages/notificationList',
       'pages/about',
@@ -84,6 +83,7 @@ export default class extends wepy.app {
         // console.log('info from wechat: ' + JSON.stringify(u));
         if(u && u.data && u.data.flag == 'success') {
           wepy.setStorageSync('UserId', u.data.user_id)
+          wepy.setStorageSync('UserAuthority', u.data.user_position)
           wepy.setStorageSync('UserSession', u.data.session)
           // console.log('UserId: ' + JSON.stringify(u.data.user_id));
           // console.log('UserSession: ' + JSON.stringify(u.data.session));

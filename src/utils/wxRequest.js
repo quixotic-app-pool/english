@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: wxRequest.js
  * @Last modified by:   mymac
- * @Last modified time: 2017-11-17T08:27:25+08:00
+ * @Last modified time: 2018-01-28T12:44:22+08:00
  */
 
 
@@ -16,7 +16,7 @@ import util from './util';
 
 
 // const API_SECRET_KEY = 'www.mall.cycle.com'
-const TIMESTAMP = util.getCurrentTime()
+// const TIMESTAMP = util.getCurrentTime()
 // const SIGN = md5.hex_md5((TIMESTAMP + API_SECRET_KEY).toLowerCase())
 
 const wxRequest = async (params = {}, url) => {

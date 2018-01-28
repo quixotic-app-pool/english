@@ -1,8 +1,11 @@
 <template>
   <view style="width: {{screenWidth}}px; height: {{screenHeight + 50}}px;">
-    <view class="center" style="padding-left:10px;justify-content:flex-start;height: 100px; width: 100%; background-color:white;">
-      <image src="{{info.avatarUrl}}" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
-      <text style="font-size:30px; ">{{info.nickName}}</text>
+    <view class="center" style="padding:0 10px;justify-content:space-between;height: 100px; width: 100%; background-color:white;">
+      <view class="center">
+        <image src="{{info.avatarUrl}}" style="width: 70px; height: 70px; border-radius:100%;margin-right: 20px;"/>
+        <text style="font-size:30px; ">{{info.nickName}}</text>
+      </view>
+      <text style="color:gold;font-weight:bold;">Level {{info.lv}}</text>
     </view>
     <view style="width: {{screenWidth}}px;margin-top:20px;">
 
@@ -104,8 +107,31 @@ export default class TestPage extends wepy.page {
     })
     if(res.data && res.data.flag == 'success') {
       this.info = res.data.data
+      this.info.lv = this.calLevel(this.info.points)
       this.$apply()
-      // console.log('info: ' + JSON.stringify(res.data.data));
+      console.log('info: ' + JSON.stringify(res.data.data));
+    }
+  }
+  calLevel (p) {
+    //points -> level mechanism
+    if(p <= 2) {
+      return 1
+    } else if(p <= 10) {
+      return 2
+    } else if(p <= 20) {
+      return 3
+    } else if(p <= 40) {
+      return 4
+    } else if(p <= 80) {
+      return 5
+    } else if(p <= 160) {
+      return 6
+    } else if(p <= 320) {
+      return 7
+    } else if(p <= 640) {
+      return 8
+    } else if(p <= 1280) {
+      return 9
     }
   }
   // onShow () {
