@@ -1,4 +1,6 @@
 <template>
+    <view class="{{toggle ? 'navBg': ''}}">
+    </view>
     <view style="background-color: transparent;box-shadow:none;" class="newBtn" @tap.stop="showOptions" catchlongpress="longpress">
       <image style="top:-3px;" src="../assets/img/light.png" class="newBtn-icon"></image>
       <view wx:if="{{!toggle && numOfNotif > 0}}" class="center" style="z-index:10;position:absolute; right:5px; top:0; background-color:rgb(215,0,18);min-width:20px;font-size:12px;border-radius:100%;color:white;min-height:20px;">
@@ -24,7 +26,7 @@
     </view>
     <navigator url="/pages/notificationList" animation="{{animationData3}}" class="newBtn newBtn-nav newBtn-nav4">
       <text class="nb-title1" style="width: {{lang == 'EN' ? '' : 160}}px">{{lang == 'EN' ? '我的消息' : 'My Notifications'}}</text>
-      <view class="center" style="z-index:10;position:absolute; right:0; top:0; background-color:rgb(215,0,18);min-width:20px;font-size:12px;border-radius:100%;color:white;min-height:20px;">
+      <view wx:if="{{numOfNotif > 0}}" class="center" style="z-index:10;position:absolute; right:0; top:0; background-color:rgb(215,0,18);min-width:20px;font-size:12px;border-radius:100%;color:white;min-height:20px;">
         <text>{{numOfNotif}}</text>
       </view>
       <image src="../assets/icons/message.png" class="newBtn-icon newBtn-nav-icon"></image>
@@ -169,6 +171,13 @@ export default class Floatingbtn extends wepy.component {
 </script>
 
 <style lang="less">
+.navBg {
+  background-color: rgba(0,0,0,0.6);
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
 .newBtn {
   position: fixed;
   right: 20px;

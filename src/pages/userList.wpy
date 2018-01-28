@@ -108,7 +108,7 @@
                 </view>
               </view>
 
-              <view wx:if="{{item.type == 'reply'}}" class="question-item"  style="margin-right:4px;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); width:{{screenWidth * 0.7}}px; min-height: 70px;">
+              <view wx:if="{{item.type == 'reply'}}" class="question-item"  style="margin-right:4px;box-shadow: 0 2px 3px rgba(0,0,0,0.4); width:{{screenWidth * 0.7}}px; min-height: 70px;">
                 <view wx:if="{{item.featured}}" class="center" style="flex-direction:row;justify-content:flex-start;border-radius:8px 8px 0 0;background-color:gold;color:white;">
                   <image src="../assets/img/feature-fill.png"  style="width:30px; height:30px;padding:0 10px;"/>
                   <text>{{lang == 'EN' ? 'Featured Answer' : '最佳回答'}}</text>

@@ -29,7 +29,7 @@ export default class extends wepy.app {
         "selectedIconPath": "assets/img/tab1-orange-empty.png"
         }, {
         "pagePath": "pages/minePage",
-        "text": "Mine",
+        "text": "Me",
         "iconPath": "assets/img/tab2-white-empty.png",
         "selectedIconPath": "assets/img/tab2-orange-empty.png"
         }]

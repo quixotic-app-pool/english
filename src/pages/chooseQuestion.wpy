@@ -19,7 +19,7 @@
           <image src="../assets/img/translation.png" class="image"/>
         </view>
         <view style="display:flex; flex-direction:column;">
-          <text>{{lang === 'EN' ? 'Please, help me correct this translation' : '请帮我修改这例翻译'}}?</text>
+          <text>{{lang === 'EN' ? 'Please, help me correct this translation.' : '请帮我修改这例翻译。'}}</text>
         </view>
       </view>
     </view>
