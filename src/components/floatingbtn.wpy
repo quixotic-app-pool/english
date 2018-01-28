@@ -1,5 +1,5 @@
 <template>
-    <view class="{{toggle ? 'navBg': ''}}">
+    <view @tap.stop = "showOptions" class="{{toggle ? 'navBg': ''}}">
     </view>
     <view style="background-color: transparent;box-shadow:none;" class="newBtn" @tap.stop="showOptions" catchlongpress="longpress">
       <image style="top:-3px;" src="../assets/img/light.png" class="newBtn-icon"></image>
@@ -59,7 +59,7 @@ export default class Floatingbtn extends wepy.component {
     await this.fetchNotif()
   }
   async fetchNotif () {
-    console.log('?');
+    // console.log('?');
     var result = await api.fetchNotificationNum({
       query: {
         user_id: this.user_id
@@ -73,12 +73,12 @@ export default class Floatingbtn extends wepy.component {
       this.$apply()
     }
   }
-  // events = {
-  //   'event-notif': (...args) => {
-  //     this.numOfNotif--
-  //     console.log('haha')
-  //   }
-  // }
+  events = {
+    'event-notif': (num) => {
+      // console.log('haha: ' + JSON.stringify(num))
+      this.numOfNotif = this.numOfNotif - num
+    }
+  }
   methods = {
     switchLang () {
       if (this.lang === 'EN') {
@@ -93,19 +93,14 @@ export default class Floatingbtn extends wepy.component {
     filter () {
       this.$emit('floaingbtn-filter')
     },
-    joinUs () {
-      wepy.showModal({
-        title: '反馈&加入我们',
-        content: `任何疑问建议甚至想加入我们的团队，请联系泽铭，微信： flyinghawker。`
-      })
-    },
     longpress() {
-      console.log('long press')
+      // console.log('long press')
       wepy.pageScrollTo({
         scrollTop: 0
       })
     },
-    showOptions () {
+    async showOptions () {
+      // await this.fetchNotif()
       if (this.toggle) {
         var animation = wepy.createAnimation({
           duration: 1000,

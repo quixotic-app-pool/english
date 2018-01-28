@@ -221,6 +221,11 @@ export default class MainPage extends wepy.page {
     this.setTitle()
     await this.loadData()
   }
+  onShow () {
+    var num = wepy.getStorageSync('__numOfRead')
+    this.$broadcast('event-notif', num)
+    wepy.removeStorageSync('__numOfRead')
+  }
   setTitle () {
     var lang = wepy.getStorageSync('lang')
       // console.log('index: ' + this.titleArray[index][0]);

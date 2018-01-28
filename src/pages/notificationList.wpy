@@ -63,6 +63,7 @@
                 <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
                 <text> ?</text>
               </view>
+              <text wx:if="{{item.post.type == 'reply'}}" style="font-weight:bold;">{{item.post.value0}} ?</text>
           </view>
           <view wx:if="{{lang == '中文'}}" style="font-size: 15px;">
               <view wx:if='{{item.post.type == 0}}'>
@@ -150,6 +151,7 @@ CN:  你的答案被选为最佳答案 ？？？？
 <script>
 import wepy from 'wepy'
 import api from './../api/api'
+import util from '../utils/util'
 
 export default class TestPage extends wepy.page {
   config = {
@@ -183,74 +185,6 @@ export default class TestPage extends wepy.page {
     //load notification list
     await this.loadData()
   }
-  onShow () {
-  }
-  onReady() {
-  }
-  calcTime(t) {
-    var lang = this.lang == 'EN'
-    var str = '';
-    if (t) {
-      var createdAt = new Date(t)
-      var now = new Date()
-      var s = now - createdAt
-      if (s < (86400000 * 7)) {
-        var day = Math.floor(s / 86400000);
-        var hour = Math.floor((s % 86400000) / 3600000);
-        var minute = Math.floor((s % 86400000 % 3600000) / 60000);
-        var seconds = Math.floor(s % 86400000 % 3600000 % 60000) / 1000;
-        if (day > 0) {
-          if(lang) {
-            if(day > 1) {
-              str = day + ' days ago'
-            } else {
-              str = day + ' day ago'
-            }
-          } else {
-             str = day + "天前";
-          }
-            return str;
-        }
-        if (hour > 0) {
-          if(lang) {
-            if(hour > 1) {
-              str = hour + ' hours ago'
-            } else {
-              str = hour + ' hour ago'
-            }
-          } else {
-            str = hour + "小时前";
-          }
-            return str;
-        }
-        if (minute > 0) {
-          if(lang) {
-            if(minute > 1) {
-              str = minute + ' minutes ago'
-            } else {
-              str = minute + ' minute ago'
-            }
-          } else {
-             str = minute + "分钟前";
-          }
-            return str;
-        }
-        if (seconds < 60) {
-          if(lang) {
-            str = "just now";
-          } else {
-             str = "刚刚";
-          }
-
-            return str;
-        }
-       } else {
-            return t.substring(0, 16);
-      }
-  } else {
-     return str;
-  }
- }
  async loadData () {
    // wepy.startPullDownRefresh()
    var self = this
@@ -265,7 +199,7 @@ export default class TestPage extends wepy.page {
    var data = res.data
    if (data.length) {
      data.forEach(function(item, index) {
-       item.timeDiff = self.calcTime(item.createdAt)
+       item.timeDiff = util.calcTime(item.createdAt)
      })
      if (self.dataList.length === 0) {
        self.dataList = data
@@ -299,7 +233,19 @@ export default class TestPage extends wepy.page {
         var ob = this.dataList.find(function(o){
           return o._id == item._id
         })
-        ob.unRead = false
+        if(ob.unRead == true) {
+          var oldVal = parseInt(wepy.getStorageSync('__numOfRead'))
+          var num = 0
+          // console.log('oldVal: ' + oldVal)
+          if(!oldVal) {
+            num = 1
+          } else {
+            num = oldVal + 1
+          }
+          // console.log('num: ' + num)
+          wepy.setStorageSync('__numOfRead', num)
+          ob.unRead = false
+        }
         var post_id = item.post.to_post ? item.post.to_post : item.post._id
         wepy.navigateTo({
           url: "question?post_id=" + post_id
