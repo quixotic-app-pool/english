@@ -5,7 +5,7 @@
  * @Project: one_server
  * @Filename: util.js
  * @Last modified by:   mymac
- * @Last modified time: 2018-01-28T12:45:39+08:00
+ * @Last modified time: 2018-01-29T16:48:59+08:00
  */
 
 function calLevel(p) {
@@ -33,8 +33,8 @@ function calLevel(p) {
   }
 }
 
-function calcTime(t) {
-  var lang = this.lang == 'EN'
+function calcTime(t, l) {
+  var lang = l == 'EN'
   var str = '';
   if (t) {
     var createdAt = new Date(t)

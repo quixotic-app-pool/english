@@ -308,13 +308,13 @@ export default class TestPage extends wepy.page {
       this.shutDown = true
       this.$apply()
     } else {
-      data.timeDiff = util.calcTime(data.createdAt)
+      data.timeDiff = util.calcTime(data.createdAt, self.lang)
       data.from_user.lv = util.calLevel(data.from_user.points)
       // console.log('1' + JSON.stringify(data))
       if (data.reply.length) {
         var diff = new textDiff()
         data.reply.forEach(function(item) {
-          item.timeDiff = util.calcTime(item.createdAt)
+          item.timeDiff = util.calcTime(item.createdAt, self.lang)
           item.from_user.lv = util.calLevel(item.from_user.points)
           if(data.type == '5') {
             item.value0 = diff.main(data.value1, item.value0)
@@ -417,7 +417,7 @@ export default class TestPage extends wepy.page {
     },
     showModal () {
       if(!this.questionClosed()){
-        this.replyMsg = this.question.type == '5' ? this.question.value1 : this.question.value0
+        this.replyMsg = this.question.type == '5' ? this.question.value1 : ''
         this.showModal = true
       }
     },

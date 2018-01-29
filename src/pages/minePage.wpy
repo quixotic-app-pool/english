@@ -71,6 +71,7 @@
 <script>
 import wepy from 'wepy'
 import api from './../api/api'
+import util from '../utils/util'
 
 export default class TestPage extends wepy.page {
   config = {
@@ -107,31 +108,9 @@ export default class TestPage extends wepy.page {
     })
     if(res.data && res.data.flag == 'success') {
       this.info = res.data.data
-      this.info.lv = this.calLevel(this.info.points)
+      this.info.lv = util.calLevel(this.info.points)
       this.$apply()
-      console.log('info: ' + JSON.stringify(res.data.data));
-    }
-  }
-  calLevel (p) {
-    //points -> level mechanism
-    if(p <= 2) {
-      return 1
-    } else if(p <= 10) {
-      return 2
-    } else if(p <= 20) {
-      return 3
-    } else if(p <= 40) {
-      return 4
-    } else if(p <= 80) {
-      return 5
-    } else if(p <= 160) {
-      return 6
-    } else if(p <= 320) {
-      return 7
-    } else if(p <= 640) {
-      return 8
-    } else if(p <= 1280) {
-      return 9
+      // console.log('info: ' + JSON.stringify(res.data.data));
     }
   }
   // onShow () {

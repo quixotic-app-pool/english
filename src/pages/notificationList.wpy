@@ -55,7 +55,7 @@
                 <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
                 <text> ?</text>
               </view>
-              <text wx:if='{{item.post.type == 4}}' style="font-weight:bold;">{{item.question.value0}} ?</text>
+              <text wx:if='{{item.post.type == 4}}' style="font-weight:bold;">{{item.post.value0}} ?</text>
               <view wx:if='{{item.post.type == 5}}'>
                 <text style="display: block;">Native language text: </text>
                 <text style="font-weight:bold;">{{ "'" + item.post.value0 +  "'"}}</text>
@@ -90,6 +90,7 @@
                 <text style="font-weight:bold;">{{ "'" + item.post.value1 +  "'"}}</text>
                 <text> 的区别是什么？</text>
               </view>
+              <text wx:if='{{item.post.type == 4}}' style="font-weight:bold;">{{item.post.value0}} ?</text>
               <text wx:if="{{item.post.type == 'reply'}}" style="font-weight:bold;">{{item.post.value0}} ?</text>
               <view wx:if='{{item.post.type == 5}}'>
                 <text style="display: block;">母语原句: </text>
@@ -199,7 +200,7 @@ export default class TestPage extends wepy.page {
    var data = res.data
    if (data.length) {
      data.forEach(function(item, index) {
-       item.timeDiff = util.calcTime(item.createdAt)
+       item.timeDiff = util.calcTime(item.createdAt, self.lang)
      })
      if (self.dataList.length === 0) {
        self.dataList = data

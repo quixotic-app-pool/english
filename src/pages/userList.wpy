@@ -167,7 +167,7 @@ export default class MainPage extends wepy.page {
     lang: '',
     type: '',
     by: 'all',
-    titleArray: [['Question', '提问'], ['Answer', '回答'], ['Like!', '点赞'], ['Featured answer', '最佳答案'], ['Bookmark', '收藏']],
+    titleArray: [['Questions', '提问'], ['Answers', '回答'], ['Like!', '点赞'], ['Featured answers', '最佳答案'], ['Bookmarks', '收藏']],
     user_id: '',
     index: undefined
   }
@@ -227,8 +227,10 @@ export default class MainPage extends wepy.page {
     var data = res.data
     if (data.length) {
       data.forEach(function(item, index) {
-        item.timeDiff = util.calcTime(item.createdAt)
-        item.from_user.lv = util.calLevel(item.from_user.points)
+        item.timeDiff = util.calcTime(item.createdAt, self.lang)
+        if(item.from_user) {
+          item.from_user.lv = util.calLevel(item.from_user.points)
+        }
       })
       if (self.dataList.length === 0) {
         self.dataList = data

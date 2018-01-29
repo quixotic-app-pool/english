@@ -245,7 +245,7 @@ export default class MainPage extends wepy.page {
       var self = this
       self.setTitle()
       self.dataList.forEach(function(item, index) {
-        item.timeDiff = util.calcTime(item.createdAt)
+        item.timeDiff = util.calcTime(item.createdAt, self.lang)
       })
     }
   }
@@ -266,7 +266,7 @@ export default class MainPage extends wepy.page {
     if (data.length) {
       // console.log('data? ' + JSON.stringify(data));
       data.forEach(function(item, index) {
-        item.timeDiff = util.calcTime(item.createdAt)
+        item.timeDiff = util.calcTime(item.createdAt, self.lang)
         if(item.from_user) {
           item.from_user.lv = util.calLevel(item.from_user.points)
         }
