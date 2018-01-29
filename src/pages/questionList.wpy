@@ -44,7 +44,7 @@
 
       <view class="body" style="width: {{screenWidth * 0.9}}px; height:{{screenHeight * 0.9}}px;z-index: 3;">
         <view class="center" wx:if="{{dataList.length == 0}}" style="width:100%;height:100%;">
-          <text style="color:white;">Hey my friend, it seems nothing here.</text>
+          <text style="color:white;">{{lang == 'EN' ? "Hey my friend, it seems nothing here." : '啊，我的朋友，这里貌似是空的。'}}</text>
         </view>
         <view wx:if="{{dataList.length > 0}}" style="width:100%;height:100%;">
           <repeat
@@ -54,13 +54,13 @@
            key= "index"
            style="width:100%;"
           >
-          <view  @tap="navigate({{item.to_post ? item.to_post : item._id}})" style="display:flex; flex-direction:row; justify-content: space-between; width:100%; min-height: 100px; margin-bottom:10px;">
+          <view  @tap="navigate({{item.to_post ? item.to_post : item._id}})" style="display:flex; flex-direction:row; justify-content: space-between; width:100%; min-height: 100px; margin-bottom:{{index + 1 == dataList.length ? '50px' : '10px'}};">
             <image src="{{item.from_user.avatarUrl}}" style="width: {{screenWidth * 0.15}}px; height: {{screenWidth * 0.15}}px; border-radius: 100%;"/>
             <view>
               <view style="color:white; font-size: 12px; display:flex; flex-direction:row; justify-content: space-between;">
                 <view class="center" style="flex-direction:row">
                   <text>{{item.from_user.nickName}}</text>
-                  <text wx:if="{{item.from_user.position}}">-{{item.from_user.position}}</text>
+                  <text wx:if="{{item.from_user.position}}" style="color:gold;padding-left:5px;"> {{item.from_user.position}}</text>
                   <image src="{{item.from_user.gender == 1 ? '../assets/img/male.png': '../assets/img/female.png'}}" style="width:15px; height:15px;padding:0 5px;" />
                   <text wx:if="{{!item.from_user.position}}" style="color:gold;font-weight:bold;">Lv{{item.from_user.lv}}</text>
                 </view>
@@ -264,9 +264,12 @@ export default class MainPage extends wepy.page {
     // console.log('request get result from server: ' + JSON.stringify(res))
     var data = res.data
     if (data.length) {
+      // console.log('data? ' + JSON.stringify(data));
       data.forEach(function(item, index) {
         item.timeDiff = util.calcTime(item.createdAt)
-        item.from_user.lv = util.calLevel(item.from_user.points)
+        if(item.from_user) {
+          item.from_user.lv = util.calLevel(item.from_user.points)
+        }
       })
       if (self.dataList.length === 0) {
         self.dataList = data

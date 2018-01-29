@@ -89,7 +89,8 @@ export default class TestPage extends wepy.page {
     difSecInput: '',
     moreInput: '',
     user_id: '',
-    post_id: ''
+    post_id: '',
+    editMode: false
   }
   onLoad (option) {
     this.index = option.index
@@ -102,6 +103,7 @@ export default class TestPage extends wepy.page {
       this.difSecInput = option.value1
       this.moreInput = option.additional
       this.choosedLang = option.lang
+      this.editMode = true
       if(this.moreInput) {
         this.more = true
       }
@@ -193,9 +195,15 @@ export default class TestPage extends wepy.page {
                     mask: true
                   })
                   // wepy.setStorageSync('_uploaded', true)
-                  wepy.navigateTo({
-                    url: 'question?post_id=' + result.data.post_id
-                  })
+                  if(self.editMode) {
+                    wepy.navigateBack({
+                      delta: 1
+                    })
+                  } else {
+                    wepy.reLaunch({
+                      url: 'questionList'
+                    })
+                  }
                 } else {
                   wepy.showModal({
                     title: failedTextArr[0],
