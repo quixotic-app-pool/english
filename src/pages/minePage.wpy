@@ -64,6 +64,9 @@
         <image src="../assets/img/about.png"style="width: 50px; height: 50px;margin-right: 20px;" />
         <text style="font-size:20px;">{{lang == 'EN' ? 'About us' : '关于我们'}}</text>
       </view>
+      <view class="center" style="font-size:10px; opacity:0.5;">
+        <text>v1.55</text>
+      </view>
     </view>
   </view>
 </template>

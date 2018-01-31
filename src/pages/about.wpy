@@ -5,8 +5,12 @@
 
     <text style="text-align:justify;">{{text1}}</text>
     <text style="margin-top:50px;">{{text2}}</text>
-    <text style="font-weight:bold;">Manford: {{wx1}}</text>
-    <text style="font-weight:bold;">Michael: {{wx2}}</text>
+    <text style="font-weight:bold;padding-top:10px;font-size:25px;">Mark:</text>
+    <text>A professional English (French as well) Teacher working in Nanjing.</text>
+    <text style="font-weight:bold;" selectable=true>WeChat: {{wx1}}</text>
+    <text style="font-weight:bold;padding-top:10px;font-size:25px;">Michael:</text>
+    <text>A fullstack developer, used to study and work in United States, big fan of English language study.</text>
+    <text style="font-weight:bold;" selectable=true>WeChat: {{wx2}}</text>
   </view>
 </template>
 

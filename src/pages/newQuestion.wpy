@@ -44,11 +44,11 @@
     </view>
 
 
-    <!-- <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #70C61B;">
+    <!-- <view style="height: 40px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #3FC5F4;">
       <image @tap="send()" src="../assets/img/send-fill.svg" style="width: 35px; height:35px;" />
     </view> -->
 
-    <view @tap.stop="send()" style="box-shadow:1px 1px 10px 0px #70C61B;height: 60px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #70C61B;">
+    <view @tap.stop="send()" style="box-shadow:1px 1px 10px 0px #3FC5F4;height: 60px;display:flex; justify-content:center; align-items:center; z-index:2; width: {{screenWidth}}px;position:fixed; bottom: 0;background-color: #3FC5F4;">
       <view>
         <text style="color:white;font-size:30px;">{{lang == 'EN' ? 'Send' : '发送'}}</text>
       </view>
@@ -63,8 +63,8 @@ import api from './../api/api'
 export default class TestPage extends wepy.page {
   config = {
     // navigationBarTitleText: '新问题',
-    backgroundColor: '#70C61B',
-    navigationBarBackgroundColor: '#70C61B',
+    backgroundColor: '#3FC5F4',
+    navigationBarBackgroundColor: '#3FC5F4',
     navigationBarTextStyle: 'white',
     enablePullDownRefresh: false
   }

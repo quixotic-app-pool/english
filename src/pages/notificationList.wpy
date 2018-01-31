@@ -1,5 +1,5 @@
 <template>
-  <scroll-view scroll-y style="background-color:white; width: {{screenWidth}}px; height: {{screenHeight}}px;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+  <scroll-view scroll-y style="background-color:white; width: {{screenWidth}}px; height: 100%;" bindscrolltoupper="upper" bindscrolltolower="lower" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
     <repeat
      for="{{dataList}}"
      item= "item"
