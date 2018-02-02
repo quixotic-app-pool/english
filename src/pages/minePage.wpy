@@ -65,7 +65,7 @@
         <text style="font-size:20px;">{{lang == 'EN' ? 'About us' : '关于我们'}}</text>
       </view>
       <view class="center" style="font-size:10px; opacity:0.5;">
-        <text>v1.55</text>
+        <text>v1.58</text>
       </view>
     </view>
   </view>

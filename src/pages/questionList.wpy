@@ -135,14 +135,17 @@
                       <text> ?</text>
                     </view>
                 </view>
-                <view style="padding:5px 10px;display:flex; position:relative;width: 100%;">
+                <view style="padding:5px 10px;display:flex; position:relative;width: 100%;justify-content:space-between;">
                   <view class="center" style="border-radius:100%;background-color:#3FC5F4;height:30px;width:30px;">
                     <text style="color: white;font-size:15px;">{{item.reply.length || 0}}</text>
+                  </view>
+                  <view @tap.stop="delBadData({{item._id}}, {{item.type}})" wx:if="{{user_position == 'Admin'}}" class="center" style="font-size:12px;">
+                    <text>Delete(Admin Only)</text>
                   </view>
                 </view>
               </view>
 
-              <view wx:if="{{item.type == 'reply'}}" class="question-item"  style="margin-right:4px;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); width:{{screenWidth * 0.7}}px; min-height: 70px;">
+              <!-- <view wx:if="{{item.type == 'reply'}}" class="question-item"  style="margin-right:4px;box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); width:{{screenWidth * 0.7}}px; min-height: 70px;">
                 <view wx:if="{{item.featured}}" class="center" style="flex-direction:row;justify-content:flex-start;border-radius:8px 8px 0 0;background-color:gold;color:white;">
                   <image src="../assets/img/feature-fill.png"  style="width:30px; height:30px;padding:0 10px;"/>
                   <text>{{lang == 'EN' ? 'Featured Answer' : '最佳回答'}}</text>
@@ -163,7 +166,7 @@
                     <image src="../assets/img/feature-fill.png" style="width:20px; height:20px;" />
                   </view>
                 </view>
-              </view>
+              </view> -->
 
             </view>
           </view>
@@ -205,6 +208,7 @@ export default class MainPage extends wepy.page {
     by: 'all',
     titleArray: [['Question', '提问'], ['Answer', '回答'], ['Like!', '点赞'], ['Featured answer', '最佳答案'], ['Bookmark', '收藏']],
     user_id: '',
+    user_position: undefined,
     toggleNav: false
   }
   components = {
@@ -212,6 +216,7 @@ export default class MainPage extends wepy.page {
   }
   async onLoad () {
     this.user_id = wepy.getStorageSync('UserId')
+    this.user_position = wepy.getStorageSync('UserAuthority')
     //check if from minePage
     // console.log('questinlist  option: ' + JSON.stringify(option));
       // 0: Questions/提问
@@ -265,7 +270,7 @@ export default class MainPage extends wepy.page {
     // console.log('request get result from server: ' + JSON.stringify(res))
     var data = res.data
     if (data.length) {
-      // console.log('data? ' + JSON.stringify(data));
+      // console.log('data in question list' + JSON.stringify(data));
       data.forEach(function(item, index) {
         item.timeDiff = util.calcTime(item.createdAt, self.lang)
         if(item.from_user) {
@@ -294,6 +299,31 @@ export default class MainPage extends wepy.page {
     await this.loadData()
   }
   methods = {
+    delBadData (id, type) {
+      console.log('checking: ' + id + '/' + type)
+      wepy.showModal({
+        title: 'Notice myself',
+        content: 'sure man?'
+      }).then(async function(res){
+        if(res.confirm) {
+          var result = await api.delQuestion({
+            query: {
+              pack: {
+                question_id: id,
+                post_id: id,
+                type: type
+              }
+            },
+            method: 'POST'
+          })
+          if(result.data && result.data.flag == 'success') {
+            wepy.reLaunch({
+              url: 'questionList'
+            })
+          }
+        }
+      })
+    },
     toggleNav () {
       console.log('??');
       this.toggleNav = !this.toggleNav
