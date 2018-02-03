@@ -10,21 +10,22 @@
 
       <view class="gray" style="color:#3FC5F4;background-color:white;height:100%;display:{{showModal ? 'flex' : 'none'}};flex-direction:column;align-items:center;top:0;">
         <view style="padding:10px 0;" class="{{ showModal ? 'show' : ''}}">
-            <view style="align-self:flex-start;padding:2%;">
+            <view style="align-self:flex-start;padding:2%; display:flex;flex-direction:column;align-items:flex-start;">
               <text selectable=true style="color: #3FC5F4;font-size:20px;font-weight: bold;">{{lang == 'EN' ? 'Write your answer:' : '写下你的答案:'}}</text>
+              <text wx:if="{{question.type == 0 || question.type == 5}}" style="font-size:12px; color:green;">({{lang == 'EN' ? 'Notice: text difference comparison will be applied in green area' : '注意：绿色区域将做文字比较'}})</text>
             </view>
-            <view style="width:96%;margin: 2%;border-radius:5px;border: 1px solid #3FC5F4;">
-              <textarea style="height:100px;width:100%;padding:5px;" maxlength="1000" placeholder-style="width:100%;" value="{{initMsg}}" bindinput="replyMsg" placeholder=""/>
+            <view style="width:96%;margin: 2%;border-radius:5px;border: {{question.type == 0 || question.type == 5 ? '1px solid green;' : '1px solid #3FC5F4'}};">
+              <textarea style="color:{{question.type == 0 || question.type == 5 ? 'green' :''}};height:100px;width:100%;padding:5px;" maxlength="1000" placeholder-style="width:100%;" value="{{initMsg}}" bindinput="replyMsg" placeholder=""/>
             </view>
-            <view style="margin:2%; width:96%; " @tap.stop = "moreInfo()" >
+            <view wx:if="{{question.type != 0 && question.type != 5}}"  style="margin:2%; width:96%; " @tap.stop = "moreInfo()" >
               <image src="../assets/img/more.png" style="width: 30px; height:30px;"/>
             </view>
-            <view  wx:if="{{!addAdditional}}" style="margin:2%; width:96%;" class="{{additionalOn ? '' : 'hidden'}}">
+            <view  wx:if="{{additionalOn || question.type == 0 || question.type == 5}}" style="margin:2%; width:96%;">
               <view style="padding-bottom:10px;">
                 <text class="title">{{lang == 'EN' ? 'Additional information' : '更多信息'}}:</text>
               </view>
               <view style="border-radius:5px;border: 1px solid #3FC5F4;">
-                <textarea style="height:100px;width:100%;padding:5px;" maxlength="1000" placeholder-style="width:100%;" value="" bindinput="moreInput" placeholder=""/>
+                <textarea style="height:100px;width:100%;padding:5px;" maxlength="1000" placeholder-style="width:100%;" value="" bindinput="moreInput" value="{{initMsg_additional}}" placeholder=""/>
               </view>
               <!-- <textarea bindinput="moreInput" value="{{moreInput ? moreInput : ''}}" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" /> -->
             </view>
@@ -69,11 +70,10 @@
               </view>
               <view wx:if="{{lang == 'EN'}}" style="padding:10px;font-size: 18px;">
                   <view wx:if='{{question.type == 0}}'>
-                    <text>Is my sentence correct </text>
+                    <text>Is my sentence correct? </text>
                     <text selectable=true style="font-weight:bold;">{{ "'" + question.value0 + "'"}}</text>
                     <text> in </text>
                     <text selectable=true style="font-weight:bold;">{{question.lang}}</text>
-                    <text> ?</text>
                   </view>
                   <view wx:if='{{question.type == 1}}'>
                     <text>Please show me example sentences with </text>
@@ -98,16 +98,14 @@
                     <text selectable=true style="font-weight:bold;">{{ "'" + question.value0 +  "'"}}</text>
                     <text selectable=true style="display: block;">Translated text: </text>
                     <text selectable=true style="font-weight:bold;">{{ "'" + question.value1 +  "'"}}</text>
-                    <text> ?</text>
                   </view>
               </view>
               <view wx:if="{{lang == '中文'}}" style="padding:10px;font-size: 18px;">
                   <view wx:if='{{question.type == 0}}'>
                     <text>用 </text>
                     <text selectable=true style="font-weight:bold;">{{question.lang}}</text>
-                    <text> 我的句子正确吗 </text>
+                    <text> 我的句子正确吗? </text>
                     <text selectable=true style="font-weight:bold;">{{ "'" + question.value0 + "'"}}</text>
-                    <text> ？</text>
                   </view>
                   <view wx:if='{{question.type == 1}}'>
                     <text>请用 </text>
@@ -128,11 +126,10 @@
                   </view>
                   <text selectable=true wx:if='{{question.type == 4}}' style="font-weight:bold;">{{question.value0}} ?</text>
                   <view wx:if='{{question.type == 5}}'>
-                    <text selectable=true style="display: block;">母语原句: </text>
+                    <text selectable=true style="display: block;">原句: </text>
                     <text selectable=true style="font-weight:bold;">{{ "'" + question.value0 +  "'"}}</text>
                     <text selectable=true style="display: block;">翻译句: </text>
                     <text selectable=true style="font-weight:bold;">{{ "'" + question.value1 +  "'"}}</text>
-                    <text> ?</text>
                   </view>
               </view>
               <view wx:if="{{question.additional}}" class="center" style="align-items:flex-start;margin:10px;border:1px solid rgb(236,236,236);padding:5px;font-size:15px;opacity:0.7;">
@@ -187,7 +184,7 @@
               <view style="padding:10px;font-size: 18px;">
                 <repeat
                  wx:if="{{question.type == 0 || question.type == 5}}"
-                 for="{{item.value0}}"
+                 for="{{item.valueDiff}}"
                  item= "subItem"
                  index= "index"
                  key= "index"
@@ -270,6 +267,7 @@ export default class TestPage extends wepy.page {
     screenHeight: wepy.getSystemInfoSync().windowHeight,
     replyMsg: '',
     initMsg: '',
+    initMsg_additional: '',
     showModal: false,
     additionalOn: false,
     moreMsg: '',
@@ -284,7 +282,9 @@ export default class TestPage extends wepy.page {
     to_user: {},
     shutDown: false,
     post_id: '',
-    readyFlag: false
+    readyFlag: false,
+    currentEditObject : {},
+    editReplyMode: false
   }
   async onLoad (option) {
     // console.log('option: ' + JSON.stringify(option));
@@ -343,10 +343,12 @@ export default class TestPage extends wepy.page {
           item.timeDiff = util.calcTime(item.createdAt, self.lang)
           item.from_user.lv = util.calLevel(item.from_user.points)
           if(data.type == '5') {
-            item.value0 = diff.main(data.value1, item.value0)
+            item.valueDiff = diff.main(data.value1, item.value0)
+            diff.cleanupSemantic(item.valueDiff)
           }
           if(data.type == '0') {
-            item.value0 = diff.main(data.value0, item.value0)
+            item.valueDiff = diff.main(data.value0, item.value0)
+            diff.cleanupSemantic(item.valueDiff)
           }
         })
       }
@@ -372,6 +374,17 @@ export default class TestPage extends wepy.page {
       return true
     } else {
       return false
+    }
+  }
+  editReply (post) {
+    if(!this.questionClosed()){
+      this.initMsg = post.value0
+      this.initMsg_additional = post.additional
+      this.replyMsg = this.initMsg
+      this.moreMsg = this.initMsg_additional
+      this.showModal = true
+      this.editReplyMode = true
+      this.$apply()
     }
   }
   methods = {
@@ -449,23 +462,36 @@ export default class TestPage extends wepy.page {
     },
     showModal () {
       if(!this.questionClosed()){
-        this.initMsg = this.question.type == '5' ? this.question.value1 : ''
+          this.initMsg = this.question.type == '5' ? this.question.value1 : ''
         this.showModal = true
       }
     },
     closeModal (flag) {
-      this.showModal = !this.showModal
       if(flag == 0) {
+        this.initMsg = ''
+        this.initMsg_additional = ''
         this.replyMsg = ''
+        this.moreMsg = ''
+        this.editReplyMode = false
+        this.currentEditObject = {}
+        this.showModal = !this.showModal
       } else if(flag == 1) {
         //going to send
         var self = this
-        if (this.replyMsg.length) {
+        if (this.replyMsg.length || this.moreMsg.length) {
           var textArr = []
           if(this.lang == 'EN') {
-            textArr = ['Confrimation', 'Are you sure to reply?']
+            if(this.editReplyMode) {
+              textArr = ['Confrimation', 'Are you sure to update?']
+            } else {
+              textArr = ['Confrimation', 'Are you sure to reply?']
+            }
           } else {
-            textArr = ['确认', '确定上传回复吗？']
+            if(this.editReplyMode) {
+              textArr = ['确认', '确定上传更新吗？']
+            } else {
+              textArr = ['确认', '确定上传回复吗？']
+            }
           }
           wepy.showModal({
             title: textArr[0],
@@ -473,21 +499,40 @@ export default class TestPage extends wepy.page {
           }).then( async function (res) {
             if (res.confirm) {
               var failedTextArr = self.lang == 'EN' ? ['Notice', 'Sorry, the server works not well, please contact me by WeChat: flyinghawker'] : ['提示', '抱歉，服务器发生异常，请联系泽铭: flyinghawker']
-              console.log('self.moreMsg : ' + self.moreMsg)
+              // console.log('self.moreMsg : ' + self.moreMsg)
               try {
-                  var pack = {
+                var pack = {}
+                var res = {}
+                if(self.editReplyMode) {
+                  pack = {
+                    post_id: self.currentEditObject._id,
+                    type: self.currentEditObject.type,
+                    user_id: self.currentUser._id,
+                    value0: self.replyMsg,
+                    additional: self.moreMsg
+                  }
+
+                 res = await api.editQuestion({
+                  query: {
+                    pack: pack
+                  },
+                  method: 'POST'
+                })
+                } else {
+                  pack = {
                     type: 'reply',
                     post_id: self.question._id,
                     from_user_id: self.currentUser._id,
                     value0: self.replyMsg,
                     additional: self.moreMsg
                   }
-                  const res = await api.answer({
+                  res = await api.answer({
                     query: {
                       pack: pack
                     },
                     method: 'POST'
                   })
+                }
                   // console.log('data back from new post: ' + JSON.stringify(res))
                   wepy.hideToast()
                   if (res.data.flag == 'success') {
@@ -498,9 +543,15 @@ export default class TestPage extends wepy.page {
                       mask: true
                     })
                     // wepy.setStorageSync('_uploaded', true)
-                    wepy.redirectTo({
-                      url: 'question?post_id=' + res.data.post_id
-                    })
+                    if(self.editReplyMode) {
+                      wepy.redirectTo({
+                        url: 'question?post_id=' + self.question._id
+                      })
+                    } else {
+                      wepy.redirectTo({
+                        url: 'question?post_id=' + res.data.post_id
+                      })
+                    }
                   } else {
                     wepy.showModal({
                       title: failedTextArr[0],
@@ -522,9 +573,10 @@ export default class TestPage extends wepy.page {
             }
           })
         } else {
+          var textArr = self.lang == 'EN' ? ['Notice', 'Please complete input.'] : ['提示', '请填写完整。']
           wepy.showModal({
-            title: '提醒',
-            content: '请填写完整？'
+            title: textArr[0],
+            content: textArr[1]
           })
         }
       }
@@ -542,6 +594,8 @@ export default class TestPage extends wepy.page {
       }
     },
     more (index, post) {
+      this.currentEditObject = post
+      var currentpost = post
       var titleArray = []
       if (index == 0) {
         if(this.currentUser.position == 'Admin' || this.currentUser.position == 'Teacher' || this.question.from_user._id == this.currentUser._id) {
@@ -553,8 +607,8 @@ export default class TestPage extends wepy.page {
 
       } else {
         if(this.currentUser.position == 'Admin' || this.currentUser.position == 'Teacher' || this.currentUser._id == post.from_user._id || this.currentUser._id == this.question.from_user._id) {
-          titleArray =  [['Delete', '删除'], ['Report', '举报']]
-          titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0]] : [titleArray[0][1], titleArray[1][1]]
+          titleArray =  [['Edit', '修改'], ['Delete', '删除'], ['Report', '举报']]
+          titleArray = this.lang === 'EN' ? [titleArray[0][0], titleArray[1][0], titleArray[2][0]] : [titleArray[0][1], titleArray[1][1], titleArray[2][1]]
         } else {
           titleArray = this.lang === 'EN' ? ['Report'] : ['举报']
         }
@@ -585,7 +639,7 @@ export default class TestPage extends wepy.page {
               // console.log(JSON.stringify(res));
               if(result.data && result.data.flag == 'success') {
                 self.question.closed = true
-                console.log('closed');
+                // console.log('closed');
               }
               self.$apply()
             }
@@ -594,7 +648,9 @@ export default class TestPage extends wepy.page {
           wepy.navigateTo({
             url: 'newQuestion?index=' + index + '&post_id=' + self.question._id + '&value0=' + self.question.value0 + '&value1=' + self.question.value1 + '&additional=' + self.question.additional + '&lang=' + self.question.lang
           })
-        } else if(index == 0 && res.tapIndex == 2 || index == 1 && res.tapIndex == 0) {
+        } else if(index == 1 && res.tapIndex == 0) {
+          self.editReply(self.currentEditObject)
+        } else if(index == 0 && res.tapIndex == 2 || index == 1 && res.tapIndex == 1) {
           var delTextArr = self.lang == 'EN' ? ['Confirmation', 'Are you sure to delete it?']: ['确认', '确定删除吗？']
           wepy.showModal({
             title: delTextArr[0],
@@ -622,7 +678,7 @@ export default class TestPage extends wepy.page {
             }
           })
 
-        } else if(index == 0 && res.tapIndex == 3 || index == 1 && res.tapIndex == 1) {
+        } else if(index == 0 && res.tapIndex == 3 || index == 1 && res.tapIndex == 2) {
           var repTextArr = self.lang == 'EN' ? ['Confirmation', 'Are you sure to report?']: ['确认', '确定要举报吗？']
           wepy.showModal({
             title: repTextArr[0],
@@ -655,7 +711,7 @@ export default class TestPage extends wepy.page {
           })
         }
 
-        console.log(JSON.stringify(res));
+        // console.log(JSON.stringify(res));
       })
     },
     async addLike (type, id) {
@@ -738,9 +794,6 @@ export default class TestPage extends wepy.page {
 </script>
 
 <style lang="less">
-.hidden {
-  display: none;
-}
 .shutDown {
   z-index: 100;
 }

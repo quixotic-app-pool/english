@@ -35,11 +35,10 @@
               <view  wx:if="{{item.type !== 'reply'}}" class="question-item"  style="box-shadow: 0 2px 3px rgba(0,0,0,0.4); width:{{screenWidth * 0.7}}px; min-height: 80px;">
                 <view wx:if="{{lang == 'EN'}}" style="padding:10px;font-size: 18px;">
                     <view wx:if='{{item.type == 0}}'>
-                      <text>Is my sentence correct </text>
+                      <text>Is my sentence correct? </text>
                       <text style="font-weight:bold;">{{ "'" + item.value0 + "'"}}</text>
                       <text> in </text>
                       <text style="font-weight:bold;">{{item.lang}}</text>
-                      <text> ?</text>
                     </view>
                     <view wx:if='{{item.type == 1}}'>
                       <text>Please show me example sentences with </text>
@@ -64,16 +63,14 @@
                       <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
                       <text style="display: block;">Translated text: </text>
                       <text style="font-weight:bold;">{{ "'" + item.value1 +  "'"}}</text>
-                      <text> ?</text>
                     </view>
                 </view>
                 <view wx:if="{{lang == '中文'}}" style="padding:10px;font-size: 18px;">
                     <view wx:if='{{item.type == 0}}'>
                       <text>用 </text>
                       <text style="font-weight:bold;">{{item.lang}}</text>
-                      <text> 我的句子正确吗 </text>
+                      <text> 我的句子正确吗？ </text>
                       <text style="font-weight:bold;">{{ "'" + item.value0 + "'"}}</text>
-                      <text> ？</text>
                     </view>
                     <view wx:if='{{item.type == 1}}'>
                       <text>请用 </text>
@@ -94,11 +91,10 @@
                     </view>
                     <text wx:if='{{item.type == 4}}' style="font-weight:bold;">{{item.value0}}</text>
                     <view wx:if='{{item.type == 5}}'>
-                      <text style="display: block;">母语原句: </text>
+                      <text style="display: block;">原句: </text>
                       <text style="font-weight:bold;">{{ "'" + item.value0 +  "'"}}</text>
                       <text style="display: block;">翻译句: </text>
                       <text style="font-weight:bold;">{{ "'" + item.value1 +  "'"}}</text>
-                      <text> ?</text>
                     </view>
                 </view>
                 <view style="padding:5px 10px;display:flex; position:relative;width: 100%;">
