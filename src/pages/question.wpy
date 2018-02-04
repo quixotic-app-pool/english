@@ -342,11 +342,11 @@ export default class TestPage extends wepy.page {
         data.reply.forEach(function(item) {
           item.timeDiff = util.calcTime(item.createdAt, self.lang)
           item.from_user.lv = util.calLevel(item.from_user.points)
-          if(data.type == '5') {
+          if(data.type == '5' && item.value0.length) {
             item.valueDiff = diff.main(data.value1, item.value0)
             diff.cleanupSemantic(item.valueDiff)
           }
-          if(data.type == '0') {
+          if(data.type == '0' && item.value0.length) {
             item.valueDiff = diff.main(data.value0, item.value0)
             diff.cleanupSemantic(item.valueDiff)
           }

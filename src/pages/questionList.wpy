@@ -321,7 +321,7 @@ export default class MainPage extends wepy.page {
       })
     },
     toggleNav () {
-      console.log('??');
+      // console.log('??');
       this.toggleNav = !this.toggleNav
       this.$apply()
     },

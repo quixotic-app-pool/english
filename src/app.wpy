@@ -43,7 +43,8 @@ export default class extends wepy.app {
   }
   globalData = {
     userInfo: null
-    // sysWidth: wx.getSystemInfoSync().windowWidth //图片宽度
+    // screenWidth: wx.getSystemInfoSync().windowWidth,
+    // screenHeight: wx.getSystemInfoSync().windowHeight
   }
   constructor () {
     super()
