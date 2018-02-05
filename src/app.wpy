@@ -52,6 +52,7 @@ export default class extends wepy.app {
     this.use('promisify')
   }
   async onLaunch() {
+
     var self = this
     var userInfo = wepy.getStorageSync('userInfo') || {}
     // console.log("userInfo: " + JSON.stringify(userInfo));

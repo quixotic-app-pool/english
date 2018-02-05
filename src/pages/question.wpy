@@ -15,8 +15,9 @@
               <text wx:if="{{question.type == 0 || question.type == 5}}" style="font-size:12px; color:green;">({{lang == 'EN' ? 'Notice: text difference comparison will be applied in green area' : '注意：绿色区域将做文字比较'}})</text>
             </view>
             <view style="width:96%;margin: 2%;border-radius:5px;border: {{question.type == 0 || question.type == 5 ? '1px solid green;' : '1px solid #3FC5F4'}};">
-              <textarea style="color:{{question.type == 0 || question.type == 5 ? 'green' :''}};height:100px;width:100%;padding:5px;" maxlength="1000" placeholder-style="width:100%;" value="{{initMsg}}" bindinput="replyMsg" placeholder=""/>
+              <textarea style="color:{{question.type == 0 || question.type == 5 ? 'green' :''}};height:100px;width:100%;padding:5px;" maxlength=500 placeholder-style="width:100%;" value="{{initMsg}}" bindinput="replyMsg" placeholder=""/>
             </view>
+            <text style="align-self:flex-end;margin-right:2%;font-size:15px;opacity:0.5;color:{{question.type == 0 || question.type == 5 ? 'green' :''}};">{{replyMsg_left}}</text>
             <view wx:if="{{question.type != 0 && question.type != 5}}"  style="margin:2%; width:96%; " @tap.stop = "moreInfo()" >
               <image src="../assets/img/more.png" style="width: 30px; height:30px;"/>
             </view>
@@ -25,7 +26,8 @@
                 <text class="title">{{lang == 'EN' ? 'Additional information' : '更多信息'}}:</text>
               </view>
               <view style="border-radius:5px;border: 1px solid #3FC5F4;">
-                <textarea style="height:100px;width:100%;padding:5px;" maxlength="1000" placeholder-style="width:100%;" value="" bindinput="moreInput" value="{{initMsg_additional}}" placeholder=""/>
+                <textarea style="height:100px;width:100%;padding:5px;" maxlength=500 placeholder-style="width:100%;" value="" bindinput="moreInput" value="{{initMsg_additional}}" placeholder=""/>
+                <text style="float:right; font-size:15px;opacity:0.5;">{{moreMsg_left}}</text>
               </view>
               <!-- <textarea bindinput="moreInput" value="{{moreInput ? moreInput : ''}}" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" /> -->
             </view>
@@ -266,11 +268,13 @@ export default class TestPage extends wepy.page {
     screenWidth: wepy.getSystemInfoSync().windowWidth,
     screenHeight: wepy.getSystemInfoSync().windowHeight,
     replyMsg: '',
+    replyMsg_left: 500,
     initMsg: '',
     initMsg_additional: '',
     showModal: false,
     additionalOn: false,
     moreMsg: '',
+    moreMsg_left: 500,
     reported: false,
     lang: '',
     // question: {id:'12', notificationIsOn: true, additional: 'here is additional content.... I have question regarding this point, anyone can help me out sovle it will be highly rewarded.', featuredApplied: true, closed: true, type: 0, numOfBM: 20, numOfLike:1, value0: 'awesome', value1: '', numOfAns: 9, user: {}, lang: 'English(US)', reply: [
@@ -390,12 +394,14 @@ export default class TestPage extends wepy.page {
   methods = {
     moreInput (e) {
       this.moreMsg = e.detail.value
+      this.moreMsg_left = 500 - this.moreMsg.length
     },
     moreInfo () {
       this.additionalOn = !this.additionalOn
     },
     replyMsg (e) {
       this.replyMsg = e.detail.value
+      this.replyMsg_left = 500 - this.replyMsg.length
     },
     addFeature (id) {
       var self = this
@@ -462,7 +468,7 @@ export default class TestPage extends wepy.page {
     },
     showModal () {
       if(!this.questionClosed()){
-          this.initMsg = this.question.type == '5' ? this.question.value1 : ''
+        this.initMsg = this.question.type == '5' ? this.question.value1 : this.question.type == 0 ? this.question.value0 : ''
         this.showModal = true
       }
     },
@@ -646,7 +652,7 @@ export default class TestPage extends wepy.page {
           })
         } else if(index == 0 && res.tapIndex == 1) {
           wepy.navigateTo({
-            url: 'newQuestion?index=' + index + '&post_id=' + self.question._id + '&value0=' + self.question.value0 + '&value1=' + self.question.value1 + '&additional=' + self.question.additional + '&lang=' + self.question.lang
+            url: 'newQuestion?index=' + self.question.type + '&post_id=' + self.question._id + '&value0=' + self.question.value0 + '&value1=' + self.question.value1 + '&additional=' + self.question.additional + '&lang=' + self.question.lang
           })
         } else if(index == 1 && res.tapIndex == 0) {
           self.editReply(self.currentEditObject)

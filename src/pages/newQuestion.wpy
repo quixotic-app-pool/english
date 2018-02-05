@@ -13,10 +13,12 @@
       <view >
         <text class="title">{{lang === 'EN' ? text2EN[index] : text2CN[index]}}</text>
       </view>
-      <textarea bindinput="mainInput" value="{{init_mainInput ? init_mainInput : ''}}" placeholder="{{lang === 'EN' ? text3EN[index] : text3CN[index]}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <textarea maxlength=500 bindinput="mainInput" value="{{init_mainInput ? init_mainInput : ''}}" placeholder="{{lang === 'EN' ? text3EN[index] : text3CN[index]}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <text style="float:right; font-size:15px;opacity:0.5;">{{mainInput_left}}</text>
       <text class="title">{{lang === 'EN' ? text4EN[index] : text4CN[index]}}</text>
       <view class="{{index == 3 || index == 5 ? '' : 'hidden'}}">
-        <textarea bindinput="difSecInput" value="{{init_difSecInput ? init_difSecInput : ''}}" placeholder="{{lang === 'EN' ? 'Write a word, phrase or sentence.' : '单词，短语或者句子...'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+        <textarea maxlength=500 bindinput="difSecInput" value="{{init_difSecInput ? init_difSecInput : ''}}" placeholder="{{lang === 'EN' ? 'Write a word, phrase or sentence.' : '单词，短语或者句子...'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+        <text style="float:right; font-size:15px;opacity:0.5;">{{difSecInput_left}}</text>
         <text class="title">{{lang == 'EN' ? 'Feel free to provide example sentences.' : '请任意列举例句。'}}</text>
       </view>
     </view>
@@ -28,7 +30,8 @@
       <view style="padding-bottom:10px;">
         <text class="title">{{lang == 'EN' ? 'Additional information' : '更多信息'}}:</text>
       </view>
-      <textarea bindinput="moreInput" value="{{init_moreInput ? init_moreInput : ''}}" placeholder="{{lang == 'EN' ? 'Write additional information here. You can write in any language.' : '写下额外说明。可以用中文或者英文'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <textarea maxlength=500 bindinput="moreInput" value="{{init_moreInput ? init_moreInput : ''}}" placeholder="{{lang == 'EN' ? 'Write additional information here. You can write in any language.' : '写下额外说明。可以用中文或者英文'}}" placeholder-style="font-size:15px;opacity:0.5;" style="width:100%;margin-bottom:5px;border-radius:5px; border: 1px solid rgb(236,236,236); height: 80px;" />
+      <text style="float:right; font-size:15px;opacity:0.5;">{{moreInput_left}}</text>
     </view>
 
 
@@ -93,11 +96,14 @@ export default class TestPage extends wepy.page {
     editMode: false,
     init_mainInput: '',
     init_difSecInput: '',
-    init_moreInput: ''
+    init_moreInput: '',
+    mainInput_left: 500,
+    difSecInput_left: 500,
+    moreInput_left: 500
   }
   onLoad (option) {
     this.index = option.index
-    // console.log('option: ' + JSON.stringify(option));
+    console.log('option: ' + JSON.stringify(option));
     this.user_id = wepy.getStorageSync('UserId')
     //redirect from question page to edit
     if(option.post_id) {
@@ -132,12 +138,15 @@ export default class TestPage extends wepy.page {
   methods = {
     mainInput (e) {
       this.mainInput = e.detail.value
+      this.mainInput_left = 500 - this.mainInput.length
     },
     difSecInput (e) {
       this.difSecInput = e.detail.value
+      this.difSecInput_left = 500 - this.difSecInput.length
     },
     moreInput (e) {
       this.moreInput = e.detail.value
+      this.moreInput_left = 500 - this.moreInput.length
     },
     chooseLanguage (lang) {
       this.choosedLang = lang
